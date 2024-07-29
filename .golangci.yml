@@ -1,0 +1,17 @@
+linters:
+  enable:
+    - errorlint
+    - forbidigo
+    - godot
+    - gofmt
+    - gofumpt
+    - loggercheck
+    - nilerr
+    - perfsprint
+    - revive
+    - stylecheck
+    - unconvert
+    - unused
+    - whitespace
+    - wrapcheck
+
