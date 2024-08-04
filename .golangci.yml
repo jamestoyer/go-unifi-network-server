@@ -9,6 +9,7 @@ linters:
     - nilerr
     - perfsprint
     - revive
+    - sloglint
     - stylecheck
     - unconvert
     - unused
