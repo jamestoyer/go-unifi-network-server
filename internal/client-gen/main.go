@@ -49,7 +49,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	archiveFile, err := firmwareClient.DownloadLatestVersion(ctx, logger)
+	archiveFile, version, err := firmwareClient.DownloadLatestVersion(ctx, logger)
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to download Unifi Network Server", "error", err)
 		os.Exit(1)
@@ -67,7 +67,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	apiDestination := filepath.Join(wd, "api", "v1.2.3")
+	apiDestination := filepath.Join(wd, "build", "api", version.Version.Core().String())
 	if err = os.MkdirAll(apiDestination, 0o755); err != nil {
 		logger.ErrorContext(ctx, "Failed to create API extraction directory", "error", err)
 	}

@@ -57,14 +57,14 @@ func NewClient(endpoint string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger) (string, error) {
+func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger) (string, *Version, error) {
 	latestVersion, err := c.getLatestReleaseVersion(ctx, logger)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	if latestVersion == nil {
-		return "", errors.New("no version found")
+		return "", nil, errors.New("no version found")
 	}
 
 	logger.InfoContext(ctx, "Downloading latest version", "version", latestVersion.Version.String())
@@ -72,10 +72,10 @@ func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger)
 	if err != nil {
 		// Remove the file and ignore any errors if that fails
 		_ = os.Remove(downloadPath)
-		return "", err
+		return "", latestVersion, err
 	}
 
-	return downloadPath, nil
+	return downloadPath, latestVersion, nil
 }
 
 func (c *Client) getLatestReleaseVersion(ctx context.Context, logger *slog.Logger) (*Version, error) {
