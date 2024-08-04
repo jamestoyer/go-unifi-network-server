@@ -16,6 +16,8 @@ package firmware
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -23,6 +25,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/hashicorp/go-version"
 )
@@ -34,6 +37,8 @@ const (
 	filterProductUnifiController = "unifi-controller"
 
 	platformUnix = "unix"
+
+	userAgent = "jamestoyer/go-unifi-network-server"
 )
 
 type Client struct {
@@ -52,17 +57,25 @@ func NewClient(endpoint string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) LatestVersion(ctx context.Context, logger *slog.Logger) (io.ReadWriteCloser, error) {
-	versionURL, err := c.getLatestReleaseVersion(ctx, logger)
+func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger) (*os.File, error) {
+	latestVersion, err := c.getLatestReleaseVersion(ctx, logger)
 	if err != nil {
 		return nil, err
 	}
 
-	if versionURL == nil {
+	if latestVersion == nil {
 		return nil, errors.New("no version found")
 	}
 
-	fmt.Println(versionURL)
+	logger.InfoContext(ctx, "Downloading latest version", "version", latestVersion.Version.String())
+	downloadPath, err := c.downloadRelease(ctx, logger, latestVersion)
+	if err != nil {
+		// Remove the file and ignore any errors if that fails
+		_ = os.Remove(downloadPath)
+		return nil, err
+	}
+
+	fmt.Println(downloadPath)
 	return nil, nil
 }
 
@@ -82,7 +95,7 @@ func (c *Client) getLatestReleaseVersion(ctx context.Context, logger *slog.Logge
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	req.Header.Set("User-Agent", "jamestoyer/go-unifi-network-server")
+	req.Header.Set("User-Agent", userAgent)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -124,8 +137,60 @@ func (c *Client) getLatestReleaseVersion(ctx context.Context, logger *slog.Logge
 	return nil, nil
 }
 
-func (c *Client) downloadRelease(ctx context.Context, logger *slog.Logger, version *Version) error {
+func (c *Client) downloadRelease(ctx context.Context, logger *slog.Logger, version *Version) (string, error) {
+	logger.DebugContext(ctx, "Creating temporary release file")
+	f, err := os.CreateTemp("", "unifi-client-*.zip")
+	if err != nil {
+		return "", fmt.Errorf("failed to create temporary file: %w", err)
+	}
 
+	defer func() {
+		if err := f.Close(); err != nil {
+			logger.ErrorContext(ctx, "Failed to close tempo", "error", err)
+		}
+	}()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, version.URL, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
+
+	logger.DebugContext(ctx, "Downloading the version", "version", version.Version.String())
+	req.Header.Set("User-Agent", userAgent)
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("download release request failed: %w", err)
+	}
+
+	defer func() {
+		err := resp.Body.Close()
+		if err != nil && !errors.Is(err, io.EOF) {
+			logger.ErrorContext(ctx, "Failed to close response body", "error", err)
+		}
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New("failed to download release")
+	}
+
+	if _, err := io.Copy(f, resp.Body); err != nil {
+		return "", fmt.Errorf("failed to write release to file: %w", err)
+	}
+
+	if _, err = f.Seek(0, 0); err != nil {
+		return "", fmt.Errorf("failed to seek to beginning of file: %w", err)
+	}
+
+	h := sha256.New()
+	if _, err = io.Copy(h, f); err != nil {
+		return "", fmt.Errorf("failed to copy file for verification: %w", err)
+	}
+
+	if hex.EncodeToString(h.Sum(nil)) != version.SHA256Checksum {
+		return "", errors.New("failed to verify release signature")
+	}
+
+	return f.Name(), nil
 }
 
 func filterQuery(key, value string) string {

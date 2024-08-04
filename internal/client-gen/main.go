@@ -48,5 +48,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	_, _ = firmwareClient.LatestVersion(ctx, logger)
+	_, err = firmwareClient.DownloadLatestVersion(ctx, logger)
+	if err != nil {
+		logger.ErrorContext(ctx, "Failed to download Unifi Network Server", "error", err)
+		os.Exit(1)
+	}
 }
