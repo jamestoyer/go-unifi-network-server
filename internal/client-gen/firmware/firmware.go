@@ -57,14 +57,14 @@ func NewClient(endpoint string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger) (*os.File, error) {
+func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger) (string, error) {
 	latestVersion, err := c.getLatestReleaseVersion(ctx, logger)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if latestVersion == nil {
-		return nil, errors.New("no version found")
+		return "", errors.New("no version found")
 	}
 
 	logger.InfoContext(ctx, "Downloading latest version", "version", latestVersion.Version.String())
@@ -72,11 +72,10 @@ func (c *Client) DownloadLatestVersion(ctx context.Context, logger *slog.Logger)
 	if err != nil {
 		// Remove the file and ignore any errors if that fails
 		_ = os.Remove(downloadPath)
-		return nil, err
+		return "", err
 	}
 
-	fmt.Println(downloadPath)
-	return nil, nil
+	return downloadPath, nil
 }
 
 func (c *Client) getLatestReleaseVersion(ctx context.Context, logger *slog.Logger) (*Version, error) {
@@ -146,7 +145,7 @@ func (c *Client) downloadRelease(ctx context.Context, logger *slog.Logger, versi
 
 	defer func() {
 		if err := f.Close(); err != nil {
-			logger.ErrorContext(ctx, "Failed to close tempo", "error", err)
+			logger.ErrorContext(ctx, "Failed to close temporary file", "error", err)
 		}
 	}()
 

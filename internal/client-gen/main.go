@@ -19,6 +19,7 @@ import (
 	"flag"
 	"log/slog"
 	"os"
+	"path/filepath"
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
 )
@@ -48,9 +49,31 @@ func main() {
 		os.Exit(1)
 	}
 
-	_, err = firmwareClient.DownloadLatestVersion(ctx, logger)
+	archiveFile, err := firmwareClient.DownloadLatestVersion(ctx, logger)
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to download Unifi Network Server", "error", err)
+		os.Exit(1)
+	}
+
+	defer func() {
+		// Remove the downloaded archive file after we're done getting the API files out
+		_ = os.Remove(archiveFile)
+	}()
+
+	logger.InfoContext(ctx, "Extracting API files")
+	wd, err := os.Getwd()
+	if err != nil {
+		logger.ErrorContext(ctx, "Failed to get current working directory", "error", err)
+		os.Exit(1)
+	}
+
+	apiDestination := filepath.Join(wd, "api", "v1.2.3")
+	if err = os.MkdirAll(apiDestination, 0o755); err != nil {
+		logger.ErrorContext(ctx, "Failed to create API extraction directory", "error", err)
+	}
+
+	if err = firmware.ExtractAPI(ctx, logger, archiveFile, apiDestination); err != nil {
+		logger.ErrorContext(ctx, "Failed to extract Unifi Network Server APIs", "error", err)
 		os.Exit(1)
 	}
 }
