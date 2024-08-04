@@ -14,5 +14,10 @@
 
 package unifi
 
+{{ range .Structs -}}
 type {{ .Name }} struct {
+	{{- range $field, $type := .Fields }}
+	{{ $field }} {{ $type }}
+	{{- end }}
 }
+{{ end }}

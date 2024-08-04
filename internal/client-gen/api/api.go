@@ -95,15 +95,14 @@ func (g *Generator) generateAPIFile(ctx context.Context, logger *slog.Logger, fi
 		return fmt.Errorf("failed to read API spec file: %w", err)
 	}
 
-	endpoint := NewEndpoint(file)
-
 	var fields map[string]interface{}
 	if err = json.Unmarshal(contents, &fields); err != nil {
 		return fmt.Errorf("failed to unmarshal API spec file: %w", err)
 	}
 
-	for name, value := range fields {
-		logger.DebugContext(ctx, "API field found", slog.String("field", name), slog.String("value", fmt.Sprintf("%v", value)))
+	endpoint := NewEndpoint(file)
+	if err = endpoint.UpdateStructs(ctx, logger, fields); err != nil {
+		return fmt.Errorf("failed to set structs for endpoint: %w", err)
 	}
 
 	dir := filepath.Dir(file)

@@ -15,6 +15,8 @@
 package api
 
 import (
+	"context"
+	"log/slog"
 	"path/filepath"
 	"strings"
 
@@ -22,7 +24,8 @@ import (
 )
 
 type Endpoint struct {
-	Name string
+	Name    string
+	Structs []Struct
 
 	specPath string
 }
@@ -37,4 +40,30 @@ func NewEndpoint(specPath string) *Endpoint {
 
 func (e *Endpoint) GoFilename() string {
 	return strcase.ToSnake(e.Name) + ".generated.go"
+}
+
+func (e *Endpoint) UpdateStructs(ctx context.Context, logger *slog.Logger, apiFields map[string]interface{}) error {
+	s := Struct{
+		Name:   e.Name,
+		Fields: map[string]string{},
+	}
+
+	for name, value := range apiFields {
+		switch t := value.(type) {
+		case string:
+			s.Fields[name] = "string"
+		default:
+			logger.DebugContext(ctx, "Skipping field with unsupported type", slog.String("name", name), slog.Any("type", t))
+			return nil
+		}
+	}
+
+	e.Structs = append(e.Structs, s)
+	return nil
+}
+
+type Struct struct {
+	Name string
+
+	Fields map[string]string
 }
