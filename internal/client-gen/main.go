@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -42,17 +43,23 @@ func main() {
 
 	logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
 
+	_, err := downloadAPISpec(ctx)
+	if err != nil {
+		logger.ErrorContext(ctx, "Failed to download the API specification", slog.Any("error", err))
+		os.Exit(1)
+	}
+}
+
+func downloadAPISpec(ctx context.Context) (string, error) {
 	logger.InfoContext(ctx, "Downloading Unifi Network Server")
 	firmwareClient, err := firmware.NewClient("")
 	if err != nil {
-		logger.ErrorContext(ctx, "Failed to create firmware client", "error", err)
-		os.Exit(1)
+		return "", fmt.Errorf("failed to create a new firmware client: %w", err)
 	}
 
 	archiveFile, version, err := firmwareClient.DownloadLatestVersion(ctx, logger)
 	if err != nil {
-		logger.ErrorContext(ctx, "Failed to download Unifi Network Server", "error", err)
-		os.Exit(1)
+		return "", fmt.Errorf("failed downloaded the latest firmware version: %w", err)
 	}
 
 	defer func() {
@@ -63,17 +70,17 @@ func main() {
 	logger.InfoContext(ctx, "Extracting API files")
 	wd, err := os.Getwd()
 	if err != nil {
-		logger.ErrorContext(ctx, "Failed to get current working directory", "error", err)
-		os.Exit(1)
+		return "", fmt.Errorf("failed to get current working directory: %w", err)
 	}
 
 	apiDestination := filepath.Join(wd, "build", "api", version.Version.Core().String())
 	if err = os.MkdirAll(apiDestination, 0o755); err != nil {
-		logger.ErrorContext(ctx, "Failed to create API extraction directory", "error", err)
+		return "", fmt.Errorf("failed to create directory %s: %w", apiDestination, err)
 	}
 
 	if err = firmware.ExtractAPI(ctx, logger, archiveFile, apiDestination); err != nil {
-		logger.ErrorContext(ctx, "Failed to extract Unifi Network Server APIs", "error", err)
-		os.Exit(1)
+		return "", fmt.Errorf("failed to extract Unifi Network Server APIs: %w", err)
 	}
+
+	return apiDestination, nil
 }
