@@ -18,6 +18,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -26,7 +27,8 @@ import (
 )
 
 var (
-	verbose = flag.Bool("v", false, "Print verbose logs")
+	verboseFlag    = flag.Bool("v", false, "Print verbose logs")
+	apiSpecDirFlag = flag.String("dir", "", "Directory containing api spec files. If not set the latest API spec will be downloaded")
 
 	logger *slog.Logger
 )
@@ -37,17 +39,35 @@ func main() {
 	ctx := context.Background()
 
 	logLevel := slog.LevelInfo
-	if verbose != nil && *verbose {
+	if *verboseFlag {
 		logLevel = slog.LevelDebug
 	}
 
 	logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
+	logger.InfoContext(ctx, "Generating API client")
 
-	_, err := downloadAPISpec(ctx)
+	var apiSpecDir string
+	if *apiSpecDirFlag == "" {
+		logger.DebugContext(ctx, "No API spec directory specified, downloading the latest API spec")
+		downloadedAPISpecDir, err := downloadAPISpec(ctx)
+		if err != nil {
+			logger.ErrorContext(ctx, "Failed to download the API specification", slog.Any("error", err))
+			os.Exit(1)
+		}
+
+		apiSpecDir = downloadedAPISpecDir
+	} else {
+		logger.DebugContext(ctx, "Using API spec directory", slog.Any("directory", *apiSpecDirFlag))
+		apiSpecDir = *apiSpecDirFlag
+	}
+
+	err := generateAPIClient(ctx, apiSpecDir)
 	if err != nil {
-		logger.ErrorContext(ctx, "Failed to download the API specification", slog.Any("error", err))
+		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
 		os.Exit(1)
 	}
+
+	logger.InfoContext(ctx, "Generated API client")
 }
 
 func downloadAPISpec(ctx context.Context) (string, error) {
@@ -83,4 +103,8 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	}
 
 	return apiDestination, nil
+}
+
+func generateAPIClient(ctx context.Context, apiSpecDir string) error {
+	return api.Generate(ctx, logger, apiSpecDir)
 }
