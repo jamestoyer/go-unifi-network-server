@@ -16,6 +16,7 @@ package api
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,21 +26,42 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"text/template"
 )
 
-var skippedFiles = []string{
-	"AuthenticationRequest.json",
-	"HeatMap.json",
-	"HeatMapPoint.json",
-	"Map.json",
-	"MediaFile.json",
-	"Setting.json",
-	"SpatialRecord.json",
-	"VirtualDevice.json",
-	"Wall.json",
+var (
+	skippedFiles = []string{
+		"AuthenticationRequest.json",
+		"HeatMap.json",
+		"HeatMapPoint.json",
+		"Map.json",
+		"MediaFile.json",
+		"Setting.json",
+		"SpatialRecord.json",
+		"VirtualDevice.json",
+		"Wall.json",
+	}
+
+	//go:embed templates
+	templatesFs embed.FS
+)
+
+type Generator struct {
+	templates *template.Template
 }
 
-func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error {
+func NewGenerator() (*Generator, error) {
+	tmpl, err := template.ParseFS(templatesFs, "templates/*")
+	if err != nil {
+		return nil, fmt.Errorf("error parsing API templates: %w", err)
+	}
+
+	return &Generator{
+		templates: tmpl,
+	}, nil
+}
+
+func (g *Generator) Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error {
 	var errs []error
 	err := filepath.WalkDir(apiSpecDir, func(path string, d fs.DirEntry, err error) error {
 		switch {
@@ -54,7 +76,7 @@ func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error
 			return nil
 		}
 
-		if err := generateAPIFile(ctx, logger, path); err != nil {
+		if err := g.generateAPIFile(ctx, logger, path); err != nil {
 			errs = append(errs, fmt.Errorf("unable to generate API client: %w", err))
 		}
 
@@ -67,11 +89,13 @@ func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error
 	return errors.Join(errs...)
 }
 
-func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) error {
+func (g *Generator) generateAPIFile(ctx context.Context, logger *slog.Logger, file string) error {
 	contents, err := os.ReadFile(file)
 	if err != nil {
 		return fmt.Errorf("failed to read API spec file: %w", err)
 	}
+
+	endpoint := NewEndpoint(file)
 
 	var fields map[string]interface{}
 	if err = json.Unmarshal(contents, &fields); err != nil {
@@ -80,6 +104,22 @@ func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) erro
 
 	for name, value := range fields {
 		logger.DebugContext(ctx, "API field found", slog.String("field", name), slog.String("value", fmt.Sprintf("%v", value)))
+	}
+
+	dir := filepath.Dir(file)
+	f, err := os.Create(filepath.Join(dir, endpoint.GoFilename()))
+	if err != nil {
+		return fmt.Errorf("failed to create generated API spec file: %w", err)
+	}
+
+	defer func() {
+		if err := f.Close(); err != nil {
+			logger.ErrorContext(ctx, "Failed to close file", "error", err)
+		}
+	}()
+
+	if err = g.templates.ExecuteTemplate(f, "api.gotmpl", endpoint); err != nil {
+		return fmt.Errorf("failed to execute generate API spec file: %w", err)
 	}
 
 	return nil

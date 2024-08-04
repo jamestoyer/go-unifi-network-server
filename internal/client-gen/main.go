@@ -106,5 +106,10 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 }
 
 func generateAPIClient(ctx context.Context, apiSpecDir string) error {
-	return api.Generate(ctx, logger, apiSpecDir)
+	generator, err := api.NewGenerator()
+	if err != nil {
+		return fmt.Errorf("failed to create a new generator: %w", err)
+	}
+
+	return generator.Generate(ctx, logger, apiSpecDir)
 }
