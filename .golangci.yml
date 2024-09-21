@@ -1,0 +1,23 @@
+linters:
+  enable:
+    - errorlint
+    - forbidigo
+    - godot
+    - gofmt
+    - gofumpt
+    - loggercheck
+    - nilerr
+    - perfsprint
+    - revive
+    - sloglint
+    - stylecheck
+    - unconvert
+    - unused
+    - whitespace
+    - wrapcheck
+
+
+linters-settings:
+  wrapcheck:
+    ignorePackageGlobs:
+      - github.com/jamestoyer/go-unifi-network-server/*
