@@ -18,11 +18,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"log/slog"
 	"os"
 	"path/filepath"
 
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
 )
 

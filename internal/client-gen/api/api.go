@@ -27,19 +27,17 @@ import (
 	"strings"
 )
 
-var (
-	skippedFiles = []string{
-		"AuthenticationRequest.json",
-		"HeatMap.json",
-		"HeatMapPoint.json",
-		"Map.json",
-		"MediaFile.json",
-		"Setting.json",
-		"SpatialRecord.json",
-		"VirtualDevice.json",
-		"Wall.json",
-	}
-)
+var skippedFiles = []string{
+	"AuthenticationRequest.json",
+	"HeatMap.json",
+	"HeatMapPoint.json",
+	"Map.json",
+	"MediaFile.json",
+	"Setting.json",
+	"SpatialRecord.json",
+	"VirtualDevice.json",
+	"Wall.json",
+}
 
 func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error {
 	var errs []error
@@ -62,7 +60,6 @@ func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error
 
 		return nil
 	})
-
 	if err != nil {
 		return fmt.Errorf("failed to walk API spec dir: %w", err)
 	}
@@ -82,7 +79,7 @@ func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) erro
 	}
 
 	for name, value := range fields {
-		fmt.Println(name, value)
+		logger.DebugContext(ctx, "API field found", slog.String("field", name), slog.String("value", fmt.Sprintf("%v", value)))
 	}
 
 	return nil
