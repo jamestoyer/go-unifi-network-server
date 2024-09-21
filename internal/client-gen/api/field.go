@@ -12,12 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package unifi
+package api
 
-{{ range .Structs -}}
-type {{ .Name }} struct {
-	{{- range $name, $field := .Fields }}
-	{{ $field.Name }} {{ $field.Type }} `json:"{{ $field.JSONName }}"`
-	{{- end }}
+import (
+	"github.com/iancoleman/strcase"
+)
+
+type Field struct {
+	Name string
+	Type string
+
+	JSONName string
 }
-{{ end }}
+
+func NewField(name, jsonName, fieldType string) Field {
+	if name == "" {
+		name = strcase.ToCamel(jsonName)
+	}
+	return Field{
+		Name:     name,
+		Type:     fieldType,
+		JSONName: jsonName,
+	}
+}

@@ -45,16 +45,16 @@ func (e *Endpoint) GoFilename() string {
 func (e *Endpoint) UpdateStructs(ctx context.Context, logger *slog.Logger, apiFields map[string]interface{}) error {
 	s := Struct{
 		Name:   e.Name,
-		Fields: map[string]string{},
+		Fields: map[string]Field{},
 	}
 
 	for name, value := range apiFields {
 		switch t := value.(type) {
 		case string:
-			s.Fields[name] = "string"
+			s.Fields[name] = NewField("", name, "string")
 		default:
 			logger.DebugContext(ctx, "Skipping field with unsupported type", slog.String("name", name), slog.Any("type", t))
-			return nil
+			continue
 		}
 	}
 
@@ -65,5 +65,5 @@ func (e *Endpoint) UpdateStructs(ctx context.Context, logger *slog.Logger, apiFi
 type Struct struct {
 	Name string
 
-	Fields map[string]string
+	Fields map[string]Field
 }
