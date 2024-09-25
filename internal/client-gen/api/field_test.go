@@ -81,6 +81,51 @@ func TestNewFieldDefinition(t *testing.T) {
 				Type:     Decimal,
 			},
 		},
+		"value has an empty list of validations": {
+			name:  "igmp_proxy_downstream_networkconf_ids",
+			value: []interface{}{},
+			want: FieldDefinition{
+				Name:     "IgmpProxyDownstreamNetworkconfIds",
+				JSONName: "igmp_proxy_downstream_networkconf_ids",
+				Type:     List(String),
+			},
+		},
+		"value has a list with empty string validation": {
+			name:  "enabled_networks",
+			value: []interface{}{""},
+			want: FieldDefinition{
+				Name:     "EnabledNetworks",
+				JSONName: "enabled_networks",
+				Type:     List(String),
+			},
+		},
+		"value has a list with string validation": {
+			name:  "options",
+			value: []interface{}{`^[^"' ]+$`},
+			want: FieldDefinition{
+				Name:     "Options",
+				JSONName: "options",
+				Type:     List(String),
+			},
+		},
+		"value has a list with number validation": {
+			name:  "auth_ids",
+			value: []interface{}{"0|1|2|3|4|5"},
+			want: FieldDefinition{
+				Name:     "AuthIds",
+				JSONName: "auth_ids",
+				Type:     List(Number),
+			},
+		},
+		"value has a list with decimal validation": {
+			name:  "a",
+			value: []interface{}{`^([-]?[\d]+[.]?[\d]*)$`},
+			want: FieldDefinition{
+				Name:     "A",
+				JSONName: "a",
+				Type:     List(Decimal),
+			},
+		},
 	}
 
 	for name, test := range tests {

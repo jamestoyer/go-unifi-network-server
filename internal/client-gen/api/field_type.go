@@ -14,11 +14,8 @@
 
 package api
 
-const (
-	Boolean fieldTypeImpl = "bool"
-	Decimal fieldTypeImpl = "float64"
-	Number  fieldTypeImpl = "int64"
-	String  fieldTypeImpl = "string"
+import (
+	"fmt"
 )
 
 // The FieldType represents information about the type of field derived from the API spec.
@@ -32,4 +29,17 @@ type fieldTypeImpl string
 
 func (t fieldTypeImpl) GoType() string {
 	return string(t)
+}
+
+const (
+	Boolean fieldTypeImpl = "bool"
+	Decimal fieldTypeImpl = "float64"
+	Number  fieldTypeImpl = "int64"
+	String  fieldTypeImpl = "string"
+
+	UnknownType fieldTypeImpl = "Field Type Unknown"
+)
+
+func List(element FieldType) FieldType {
+	return fieldTypeImpl(fmt.Sprintf("[]%s", element))
 }

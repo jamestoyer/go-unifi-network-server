@@ -35,32 +35,54 @@ type FieldDefinition struct {
 }
 
 func NewFieldDefinition(jsonName string, value interface{}) (FieldDefinition, error) {
-	switch value.(type) {
-	case string:
-		return definitionFromStringValue(jsonName, value)
-	}
-
-	return FieldDefinition{}, fmt.Errorf("unsupported type for field definition: %v", value)
-}
-
-func definitionFromStringValue(jsonName string, value interface{}) (FieldDefinition, error) {
-	var fieldType fieldTypeImpl
-	normalisedValidationString := normaliseValidationString(value.(string))
-	if normalisedValidationString == "truefalse" || normalisedValidationString == "falsetrue" {
-		fieldType = Boolean
-	} else if _, err := strconv.ParseInt(normalisedValidationString, 10, 64); err == nil {
-		fieldType = Number
-	} else if _, err := strconv.ParseFloat(normalisedValidationString, 64); err == nil {
-		fieldType = Decimal
-	} else {
-		fieldType = String
-	}
-
-	return FieldDefinition{
+	fieldDefinition := FieldDefinition{
 		JSONName: jsonName,
 		Name:     strcase.ToCamel(jsonName),
-		Type:     fieldType,
-	}, nil
+	}
+
+	switch t := value.(type) {
+	case string:
+		fieldDefinition.Type = fieldTypeFromStringValue(value)
+	case []interface{}:
+		fieldType, err := fieldTypeFromInterfaceValue(t)
+		if err != nil {
+			return fieldDefinition, err
+		}
+
+		fieldDefinition.Type = fieldType
+	default:
+		return FieldDefinition{}, fmt.Errorf("unsupported type for field definition: %v", value)
+	}
+
+	return fieldDefinition, nil
+}
+
+func fieldTypeFromInterfaceValue(value []interface{}) (FieldType, error) {
+	switch len(value) {
+	case 0:
+		return List(String), nil
+	case 1:
+		return List(fieldTypeFromStringValue(value[0])), nil
+	default:
+		return UnknownType, fmt.Errorf("unsupported validation for list: %v", value)
+	}
+}
+
+func fieldTypeFromStringValue(value interface{}) FieldType {
+	normalisedValidationString := normaliseValidationString(value.(string))
+	if normalisedValidationString == "truefalse" || normalisedValidationString == "falsetrue" {
+		return Boolean
+	}
+
+	if _, err := strconv.ParseInt(normalisedValidationString, 10, 64); err == nil {
+		return Number
+	}
+
+	if _, err := strconv.ParseFloat(normalisedValidationString, 64); err == nil {
+		return Decimal
+	}
+
+	return String
 }
 
 // normaliseValidationString processes the validation string such that it can be subsequently used to work out if the
