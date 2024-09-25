@@ -20,20 +20,26 @@ import (
 )
 
 type EndpointObject struct {
-	Name   string
-	Fields []FieldDefinition
+	Name          string
+	Fields        []FieldDefinition
+	NestedObjects []*EndpointObject
 }
 
 func NewEndpointObject(name string, values map[string]interface{}, namePrefix string) (*EndpointObject, error) {
+	name = namePrefix + name
 	var fields []FieldDefinition
+	var nestedObjects []*EndpointObject
 	var errs []error
 	for fieldName, value := range values {
-		definition, err := NewFieldDefinition(fieldName, value)
+		definition, nested, err := NewFieldDefinition(fieldName, name, value)
 		if err != nil {
 			errs = append(errs, err)
 		}
 
 		fields = append(fields, definition)
+		if nested != nil {
+			nestedObjects = append(nestedObjects, nested)
+		}
 	}
 
 	if len(errs) > 0 {
@@ -41,7 +47,8 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 	}
 
 	return &EndpointObject{
-		Name:   namePrefix + name,
-		Fields: fields,
+		Name:          name,
+		Fields:        fields,
+		NestedObjects: nestedObjects,
 	}, nil
 }

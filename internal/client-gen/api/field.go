@@ -34,27 +34,36 @@ type FieldDefinition struct {
 	Type     FieldType
 }
 
-func NewFieldDefinition(jsonName string, value interface{}) (FieldDefinition, error) {
+func NewFieldDefinition(jsonName, endpointObjectName string, value interface{}) (FieldDefinition, *EndpointObject, error) {
 	fieldDefinition := FieldDefinition{
 		JSONName: jsonName,
 		Name:     strcase.ToCamel(jsonName),
 	}
 
+	var endpointObject *EndpointObject
 	switch t := value.(type) {
 	case string:
 		fieldDefinition.Type = fieldTypeFromStringValue(value)
 	case []interface{}:
 		fieldType, err := fieldTypeFromInterfaceValue(t)
 		if err != nil {
-			return fieldDefinition, err
+			return fieldDefinition, nil, err
 		}
 
 		fieldDefinition.Type = fieldType
+	case map[string]interface{}:
+		fieldType, object, err := fieldTypeFromObjectValue(jsonName, endpointObjectName, t)
+		if err != nil {
+			return fieldDefinition, nil, err
+		}
+
+		endpointObject = object
+		fieldDefinition.Type = fieldType
 	default:
-		return FieldDefinition{}, fmt.Errorf("unsupported type for field definition: %v", value)
+		return FieldDefinition{}, nil, fmt.Errorf("unsupported type for field definition: %v", value)
 	}
 
-	return fieldDefinition, nil
+	return fieldDefinition, endpointObject, nil
 }
 
 func fieldTypeFromInterfaceValue(value []interface{}) (FieldType, error) {
@@ -66,6 +75,17 @@ func fieldTypeFromInterfaceValue(value []interface{}) (FieldType, error) {
 	default:
 		return UnknownType, fmt.Errorf("unsupported validation for list: %v", value)
 	}
+}
+
+func fieldTypeFromObjectValue(jsonName, endpointObjectName string, values map[string]interface{}) (FieldType, *EndpointObject, error) {
+	name := strcase.ToCamel(jsonName)
+	fieldType := Object(endpointObjectName + name)
+	object, err := NewEndpointObject(name, values, endpointObjectName)
+	if err != nil {
+		return FieldType{}, nil, fmt.Errorf("failed to create endpoint object for field: %w", err)
+	}
+
+	return fieldType, object, err
 }
 
 func fieldTypeFromStringValue(value interface{}) FieldType {

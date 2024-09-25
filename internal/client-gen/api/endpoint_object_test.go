@@ -84,6 +84,48 @@ func TestNewEndpointObject(t *testing.T) {
 				},
 			},
 		},
+		"object values": {
+			name: "EntrypointObject",
+			values: map[string]interface{}{
+				"string": "string",
+				"nested_object": map[string]interface{}{
+					"empty_string": "",
+					"number":       `[0-9]`,
+				},
+			},
+			want: &EndpointObject{
+				Name: "EntrypointObject",
+				Fields: []FieldDefinition{
+					{
+						Name:     "String",
+						JSONName: "string",
+						Type:     String,
+					},
+					{
+						Name:     "NestedObject",
+						JSONName: "nested_object",
+						Type:     Object("EntrypointObjectNestedObject"),
+					},
+				},
+				NestedObjects: []*EndpointObject{
+					{
+						Name: "EntrypointObjectNestedObject",
+						Fields: []FieldDefinition{
+							{
+								Name:     "EmptyString",
+								JSONName: "empty_string",
+								Type:     String,
+							},
+							{
+								Name:     "Number",
+								JSONName: "number",
+								Type:     Number,
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -97,6 +139,7 @@ func TestNewEndpointObject(t *testing.T) {
 
 			assert.Equal(t, test.want.Name, got.Name)
 			assert.ElementsMatch(t, test.want.Fields, got.Fields)
+			assert.ElementsMatch(t, test.want.NestedObjects, got.NestedObjects)
 		})
 	}
 }

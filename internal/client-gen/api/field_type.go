@@ -92,3 +92,17 @@ func List(element FieldType) FieldType {
 		fieldTypeImpl: listFieldType{elementType: element},
 	}
 }
+
+type objectFieldType struct {
+	kind string
+}
+
+func (t objectFieldType) GoType() string {
+	return t.kind
+}
+
+func Object(name string) FieldType {
+	return FieldType{
+		fieldTypeImpl: objectFieldType{kind: name},
+	}
+}
