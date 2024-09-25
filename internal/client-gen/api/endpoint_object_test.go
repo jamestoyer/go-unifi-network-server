@@ -52,19 +52,9 @@ func TestNewEndpointObject(t *testing.T) {
 				Name: "Primitive",
 				Fields: []FieldDefinition{
 					{
-						Name:     "EmptyString",
-						JSONName: "empty_string",
-						Type:     String,
-					},
-					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
-					},
-					{
-						Name:     "Number",
-						JSONName: "number",
-						Type:     Number,
+						Name:     "Bool",
+						JSONName: "bool",
+						Type:     Boolean,
 					},
 					{
 						Name:     "Decimal",
@@ -72,14 +62,24 @@ func TestNewEndpointObject(t *testing.T) {
 						Type:     Decimal,
 					},
 					{
-						Name:     "Bool",
-						JSONName: "bool",
-						Type:     Boolean,
+						Name:     "EmptyString",
+						JSONName: "empty_string",
+						Type:     String,
 					},
 					{
 						Name:     "List",
 						JSONName: "list",
 						Type:     List(String),
+					},
+					{
+						Name:     "Number",
+						JSONName: "number",
+						Type:     Number,
+					},
+					{
+						Name:     "String",
+						JSONName: "string",
+						Type:     String,
 					},
 				},
 			},
@@ -97,14 +97,14 @@ func TestNewEndpointObject(t *testing.T) {
 				Name: "EntrypointObject",
 				Fields: []FieldDefinition{
 					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
-					},
-					{
 						Name:     "NestedObject",
 						JSONName: "nested_object",
 						Type:     Object("EntrypointObjectNestedObject"),
+					},
+					{
+						Name:     "String",
+						JSONName: "string",
+						Type:     String,
 					},
 				},
 				NestedObjects: []*EndpointObject{
@@ -126,6 +126,38 @@ func TestNewEndpointObject(t *testing.T) {
 				},
 			},
 		},
+		"list values": {
+			name: "EntrypointList",
+			values: map[string]interface{}{
+				"list_object": []interface{}{
+					map[string]interface{}{
+						"empty_string": "",
+					},
+				},
+			},
+			want: &EndpointObject{
+				Name: "EntrypointList",
+				Fields: []FieldDefinition{
+					{
+						Name:     "ListObject",
+						JSONName: "list_object",
+						Type:     List(Object("EntrypointListListObject")),
+					},
+				},
+				NestedObjects: []*EndpointObject{
+					{
+						Name: "EntrypointListListObject",
+						Fields: []FieldDefinition{
+							{
+								Name:     "EmptyString",
+								JSONName: "empty_string",
+								Type:     String,
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -137,9 +169,7 @@ func TestNewEndpointObject(t *testing.T) {
 				assert.NoError(t, err)
 			}
 
-			assert.Equal(t, test.want.Name, got.Name)
-			assert.ElementsMatch(t, test.want.Fields, got.Fields)
-			assert.ElementsMatch(t, test.want.NestedObjects, got.NestedObjects)
+			assert.Equal(t, test.want, got)
 		})
 	}
 }

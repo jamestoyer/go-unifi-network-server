@@ -201,6 +201,35 @@ func TestNewFieldDefinition(t *testing.T) {
 				},
 			},
 		},
+		"value has a list with object value": {
+			name: "satisfaction_table",
+			value: []interface{}{
+				map[string]interface{}{
+					"device_mac":   `^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$`,
+					"satisfaction": `^[0-9]+\.?[0-9]*$`,
+				},
+			},
+			wantDefinition: FieldDefinition{
+				Name:     "SatisfactionTable",
+				JSONName: "satisfaction_table",
+				Type:     List(Object("FieldTestSatisfactionTable")),
+			},
+			wantNestedObject: &EndpointObject{
+				Name: "FieldTestSatisfactionTable",
+				Fields: []FieldDefinition{
+					{
+						Name:     "DeviceMac",
+						JSONName: "device_mac",
+						Type:     String,
+					},
+					{
+						Name:     "Satisfaction",
+						JSONName: "satisfaction",
+						Type:     String,
+					},
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {

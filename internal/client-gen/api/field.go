@@ -40,40 +40,57 @@ func NewFieldDefinition(jsonName, endpointObjectName string, value interface{}) 
 		Name:     strcase.ToCamel(jsonName),
 	}
 
-	var endpointObject *EndpointObject
-	switch t := value.(type) {
-	case string:
-		fieldDefinition.Type = fieldTypeFromStringValue(value)
-	case []interface{}:
-		fieldType, err := fieldTypeFromInterfaceValue(t)
-		if err != nil {
-			return fieldDefinition, nil, err
-		}
-
-		fieldDefinition.Type = fieldType
-	case map[string]interface{}:
-		fieldType, object, err := fieldTypeFromObjectValue(jsonName, endpointObjectName, t)
-		if err != nil {
-			return fieldDefinition, nil, err
-		}
-
-		endpointObject = object
-		fieldDefinition.Type = fieldType
-	default:
-		return FieldDefinition{}, nil, fmt.Errorf("unsupported type for field definition: %v", value)
+	fieldType, endpointObject, err := getFieldType(jsonName, endpointObjectName, value)
+	if err != nil {
+		return fieldDefinition, nil, fmt.Errorf("unable to get field type: %w", err)
 	}
 
+	fieldDefinition.Type = fieldType
 	return fieldDefinition, endpointObject, nil
 }
 
-func fieldTypeFromInterfaceValue(value []interface{}) (FieldType, error) {
+func getFieldType(jsonName, endpointObjectName string, value interface{}) (FieldType, *EndpointObject, error) {
+	var endpointObject *EndpointObject
+	var fieldType FieldType
+	switch t := value.(type) {
+	case string:
+		fieldType = fieldTypeFromStringValue(value)
+	case []interface{}:
+		ft, object, err := fieldTypeFromInterfaceValue(jsonName, endpointObjectName, t)
+		if err != nil {
+			return UnknownType, nil, err
+		}
+
+		endpointObject = object
+		fieldType = ft
+	case map[string]interface{}:
+		ft, object, err := fieldTypeFromObjectValue(jsonName, endpointObjectName, t)
+		if err != nil {
+			return UnknownType, nil, err
+		}
+
+		endpointObject = object
+		fieldType = ft
+	default:
+		return UnknownType, nil, fmt.Errorf("unsupported type for field definition: %v", value)
+	}
+
+	return fieldType, endpointObject, nil
+}
+
+func fieldTypeFromInterfaceValue(jsonName, endpointObjectName string, value []interface{}) (FieldType, *EndpointObject, error) {
 	switch len(value) {
 	case 0:
-		return List(String), nil
+		return List(String), nil, nil
 	case 1:
-		return List(fieldTypeFromStringValue(value[0])), nil
+		ft, object, err := getFieldType(jsonName, endpointObjectName, value[0])
+		if err != nil {
+			return UnknownType, nil, err
+		}
+
+		return List(ft), object, nil
 	default:
-		return UnknownType, fmt.Errorf("unsupported validation for list: %v", value)
+		return UnknownType, nil, fmt.Errorf("unsupported validation for list: %v", value)
 	}
 }
 
