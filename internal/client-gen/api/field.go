@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/zclconf/go-cty/cty"
 )
 
 var (
@@ -32,7 +31,7 @@ var (
 type FieldDefinition struct {
 	Name     string
 	JSONName string
-	Type     cty.Type
+	Type     FieldType
 }
 
 func NewFieldDefinition(jsonName string, value interface{}) (FieldDefinition, error) {
@@ -45,23 +44,22 @@ func NewFieldDefinition(jsonName string, value interface{}) (FieldDefinition, er
 }
 
 func definitionFromStringValue(jsonName string, value interface{}) (FieldDefinition, error) {
-	var ctyType cty.Type
+	var fieldType fieldTypeImpl
 	normalisedValidationString := normaliseValidationString(value.(string))
 	if normalisedValidationString == "truefalse" || normalisedValidationString == "falsetrue" {
-		ctyType = cty.Bool
+		fieldType = Boolean
 	} else if _, err := strconv.ParseInt(normalisedValidationString, 10, 64); err == nil {
-		ctyType = cty.Number
+		fieldType = Number
 	} else if _, err := strconv.ParseFloat(normalisedValidationString, 64); err == nil {
-		// TODO: (jtoyer) Handle floats differently to integers to ensure the structs are rendered correctly
-		ctyType = cty.Number
+		fieldType = Decimal
 	} else {
-		ctyType = cty.String
+		fieldType = String
 	}
 
 	return FieldDefinition{
 		JSONName: jsonName,
 		Name:     strcase.ToCamel(jsonName),
-		Type:     ctyType,
+		Type:     fieldType,
 	}, nil
 }
 

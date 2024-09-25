@@ -19,7 +19,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/zclconf/go-cty/cty"
 )
 
 func TestNewFieldDefinition(t *testing.T) {
@@ -34,7 +33,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "Hostname",
 				JSONName: "hostname",
-				Type:     cty.String,
+				Type:     String,
 			},
 		},
 		"value has validation for a string": {
@@ -43,7 +42,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "Mac",
 				JSONName: "mac",
-				Type:     cty.String,
+				Type:     String,
 			},
 		},
 		"value has false|true validation": {
@@ -52,7 +51,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "UseFixedip",
 				JSONName: "use_fixedip",
-				Type:     cty.Bool,
+				Type:     Boolean,
 			},
 		},
 		"value has true|false validation": {
@@ -61,7 +60,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "UseFixedip",
 				JSONName: "use_fixedip",
-				Type:     cty.Bool,
+				Type:     Boolean,
 			},
 		},
 		"value has validation for integer": {
@@ -70,7 +69,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "QosRateMaxDown",
 				JSONName: "qos_rate_max_down",
-				Type:     cty.Number,
+				Type:     Number,
 			},
 		},
 		"value has validation for float": {
@@ -79,7 +78,7 @@ func TestNewFieldDefinition(t *testing.T) {
 			want: FieldDefinition{
 				Name:     "HeightInMeters",
 				JSONName: "heightInMeters",
-				Type:     cty.Number,
+				Type:     Decimal,
 			},
 		},
 	}
