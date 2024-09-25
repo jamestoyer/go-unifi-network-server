@@ -14,32 +14,81 @@
 
 package api
 
-import (
-	"fmt"
+var (
+	Boolean = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "bool"},
+	}
+	Decimal = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "float64"},
+	}
+	Number = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "int64"},
+	}
+	String = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "string"},
+	}
+
+	UnknownType = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "Field Type Unknown"},
+	}
 )
 
-// The FieldType represents information about the type of field derived from the API spec.
-type FieldType interface {
+// fieldTypeImpl should be implemented by anything that can be used as valid API field type.
+type fieldTypeImpl interface {
 	// GoType is the Golang type definition.
 	GoType() string
+
+	// // IsObjectType indicates whether the type is a Golang struct.
+	// // TODO: (jtoyer) Add information about how to get the object definition
+	// IsObjectType() bool
 }
 
-// fieldTypeImpl is a help struct that implements FieldType for easy variable construction.
-type fieldTypeImpl string
-
-func (t fieldTypeImpl) GoType() string {
-	return string(t)
+// FieldType represents the derived type from the API specification for a field on an endpoint object.
+type FieldType struct {
+	fieldTypeImpl
 }
 
-const (
-	Boolean fieldTypeImpl = "bool"
-	Decimal fieldTypeImpl = "float64"
-	Number  fieldTypeImpl = "int64"
-	String  fieldTypeImpl = "string"
+// IsListType indicates whether the type is a Golang list. Use ElementType to determine the type of the elements
+// expected for the list.
+func (t FieldType) IsListType() bool {
+	_, ok := t.fieldTypeImpl.(listFieldType)
+	return ok
+}
 
-	UnknownType fieldTypeImpl = "Field Type Unknown"
-)
+// IsPrimitiveType indicates whether the type is a Golang primitive.
+func (t FieldType) IsPrimitiveType() bool {
+	_, ok := t.fieldTypeImpl.(primitiveFieldType)
+	return ok
+}
+
+// ElementType returns the expected FieldType for all elements of a list. If this type is not a list the nil is
+// returned.
+func (t FieldType) ElementType() *FieldType {
+	if listType, ok := t.fieldTypeImpl.(listFieldType); ok {
+		return &listType.elementType
+	}
+
+	return nil
+}
+
+type primitiveFieldType struct {
+	kind string
+}
+
+func (t primitiveFieldType) GoType() string {
+	return t.kind
+}
+
+type listFieldType struct {
+	elementType FieldType
+}
+
+func (t listFieldType) GoType() string {
+	return "[]" + t.elementType.GoType()
+}
 
 func List(element FieldType) FieldType {
-	return fieldTypeImpl(fmt.Sprintf("[]%s", element))
+	return FieldType{
+		fieldTypeImpl: listFieldType{elementType: element},
+	}
 }
