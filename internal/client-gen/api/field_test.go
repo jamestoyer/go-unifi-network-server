@@ -130,9 +130,9 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value is an object": {
 			name: "config",
 			value: map[string]interface{}{
-				"string": ``,
-				"number": `[0-9]`,
 				"list":   []interface{}{},
+				"number": `[0-9]`,
+				"string": ``,
 			},
 			wantDefinition: FieldDefinition{
 				Name:     "Config",
@@ -143,9 +143,9 @@ func TestNewFieldDefinition(t *testing.T) {
 				Name: "FieldTestConfig",
 				Fields: []FieldDefinition{
 					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
+						Name:     "List",
+						JSONName: "list",
+						Type:     List(String),
 					},
 					{
 						Name:     "Number",
@@ -153,9 +153,9 @@ func TestNewFieldDefinition(t *testing.T) {
 						Type:     Number,
 					},
 					{
-						Name:     "List",
-						JSONName: "list",
-						Type:     List(String),
+						Name:     "String",
+						JSONName: "string",
+						Type:     String,
 					},
 				},
 			},
@@ -163,10 +163,10 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value is a nested object": {
 			name: "config",
 			value: map[string]interface{}{
-				"string": ``,
 				"nested": map[string]interface{}{
 					"number": `[0-9]`,
 				},
+				"string": ``,
 			},
 			wantDefinition: FieldDefinition{
 				Name:     "Config",
@@ -177,14 +177,14 @@ func TestNewFieldDefinition(t *testing.T) {
 				Name: "FieldTestConfig",
 				Fields: []FieldDefinition{
 					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
-					},
-					{
 						Name:     "Nested",
 						JSONName: "nested",
 						Type:     Object("FieldTestConfigNested"),
+					},
+					{
+						Name:     "String",
+						JSONName: "string",
+						Type:     String,
 					},
 				},
 				NestedObjects: []*EndpointObject{

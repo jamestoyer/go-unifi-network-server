@@ -17,6 +17,8 @@ package api
 import (
 	"errors"
 	"fmt"
+	"maps"
+	"slices"
 )
 
 type EndpointObject struct {
@@ -30,7 +32,10 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 	var fields []FieldDefinition
 	var nestedObjects []*EndpointObject
 	var errs []error
-	for fieldName, value := range values {
+
+	sortedFieldNames := slices.Sorted(maps.Keys(values))
+	for _, fieldName := range sortedFieldNames {
+		value := values[fieldName]
 		definition, nested, err := NewFieldDefinition(fieldName, name, value)
 		if err != nil {
 			errs = append(errs, err)
