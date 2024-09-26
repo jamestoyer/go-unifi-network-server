@@ -78,8 +78,14 @@ func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) erro
 		return fmt.Errorf("failed to unmarshal API spec file: %w", err)
 	}
 
-	for name, value := range fields {
-		logger.DebugContext(ctx, "API field found", slog.String("field", name), slog.String("value", fmt.Sprintf("%v", value)))
+	endpointName := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
+	endpoint, err := NewEndpoint(endpointName, fields)
+	if err != nil {
+		return fmt.Errorf("failed to create API endpoint: %w", err)
+	}
+
+	for _, object := range endpoint.Objects() {
+		logger.DebugContext(ctx, "API object found", slog.String("fieldName", object.Name), slog.Int("fieldCount", len(object.Fields)))
 	}
 
 	return nil
