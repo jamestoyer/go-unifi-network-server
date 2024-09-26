@@ -15,8 +15,10 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"go/format"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -56,23 +58,22 @@ func (e *Endpoint) Render(ctx context.Context, logger *slog.Logger, modulePath s
 	filename := filepath.Join(modulePath, e.goFilePath)
 	logger.InfoContext(ctx, "Rendering endpoint", slog.String("endpoint", e.Name), slog.String("filename", filename))
 
-	f, err := os.Create(filename)
-	if err != nil {
-		return fmt.Errorf("failed to create API endpoint file: %w", err)
-	}
-
-	defer func() {
-		if err := f.Close(); err != nil {
-			logger.ErrorContext(ctx, "Failed to close file", "error", err)
-		}
-	}()
-
+	var buffer bytes.Buffer
 	endpointTmpl := endpointTemplate{
 		PackageName: modulePath,
 		Structs:     e.Objects(),
 	}
-	if err = tmpl.ExecuteTemplate(f, "file.gotmpl", endpointTmpl); err != nil {
-		return fmt.Errorf("failed to execute generate API spec file: %w", err)
+	if err := tmpl.ExecuteTemplate(&buffer, "file.gotmpl", endpointTmpl); err != nil {
+		return fmt.Errorf("failed to generate API endpoint file: %w", err)
+	}
+
+	src, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return fmt.Errorf("failed to format API endpoint: %w", err)
+	}
+
+	if err := os.WriteFile(filename, src, 0o644); err != nil {
+		return fmt.Errorf("failed to write API endpoint file: %w", err)
 	}
 
 	return nil
