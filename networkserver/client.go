@@ -26,6 +26,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"golang.org/x/net/publicsuffix"
@@ -68,6 +69,9 @@ type Client struct {
 	endpoint     *url.URL
 	username     string
 	password     string
+
+	csrf     string
+	csrfLock sync.RWMutex
 }
 
 // NewClient creates a new Unifi Network Server client.
@@ -129,6 +133,12 @@ func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body in
 	req.Header.Set("User-Agent", c.config.UserAgent)
 	req.Header.Add("Accept", "application/json")
 
+	if c.csrf != "" {
+		c.csrfLock.RLock()
+		req.Header.Set("X-Csrf-Token", c.csrf)
+		c.csrfLock.RUnlock()
+	}
+
 	return req, nil
 }
 
@@ -143,12 +153,11 @@ func (c *Client) Authenticate(ctx context.Context) error {
 		return err
 	}
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.do(req, nil)
 	if err != nil {
 		return fmt.Errorf("authenticate request failed: %w", err)
 	}
 
-	_ = resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return ErrAuthenticationFailed
 	}
@@ -239,4 +248,29 @@ func (c *Client) path(p string) string {
 	}
 
 	return p
+}
+
+func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("http request failure: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
+		c.csrfLock.Lock()
+		c.csrf = csrf
+		c.csrfLock.Unlock()
+	}
+
+	if v == nil {
+		return resp, nil
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(v); err != nil && err != io.EOF {
+		return resp, fmt.Errorf("json decode failure: %w", err)
+	}
+
+	return resp, nil
 }
