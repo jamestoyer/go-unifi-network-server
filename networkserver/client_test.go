@@ -20,6 +20,8 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -32,5 +34,27 @@ func TestClient_initialise(t *testing.T) {
 		}
 		err := client.initialise(context.Background())
 		require.NoError(t, err)
+	})
+}
+
+func TestClient_Authenticate(t *testing.T) {
+	t.Run("failed authentication", func(t *testing.T) {
+		ctx := context.Background()
+		client, err := NewClient(ctx, "https://localhost:8443", "invalid", "creds",
+			WithTLSConfig(&tls.Config{InsecureSkipVerify: true}))
+		require.NoError(t, err)
+
+		err = client.Authenticate(ctx)
+		assert.Error(t, err)
+		assert.ErrorIs(t, err, ErrAuthenticationFailed)
+	})
+
+	t.Run("successful authentication", func(t *testing.T) {
+		ctx := context.Background()
+		client, err := NewClient(ctx, "https://localhost:8443", "admin", "admin",
+			WithTLSConfig(&tls.Config{InsecureSkipVerify: true}))
+		require.NoError(t, err)
+
+		assert.NoError(t, client.Authenticate(ctx))
 	})
 }
