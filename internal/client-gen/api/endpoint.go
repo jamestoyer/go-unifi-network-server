@@ -15,11 +15,21 @@
 package api
 
 import (
+	"bytes"
+	"context"
 	"fmt"
+	"go/format"
+	"log/slog"
+	"os"
+	"path/filepath"
+	"text/template"
+
+	"github.com/iancoleman/strcase"
 )
 
 type Endpoint struct {
 	Name       string
+	goFilePath string
 	rootObject *EndpointObject
 }
 
@@ -31,6 +41,7 @@ func NewEndpoint(name string, spec map[string]interface{}) (*Endpoint, error) {
 
 	return &Endpoint{
 		Name:       name,
+		goFilePath: strcase.ToSnake(name) + ".generated.go",
 		rootObject: rootObject,
 	}, nil
 }
@@ -41,4 +52,34 @@ func (e *Endpoint) Objects() []*EndpointObject {
 	objects := []*EndpointObject{e.rootObject}
 	objects = append(objects, e.rootObject.NestedObjects()...)
 	return objects
+}
+
+func (e *Endpoint) Render(ctx context.Context, logger *slog.Logger, modulePath string, tmpl *template.Template) error {
+	filename := filepath.Join(modulePath, e.goFilePath)
+	logger.InfoContext(ctx, "Rendering endpoint", slog.String("endpoint", e.Name), slog.String("filename", filename))
+
+	var buffer bytes.Buffer
+	endpointTmpl := endpointTemplate{
+		PackageName: modulePath,
+		Structs:     e.Objects(),
+	}
+	if err := tmpl.ExecuteTemplate(&buffer, "file.gotmpl", endpointTmpl); err != nil {
+		return fmt.Errorf("failed to generate API endpoint file: %w", err)
+	}
+
+	src, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return fmt.Errorf("failed to format API endpoint: %w", err)
+	}
+
+	if err := os.WriteFile(filename, src, 0o644); err != nil {
+		return fmt.Errorf("failed to write API endpoint file: %w", err)
+	}
+
+	return nil
+}
+
+type endpointTemplate struct {
+	PackageName string
+	Structs     []*EndpointObject
 }

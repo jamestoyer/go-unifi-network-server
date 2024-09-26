@@ -1,0 +1,8 @@
+// Code generated from Unifi Network Server API definitions.
+// DO NOT EDIT.
+
+{{ template "licence.gotmpl" }}
+package {{ .PackageName }}
+{{ range $struct := .Structs }}
+{{ template "struct.gotmpl" $struct }}
+{{ end }}

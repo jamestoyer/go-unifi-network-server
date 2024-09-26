@@ -71,6 +71,10 @@ func (t FieldType) ElementType() *FieldType {
 	return nil
 }
 
+func (t FieldType) String() string {
+	return t.fieldTypeImpl.GoType()
+}
+
 type primitiveFieldType struct {
 	kind string
 }
