@@ -100,28 +100,26 @@ func TestNewEndpointObject(t *testing.T) {
 						Name:     "NestedObject",
 						JSONName: "nested_object",
 						Type:     Object("EntrypointObjectNestedObject"),
+						Object: &EndpointObject{
+							Name: "EntrypointObjectNestedObject",
+							Fields: []FieldDefinition{
+								{
+									Name:     "EmptyString",
+									JSONName: "empty_string",
+									Type:     String,
+								},
+								{
+									Name:     "Number",
+									JSONName: "number",
+									Type:     Number,
+								},
+							},
+						},
 					},
 					{
 						Name:     "String",
 						JSONName: "string",
 						Type:     String,
-					},
-				},
-				NestedObjects: []*EndpointObject{
-					{
-						Name: "EntrypointObjectNestedObject",
-						Fields: []FieldDefinition{
-							{
-								Name:     "EmptyString",
-								JSONName: "empty_string",
-								Type:     String,
-							},
-							{
-								Name:     "Number",
-								JSONName: "number",
-								Type:     Number,
-							},
-						},
 					},
 				},
 			},
@@ -142,16 +140,14 @@ func TestNewEndpointObject(t *testing.T) {
 						Name:     "ListObject",
 						JSONName: "list_object",
 						Type:     List(Object("EntrypointListListObject")),
-					},
-				},
-				NestedObjects: []*EndpointObject{
-					{
-						Name: "EntrypointListListObject",
-						Fields: []FieldDefinition{
-							{
-								Name:     "EmptyString",
-								JSONName: "empty_string",
-								Type:     String,
+						Object: &EndpointObject{
+							Name: "EntrypointListListObject",
+							Fields: []FieldDefinition{
+								{
+									Name:     "EmptyString",
+									JSONName: "empty_string",
+									Type:     String,
+								},
 							},
 						},
 					},

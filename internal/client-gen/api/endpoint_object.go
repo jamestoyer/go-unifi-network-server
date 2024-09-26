@@ -22,29 +22,24 @@ import (
 )
 
 type EndpointObject struct {
-	Name          string
-	Fields        []FieldDefinition
-	NestedObjects []*EndpointObject
+	Name   string
+	Fields []FieldDefinition
 }
 
 func NewEndpointObject(name string, values map[string]interface{}, namePrefix string) (*EndpointObject, error) {
 	name = namePrefix + name
 	var fields []FieldDefinition
-	var nestedObjects []*EndpointObject
 	var errs []error
 
 	sortedFieldNames := slices.Sorted(maps.Keys(values))
 	for _, fieldName := range sortedFieldNames {
 		value := values[fieldName]
-		definition, nested, err := NewFieldDefinition(fieldName, name, value)
+		definition, err := NewFieldDefinition(fieldName, name, value)
 		if err != nil {
 			errs = append(errs, err)
 		}
 
 		fields = append(fields, definition)
-		if nested != nil {
-			nestedObjects = append(nestedObjects, nested)
-		}
 	}
 
 	if len(errs) > 0 {
@@ -52,8 +47,7 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 	}
 
 	return &EndpointObject{
-		Name:          name,
-		Fields:        fields,
-		NestedObjects: nestedObjects,
+		Name:   name,
+		Fields: fields,
 	}, nil
 }

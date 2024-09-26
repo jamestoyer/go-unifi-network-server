@@ -32,9 +32,10 @@ type FieldDefinition struct {
 	Name     string
 	JSONName string
 	Type     FieldType
+	Object   *EndpointObject
 }
 
-func NewFieldDefinition(jsonName, endpointObjectName string, value interface{}) (FieldDefinition, *EndpointObject, error) {
+func NewFieldDefinition(jsonName, endpointObjectName string, value interface{}) (FieldDefinition, error) {
 	fieldDefinition := FieldDefinition{
 		JSONName: jsonName,
 		Name:     strcase.ToCamel(jsonName),
@@ -42,11 +43,12 @@ func NewFieldDefinition(jsonName, endpointObjectName string, value interface{}) 
 
 	fieldType, endpointObject, err := getFieldType(jsonName, endpointObjectName, value)
 	if err != nil {
-		return fieldDefinition, nil, fmt.Errorf("unable to get field type: %w", err)
+		return fieldDefinition, fmt.Errorf("unable to get field type: %w", err)
 	}
 
 	fieldDefinition.Type = fieldType
-	return fieldDefinition, endpointObject, nil
+	fieldDefinition.Object = endpointObject
+	return fieldDefinition, nil
 }
 
 func getFieldType(jsonName, endpointObjectName string, value interface{}) (FieldType, *EndpointObject, error) {

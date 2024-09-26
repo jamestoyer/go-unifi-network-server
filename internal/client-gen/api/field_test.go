@@ -23,15 +23,14 @@ import (
 
 func TestNewFieldDefinition(t *testing.T) {
 	tests := map[string]struct {
-		name             string
-		value            interface{}
-		wantDefinition   FieldDefinition
-		wantNestedObject *EndpointObject
+		name  string
+		value interface{}
+		want  FieldDefinition
 	}{
 		"empty string value": {
 			name:  "hostname",
 			value: "",
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "Hostname",
 				JSONName: "hostname",
 				Type:     String,
@@ -40,7 +39,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has validation for a string": {
 			name:  "mac",
 			value: `^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$`,
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "Mac",
 				JSONName: "mac",
 				Type:     String,
@@ -49,7 +48,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has false|true validation": {
 			name:  "use_fixedip",
 			value: `false|true`,
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "UseFixedip",
 				JSONName: "use_fixedip",
 				Type:     Boolean,
@@ -58,7 +57,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has true|false validation": {
 			name:  "use_fixedip",
 			value: `true|false`,
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "UseFixedip",
 				JSONName: "use_fixedip",
 				Type:     Boolean,
@@ -67,7 +66,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has validation for integer": {
 			name:  "qos_rate_max_down",
 			value: `^-1|[2-9]|[1-9][0-9]{1,4}|100000$`,
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "QosRateMaxDown",
 				JSONName: "qos_rate_max_down",
 				Type:     Number,
@@ -76,7 +75,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has validation for float": {
 			name:  "heightInMeters",
 			value: `^([-]?[\d]+[.]?[\d]*)$`,
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "HeightInMeters",
 				JSONName: "heightInMeters",
 				Type:     Decimal,
@@ -85,7 +84,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has an empty list of validations": {
 			name:  "igmp_proxy_downstream_networkconf_ids",
 			value: []interface{}{},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "IgmpProxyDownstreamNetworkconfIds",
 				JSONName: "igmp_proxy_downstream_networkconf_ids",
 				Type:     List(String),
@@ -94,7 +93,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has a list with empty string validation": {
 			name:  "enabled_networks",
 			value: []interface{}{""},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "EnabledNetworks",
 				JSONName: "enabled_networks",
 				Type:     List(String),
@@ -103,7 +102,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has a list with string validation": {
 			name:  "options",
 			value: []interface{}{`^[^"' ]+$`},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "Options",
 				JSONName: "options",
 				Type:     List(String),
@@ -112,7 +111,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has a list with number validation": {
 			name:  "auth_ids",
 			value: []interface{}{"0|1|2|3|4|5"},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "AuthIds",
 				JSONName: "auth_ids",
 				Type:     List(Number),
@@ -121,7 +120,7 @@ func TestNewFieldDefinition(t *testing.T) {
 		"value has a list with decimal validation": {
 			name:  "a",
 			value: []interface{}{`^([-]?[\d]+[.]?[\d]*)$`},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "A",
 				JSONName: "a",
 				Type:     List(Decimal),
@@ -134,28 +133,28 @@ func TestNewFieldDefinition(t *testing.T) {
 				"number": `[0-9]`,
 				"string": ``,
 			},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "Config",
 				JSONName: "config",
 				Type:     Object("FieldTestConfig"),
-			},
-			wantNestedObject: &EndpointObject{
-				Name: "FieldTestConfig",
-				Fields: []FieldDefinition{
-					{
-						Name:     "List",
-						JSONName: "list",
-						Type:     List(String),
-					},
-					{
-						Name:     "Number",
-						JSONName: "number",
-						Type:     Number,
-					},
-					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
+				Object: &EndpointObject{
+					Name: "FieldTestConfig",
+					Fields: []FieldDefinition{
+						{
+							Name:     "List",
+							JSONName: "list",
+							Type:     List(String),
+						},
+						{
+							Name:     "Number",
+							JSONName: "number",
+							Type:     Number,
+						},
+						{
+							Name:     "String",
+							JSONName: "string",
+							Type:     String,
+						},
 					},
 				},
 			},
@@ -168,34 +167,32 @@ func TestNewFieldDefinition(t *testing.T) {
 				},
 				"string": ``,
 			},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "Config",
 				JSONName: "config",
 				Type:     Object("FieldTestConfig"),
-			},
-			wantNestedObject: &EndpointObject{
-				Name: "FieldTestConfig",
-				Fields: []FieldDefinition{
-					{
-						Name:     "Nested",
-						JSONName: "nested",
-						Type:     Object("FieldTestConfigNested"),
-					},
-					{
-						Name:     "String",
-						JSONName: "string",
-						Type:     String,
-					},
-				},
-				NestedObjects: []*EndpointObject{
-					{
-						Name: "FieldTestConfigNested",
-						Fields: []FieldDefinition{
-							{
-								Name:     "Number",
-								JSONName: "number",
-								Type:     Number,
+				Object: &EndpointObject{
+					Name: "FieldTestConfig",
+					Fields: []FieldDefinition{
+						{
+							Name:     "Nested",
+							JSONName: "nested",
+							Type:     Object("FieldTestConfigNested"),
+							Object: &EndpointObject{
+								Name: "FieldTestConfigNested",
+								Fields: []FieldDefinition{
+									{
+										Name:     "Number",
+										JSONName: "number",
+										Type:     Number,
+									},
+								},
 							},
+						},
+						{
+							Name:     "String",
+							JSONName: "string",
+							Type:     String,
 						},
 					},
 				},
@@ -209,23 +206,23 @@ func TestNewFieldDefinition(t *testing.T) {
 					"satisfaction": `^[0-9]+\.?[0-9]*$`,
 				},
 			},
-			wantDefinition: FieldDefinition{
+			want: FieldDefinition{
 				Name:     "SatisfactionTable",
 				JSONName: "satisfaction_table",
 				Type:     List(Object("FieldTestSatisfactionTable")),
-			},
-			wantNestedObject: &EndpointObject{
-				Name: "FieldTestSatisfactionTable",
-				Fields: []FieldDefinition{
-					{
-						Name:     "DeviceMac",
-						JSONName: "device_mac",
-						Type:     String,
-					},
-					{
-						Name:     "Satisfaction",
-						JSONName: "satisfaction",
-						Type:     String,
+				Object: &EndpointObject{
+					Name: "FieldTestSatisfactionTable",
+					Fields: []FieldDefinition{
+						{
+							Name:     "DeviceMac",
+							JSONName: "device_mac",
+							Type:     String,
+						},
+						{
+							Name:     "Satisfaction",
+							JSONName: "satisfaction",
+							Type:     String,
+						},
 					},
 				},
 			},
@@ -234,11 +231,10 @@ func TestNewFieldDefinition(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			gotDefinition, gotNestedObjects, err := NewFieldDefinition(test.name, "FieldTest", test.value)
+			got, err := NewFieldDefinition(test.name, "FieldTest", test.value)
 			require.NoError(t, err)
 
-			assert.Equal(t, test.wantDefinition, gotDefinition)
-			assert.Equal(t, test.wantNestedObject, gotNestedObjects)
+			assert.Equal(t, test.want, got)
 		})
 	}
 }
