@@ -1,0 +1,5 @@
+{{ template "licence.gotmpl" }}
+package {{ .PackageName }}
+{{ range $struct := .Structs }}
+{{ template "struct.gotmpl" $struct }}
+{{ end }}

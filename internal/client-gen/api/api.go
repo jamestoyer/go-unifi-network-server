@@ -16,6 +16,7 @@ package api
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,23 +26,34 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"text/template"
 )
 
-var skippedFiles = []string{
-	"AuthenticationRequest.json",
-	"HeatMap.json",
-	"HeatMapPoint.json",
-	"Map.json",
-	"MediaFile.json",
-	"Setting.json",
-	"SpatialRecord.json",
-	"VirtualDevice.json",
-	"Wall.json",
-}
+var (
+	skippedFiles = []string{
+		"AuthenticationRequest.json",
+		"HeatMap.json",
+		"HeatMapPoint.json",
+		"Map.json",
+		"MediaFile.json",
+		"Setting.json",
+		"SpatialRecord.json",
+		"VirtualDevice.json",
+		"Wall.json",
+	}
 
-func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error {
+	//go:embed templates
+	templatesFs embed.FS
+)
+
+func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir, outputDir string) error {
+	tmpl, err := template.ParseFS(templatesFs, "templates/*")
+	if err != nil {
+		return fmt.Errorf("error parsing API templates: %w", err)
+	}
+
 	var errs []error
-	err := filepath.WalkDir(apiSpecDir, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(apiSpecDir, func(path string, d fs.DirEntry, err error) error {
 		switch {
 		case err != nil:
 			return err
@@ -54,7 +66,7 @@ func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error
 			return nil
 		}
 
-		if err := generateAPIFile(ctx, logger, path); err != nil {
+		if err := generateAPIFile(ctx, logger, path, outputDir, tmpl); err != nil {
 			errs = append(errs, fmt.Errorf("unable to generate API client: %w", err))
 		}
 
@@ -67,7 +79,7 @@ func Generate(ctx context.Context, logger *slog.Logger, apiSpecDir string) error
 	return errors.Join(errs...)
 }
 
-func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) error {
+func generateAPIFile(ctx context.Context, logger *slog.Logger, file, outputDir string, tmpl *template.Template) error {
 	contents, err := os.ReadFile(file)
 	if err != nil {
 		return fmt.Errorf("failed to read API spec file: %w", err)
@@ -84,8 +96,8 @@ func generateAPIFile(ctx context.Context, logger *slog.Logger, file string) erro
 		return fmt.Errorf("failed to create API endpoint: %w", err)
 	}
 
-	for _, object := range endpoint.Objects() {
-		logger.DebugContext(ctx, "API object found", slog.String("fieldName", object.Name), slog.Int("fieldCount", len(object.Fields)))
+	if err = endpoint.Render(ctx, logger, outputDir, tmpl); err != nil {
+		return fmt.Errorf("failed to render API endpoint: %w", err)
 	}
 
 	return nil

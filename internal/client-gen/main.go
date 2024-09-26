@@ -26,6 +26,8 @@ import (
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
 )
 
+const packageName = "networkserver"
+
 var (
 	verboseFlag    = flag.Bool("v", false, "Print verbose logs")
 	apiSpecDirFlag = flag.String("dir", "", "Directory containing api spec files. If not set the latest API spec will be downloaded")
@@ -106,5 +108,9 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 }
 
 func generateAPIClient(ctx context.Context, apiSpecDir string) error {
-	return api.Generate(ctx, logger, apiSpecDir)
+	if err := os.MkdirAll(packageName, 0o775); err != nil {
+		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
+	}
+
+	return api.Generate(ctx, logger, apiSpecDir, packageName)
 }
