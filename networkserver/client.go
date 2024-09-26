@@ -153,7 +153,7 @@ func (c *Client) Authenticate(ctx context.Context) error {
 		return err
 	}
 
-	resp, err := c.do(req, nil)
+	resp, err := c.Do(ctx, req, nil)
 	if err != nil {
 		return fmt.Errorf("authenticate request failed: %w", err)
 	}
@@ -250,9 +250,13 @@ func (c *Client) path(p string) string {
 	return p
 }
 
-// do will execute a HTTP request to the Unifi Network Server. When v implements an io.Writer the raw response will be
+// Do will execute a HTTP request to the Unifi Network Server. When v implements an io.Writer the raw response will be
 // copied, otherwise the response body will be JSON decoded to any non nil value of v.
-func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
+func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	if ctx == nil {
+		return nil, errors.New("context not set")
+	}
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("http request failure: %w", err)
