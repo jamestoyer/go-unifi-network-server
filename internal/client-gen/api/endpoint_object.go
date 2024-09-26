@@ -51,3 +51,17 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 		Fields: fields,
 	}, nil
 }
+
+// NestedObjects will loop over all Fields to find any that have an EndpointObject. It will then recursively check the
+// fields of any found EndpointObject to also get these and will return them all in a flattened list.
+func (e *EndpointObject) NestedObjects() []*EndpointObject {
+	var nestedObjects []*EndpointObject
+	for _, field := range e.Fields {
+		if field.Object != nil {
+			nestedObjects = append(nestedObjects, field.Object)
+			nestedObjects = append(nestedObjects, field.Object.NestedObjects()...)
+		}
+	}
+
+	return nestedObjects
+}
