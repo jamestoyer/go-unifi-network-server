@@ -16,16 +16,16 @@ package api
 
 var (
 	Boolean = FieldType{
-		fieldTypeImpl: primitiveFieldType{kind: "bool"},
+		fieldTypeImpl: primitiveFieldType{kind: "bool", defaultValue: "false"},
 	}
 	Decimal = FieldType{
-		fieldTypeImpl: primitiveFieldType{kind: "float64"},
+		fieldTypeImpl: primitiveFieldType{kind: "float64", defaultValue: "0"},
 	}
 	Number = FieldType{
-		fieldTypeImpl: primitiveFieldType{kind: "int64"},
+		fieldTypeImpl: primitiveFieldType{kind: "int64", defaultValue: "0"},
 	}
 	String = FieldType{
-		fieldTypeImpl: primitiveFieldType{kind: "string"},
+		fieldTypeImpl: primitiveFieldType{kind: "string", defaultValue: `""`},
 	}
 
 	UnknownType = FieldType{
@@ -38,9 +38,7 @@ type fieldTypeImpl interface {
 	// GoType is the Golang type definition.
 	GoType() string
 
-	// // IsObjectType indicates whether the type is a Golang struct.
-	// // TODO: (jtoyer) Add information about how to get the object definition
-	// IsObjectType() bool
+	DefaultValue() string
 }
 
 // FieldType represents the derived type from the API specification for a field on an endpoint object.
@@ -52,6 +50,12 @@ type FieldType struct {
 // expected for the list.
 func (t FieldType) IsListType() bool {
 	_, ok := t.fieldTypeImpl.(listFieldType)
+	return ok
+}
+
+// IsObjectType indicates whether the type is a Golang struct.
+func (t FieldType) IsObjectType() bool {
+	_, ok := t.fieldTypeImpl.(objectFieldType)
 	return ok
 }
 
@@ -76,11 +80,16 @@ func (t FieldType) String() string {
 }
 
 type primitiveFieldType struct {
-	kind string
+	defaultValue string
+	kind         string
 }
 
 func (t primitiveFieldType) GoType() string {
 	return t.kind
+}
+
+func (t primitiveFieldType) DefaultValue() string {
+	return t.defaultValue
 }
 
 type listFieldType struct {
@@ -89,6 +98,10 @@ type listFieldType struct {
 
 func (t listFieldType) GoType() string {
 	return "[]" + t.elementType.GoType()
+}
+
+func (t listFieldType) DefaultValue() string {
+	return "nil"
 }
 
 func List(element FieldType) FieldType {
@@ -103,6 +116,10 @@ type objectFieldType struct {
 
 func (t objectFieldType) GoType() string {
 	return t.kind
+}
+
+func (t objectFieldType) DefaultValue() string {
+	return "nil"
 }
 
 func Object(name string) FieldType {

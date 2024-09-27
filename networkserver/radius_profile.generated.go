@@ -38,14 +38,206 @@ type RadiusProfile struct {
 	XClientPrivateKeyPassword *string                     `json:"x_client_private_key_password,omitempty"`
 }
 
+func (s *RadiusProfile) GetAccountingEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.AccountingEnabled
+}
+
+func (s *RadiusProfile) GetAcctServers() []RadiusProfileAcctServers {
+	if s == nil || s.AcctServers == nil {
+		return nil
+	}
+
+	return *s.AcctServers
+}
+
+func (s *RadiusProfile) GetAuthServers() []RadiusProfileAuthServers {
+	if s == nil || s.AuthServers == nil {
+		return nil
+	}
+
+	return *s.AuthServers
+}
+
+func (s *RadiusProfile) GetInterimUpdateEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.InterimUpdateEnabled
+}
+
+func (s *RadiusProfile) GetInterimUpdateInterval() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.InterimUpdateInterval
+}
+
+func (s *RadiusProfile) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *RadiusProfile) GetTlsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.TlsEnabled
+}
+
+func (s *RadiusProfile) GetUseUsgAcctServer() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UseUsgAcctServer
+}
+
+func (s *RadiusProfile) GetUseUsgAuthServer() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UseUsgAuthServer
+}
+
+func (s *RadiusProfile) GetVlanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VlanEnabled
+}
+
+func (s *RadiusProfile) GetVlanWlanMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VlanWlanMode
+}
+
+func (s *RadiusProfile) GetXCaCrt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XCaCrt
+}
+
+func (s *RadiusProfile) GetXCaCrtFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XCaCrtFilename
+}
+
+func (s *RadiusProfile) GetXClientCrt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XClientCrt
+}
+
+func (s *RadiusProfile) GetXClientCrtFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XClientCrtFilename
+}
+
+func (s *RadiusProfile) GetXClientPrivateKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XClientPrivateKey
+}
+
+func (s *RadiusProfile) GetXClientPrivateKeyFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XClientPrivateKeyFilename
+}
+
+func (s *RadiusProfile) GetXClientPrivateKeyPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XClientPrivateKeyPassword
+}
+
 type RadiusProfileAcctServers struct {
 	Ip      *string  `json:"ip,omitempty"`
 	Port    *float64 `json:"port,omitempty"`
 	XSecret *string  `json:"x_secret,omitempty"`
 }
 
+func (s *RadiusProfileAcctServers) GetIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ip
+}
+
+func (s *RadiusProfileAcctServers) GetPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Port
+}
+
+func (s *RadiusProfileAcctServers) GetXSecret() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XSecret
+}
+
 type RadiusProfileAuthServers struct {
 	Ip      *string  `json:"ip,omitempty"`
 	Port    *float64 `json:"port,omitempty"`
 	XSecret *string  `json:"x_secret,omitempty"`
+}
+
+func (s *RadiusProfileAuthServers) GetIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ip
+}
+
+func (s *RadiusProfileAuthServers) GetPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Port
+}
+
+func (s *RadiusProfileAuthServers) GetXSecret() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XSecret
 }

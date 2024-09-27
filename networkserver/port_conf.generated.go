@@ -60,14 +60,366 @@ type PortConf struct {
 	VoiceNetworkconfId            *string             `json:"voice_networkconf_id,omitempty"`
 }
 
+func (s *PortConf) GetAutoneg() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Autoneg
+}
+
+func (s *PortConf) GetDot1XCtrl() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dot1XCtrl
+}
+
+func (s *PortConf) GetDot1XIdleTimeout() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Dot1XIdleTimeout
+}
+
+func (s *PortConf) GetEgressRateLimitKbps() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.EgressRateLimitKbps
+}
+
+func (s *PortConf) GetEgressRateLimitKbpsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.EgressRateLimitKbpsEnabled
+}
+
+func (s *PortConf) GetExcludedNetworkconfIds() []string {
+	if s == nil || s.ExcludedNetworkconfIds == nil {
+		return nil
+	}
+
+	return *s.ExcludedNetworkconfIds
+}
+
+func (s *PortConf) GetFecMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FecMode
+}
+
+func (s *PortConf) GetForward() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Forward
+}
+
+func (s *PortConf) GetFullDuplex() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.FullDuplex
+}
+
+func (s *PortConf) GetIsolation() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Isolation
+}
+
+func (s *PortConf) GetLldpmedEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LldpmedEnabled
+}
+
+func (s *PortConf) GetLldpmedNotifyEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LldpmedNotifyEnabled
+}
+
+func (s *PortConf) GetMulticastRouterNetworkconfIds() []string {
+	if s == nil || s.MulticastRouterNetworkconfIds == nil {
+		return nil
+	}
+
+	return *s.MulticastRouterNetworkconfIds
+}
+
+func (s *PortConf) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *PortConf) GetNativeNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.NativeNetworkconfId
+}
+
+func (s *PortConf) GetOpMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpMode
+}
+
+func (s *PortConf) GetPoeMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PoeMode
+}
+
+func (s *PortConf) GetPortKeepaliveEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PortKeepaliveEnabled
+}
+
+func (s *PortConf) GetPortSecurityEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PortSecurityEnabled
+}
+
+func (s *PortConf) GetPortSecurityMacAddress() []string {
+	if s == nil || s.PortSecurityMacAddress == nil {
+		return nil
+	}
+
+	return *s.PortSecurityMacAddress
+}
+
+func (s *PortConf) GetPriorityQueue1Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue1Level
+}
+
+func (s *PortConf) GetPriorityQueue2Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue2Level
+}
+
+func (s *PortConf) GetPriorityQueue3Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue3Level
+}
+
+func (s *PortConf) GetPriorityQueue4Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue4Level
+}
+
+func (s *PortConf) GetQosProfile() *PortConfQosProfile {
+	if s == nil || s.QosProfile == nil {
+		return nil
+	}
+
+	return s.QosProfile
+}
+
+func (s *PortConf) GetSettingPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SettingPreference
+}
+
+func (s *PortConf) GetSpeed() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Speed
+}
+
+func (s *PortConf) GetStormctrlBcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlBcastEnabled
+}
+
+func (s *PortConf) GetStormctrlBcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlBcastLevel
+}
+
+func (s *PortConf) GetStormctrlBcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlBcastRate
+}
+
+func (s *PortConf) GetStormctrlMcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlMcastEnabled
+}
+
+func (s *PortConf) GetStormctrlMcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlMcastLevel
+}
+
+func (s *PortConf) GetStormctrlMcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlMcastRate
+}
+
+func (s *PortConf) GetStormctrlType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StormctrlType
+}
+
+func (s *PortConf) GetStormctrlUcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlUcastEnabled
+}
+
+func (s *PortConf) GetStormctrlUcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlUcastLevel
+}
+
+func (s *PortConf) GetStormctrlUcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlUcastRate
+}
+
+func (s *PortConf) GetStpPortMode() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StpPortMode
+}
+
+func (s *PortConf) GetTaggedVlanMgmt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TaggedVlanMgmt
+}
+
+func (s *PortConf) GetVoiceNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VoiceNetworkconfId
+}
+
 type PortConfQosProfile struct {
 	QosPolicies    *[]PortConfQosProfileQosPolicies `json:"qos_policies,omitempty"`
 	QosProfileMode *string                          `json:"qos_profile_mode,omitempty"`
 }
 
+func (s *PortConfQosProfile) GetQosPolicies() []PortConfQosProfileQosPolicies {
+	if s == nil || s.QosPolicies == nil {
+		return nil
+	}
+
+	return *s.QosPolicies
+}
+
+func (s *PortConfQosProfile) GetQosProfileMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.QosProfileMode
+}
+
 type PortConfQosProfileQosPolicies struct {
 	QosMarking  *PortConfQosProfileQosPoliciesQosMarking  `json:"qos_marking,omitempty"`
 	QosMatching *PortConfQosProfileQosPoliciesQosMatching `json:"qos_matching,omitempty"`
+}
+
+func (s *PortConfQosProfileQosPolicies) GetQosMarking() *PortConfQosProfileQosPoliciesQosMarking {
+	if s == nil || s.QosMarking == nil {
+		return nil
+	}
+
+	return s.QosMarking
+}
+
+func (s *PortConfQosProfileQosPolicies) GetQosMatching() *PortConfQosProfileQosPoliciesQosMatching {
+	if s == nil || s.QosMatching == nil {
+		return nil
+	}
+
+	return s.QosMatching
 }
 
 type PortConfQosProfileQosPoliciesQosMarking struct {
@@ -77,6 +429,38 @@ type PortConfQosProfileQosPoliciesQosMarking struct {
 	Queue            *int64   `json:"queue,omitempty"`
 }
 
+func (s *PortConfQosProfileQosPoliciesQosMarking) GetCosCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.CosCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMarking) GetDscpCode() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DscpCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMarking) GetIpPrecedenceCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpPrecedenceCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMarking) GetQueue() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Queue
+}
+
 type PortConfQosProfileQosPoliciesQosMatching struct {
 	CosCode          *int64   `json:"cos_code,omitempty"`
 	DscpCode         *int64   `json:"dscp_code,omitempty"`
@@ -84,4 +468,52 @@ type PortConfQosProfileQosPoliciesQosMatching struct {
 	IpPrecedenceCode *int64   `json:"ip_precedence_code,omitempty"`
 	Protocol         *string  `json:"protocol,omitempty"`
 	SrcPort          *float64 `json:"src_port,omitempty"`
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetCosCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.CosCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetDscpCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DscpCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetDstPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DstPort
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetIpPrecedenceCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpPrecedenceCode
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetProtocol() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Protocol
+}
+
+func (s *PortConfQosProfileQosPoliciesQosMatching) GetSrcPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.SrcPort
 }

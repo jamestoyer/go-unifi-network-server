@@ -48,3 +48,235 @@ type HotspotPackage struct {
 	TrialDurationMinutes           *int64   `json:"trial_duration_minutes,omitempty"`
 	TrialReset                     *float64 `json:"trial_reset,omitempty"`
 }
+
+func (s *HotspotPackage) GetAmount() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Amount
+}
+
+func (s *HotspotPackage) GetChargedAs() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ChargedAs
+}
+
+func (s *HotspotPackage) GetCurrency() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Currency
+}
+
+func (s *HotspotPackage) GetCustomPaymentFieldsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.CustomPaymentFieldsEnabled
+}
+
+func (s *HotspotPackage) GetHours() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Hours
+}
+
+func (s *HotspotPackage) GetIndex() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Index
+}
+
+func (s *HotspotPackage) GetLimitDown() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LimitDown
+}
+
+func (s *HotspotPackage) GetLimitOverwrite() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LimitOverwrite
+}
+
+func (s *HotspotPackage) GetLimitQuota() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LimitQuota
+}
+
+func (s *HotspotPackage) GetLimitUp() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LimitUp
+}
+
+func (s *HotspotPackage) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *HotspotPackage) GetPaymentFieldsAddressEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsAddressEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsAddressRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsAddressRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsCityEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsCityEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsCityRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsCityRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsCountryEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsCountryEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsCountryRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsCountryRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsEmailEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsEmailEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsEmailRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsEmailRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsFirstNameEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsFirstNameEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsFirstNameRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsFirstNameRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsLastNameEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsLastNameEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsLastNameRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsLastNameRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsStateEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsStateEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsStateRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsStateRequired
+}
+
+func (s *HotspotPackage) GetPaymentFieldsZipEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsZipEnabled
+}
+
+func (s *HotspotPackage) GetPaymentFieldsZipRequired() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PaymentFieldsZipRequired
+}
+
+func (s *HotspotPackage) GetTrialDurationMinutes() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.TrialDurationMinutes
+}
+
+func (s *HotspotPackage) GetTrialReset() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.TrialReset
+}

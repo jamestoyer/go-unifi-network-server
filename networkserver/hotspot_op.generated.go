@@ -22,3 +22,27 @@ type HotspotOp struct {
 	Note      *string `json:"note,omitempty"`
 	XPassword *string `json:"x_password,omitempty"`
 }
+
+func (s *HotspotOp) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *HotspotOp) GetNote() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Note
+}
+
+func (s *HotspotOp) GetXPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XPassword
+}

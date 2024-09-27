@@ -27,3 +27,67 @@ type DynamicDNS struct {
 	Service       *string   `json:"service,omitempty"`
 	XPassword     *string   `json:"x_password,omitempty"`
 }
+
+func (s *DynamicDNS) GetCustomService() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.CustomService
+}
+
+func (s *DynamicDNS) GetHostName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HostName
+}
+
+func (s *DynamicDNS) GetInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Interface
+}
+
+func (s *DynamicDNS) GetLogin() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Login
+}
+
+func (s *DynamicDNS) GetOptions() []string {
+	if s == nil || s.Options == nil {
+		return nil
+	}
+
+	return *s.Options
+}
+
+func (s *DynamicDNS) GetServer() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Server
+}
+
+func (s *DynamicDNS) GetService() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Service
+}
+
+func (s *DynamicDNS) GetXPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XPassword
+}

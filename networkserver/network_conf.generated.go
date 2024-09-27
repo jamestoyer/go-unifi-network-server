@@ -252,9 +252,1881 @@ type NetworkConf struct {
 	XWireguardPrivateKey                          *string                              `json:"x_wireguard_private_key,omitempty"`
 }
 
+func (s *NetworkConf) GetAutoScaleEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.AutoScaleEnabled
+}
+
+func (s *NetworkConf) GetDhcpRelayEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpRelayEnabled
+}
+
+func (s *NetworkConf) GetDhcpdBootEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdBootEnabled
+}
+
+func (s *NetworkConf) GetDhcpdBootFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdBootFilename
+}
+
+func (s *NetworkConf) GetDhcpdBootServer() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdBootServer
+}
+
+func (s *NetworkConf) GetDhcpdConflictChecking() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdConflictChecking
+}
+
+func (s *NetworkConf) GetDhcpdDns1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdDns1
+}
+
+func (s *NetworkConf) GetDhcpdDns2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdDns2
+}
+
+func (s *NetworkConf) GetDhcpdDns3() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdDns3
+}
+
+func (s *NetworkConf) GetDhcpdDns4() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdDns4
+}
+
+func (s *NetworkConf) GetDhcpdDnsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdDnsEnabled
+}
+
+func (s *NetworkConf) GetDhcpdEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdEnabled
+}
+
+func (s *NetworkConf) GetDhcpdGateway() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdGateway
+}
+
+func (s *NetworkConf) GetDhcpdGatewayEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdGatewayEnabled
+}
+
+func (s *NetworkConf) GetDhcpdIp1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdIp1
+}
+
+func (s *NetworkConf) GetDhcpdIp2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdIp2
+}
+
+func (s *NetworkConf) GetDhcpdIp3() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdIp3
+}
+
+func (s *NetworkConf) GetDhcpdLeasetime() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DhcpdLeasetime
+}
+
+func (s *NetworkConf) GetDhcpdMac1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdMac1
+}
+
+func (s *NetworkConf) GetDhcpdMac2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdMac2
+}
+
+func (s *NetworkConf) GetDhcpdMac3() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdMac3
+}
+
+func (s *NetworkConf) GetDhcpdNtp1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdNtp1
+}
+
+func (s *NetworkConf) GetDhcpdNtp2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdNtp2
+}
+
+func (s *NetworkConf) GetDhcpdNtpEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdNtpEnabled
+}
+
+func (s *NetworkConf) GetDhcpdStart() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdStart
+}
+
+func (s *NetworkConf) GetDhcpdStop() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdStop
+}
+
+func (s *NetworkConf) GetDhcpdTftpServer() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdTftpServer
+}
+
+func (s *NetworkConf) GetDhcpdTimeOffset() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DhcpdTimeOffset
+}
+
+func (s *NetworkConf) GetDhcpdTimeOffsetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdTimeOffsetEnabled
+}
+
+func (s *NetworkConf) GetDhcpdUnifiController() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdUnifiController
+}
+
+func (s *NetworkConf) GetDhcpdWins1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdWins1
+}
+
+func (s *NetworkConf) GetDhcpdWins2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdWins2
+}
+
+func (s *NetworkConf) GetDhcpdWinsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpdWinsEnabled
+}
+
+func (s *NetworkConf) GetDhcpdWpadUrl() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DhcpdWpadUrl
+}
+
+func (s *NetworkConf) GetDhcpdv6AllowSlaac() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Dhcpdv6AllowSlaac
+}
+
+func (s *NetworkConf) GetDhcpdv6Dns1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Dns1
+}
+
+func (s *NetworkConf) GetDhcpdv6Dns2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Dns2
+}
+
+func (s *NetworkConf) GetDhcpdv6Dns3() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Dns3
+}
+
+func (s *NetworkConf) GetDhcpdv6Dns4() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Dns4
+}
+
+func (s *NetworkConf) GetDhcpdv6DnsAuto() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Dhcpdv6DnsAuto
+}
+
+func (s *NetworkConf) GetDhcpdv6Enabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Dhcpdv6Enabled
+}
+
+func (s *NetworkConf) GetDhcpdv6Leasetime() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Dhcpdv6Leasetime
+}
+
+func (s *NetworkConf) GetDhcpdv6Start() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Start
+}
+
+func (s *NetworkConf) GetDhcpdv6Stop() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dhcpdv6Stop
+}
+
+func (s *NetworkConf) GetDhcpguardEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DhcpguardEnabled
+}
+
+func (s *NetworkConf) GetDomainName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DomainName
+}
+
+func (s *NetworkConf) GetDpiEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DpiEnabled
+}
+
+func (s *NetworkConf) GetDpigroupId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DpigroupId
+}
+
+func (s *NetworkConf) GetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Enabled
+}
+
+func (s *NetworkConf) GetExposedToSiteVpn() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.ExposedToSiteVpn
+}
+
+func (s *NetworkConf) GetGatewayDevice() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GatewayDevice
+}
+
+func (s *NetworkConf) GetGatewayType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GatewayType
+}
+
+func (s *NetworkConf) GetIgmpFastleave() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IgmpFastleave
+}
+
+func (s *NetworkConf) GetIgmpForwardUnknownMulticast() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IgmpForwardUnknownMulticast
+}
+
+func (s *NetworkConf) GetIgmpGroupmembership() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IgmpGroupmembership
+}
+
+func (s *NetworkConf) GetIgmpMaxresponse() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IgmpMaxresponse
+}
+
+func (s *NetworkConf) GetIgmpMcrtrexpiretime() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IgmpMcrtrexpiretime
+}
+
+func (s *NetworkConf) GetIgmpProxyDownstreamNetworkconfIds() []string {
+	if s == nil || s.IgmpProxyDownstreamNetworkconfIds == nil {
+		return nil
+	}
+
+	return *s.IgmpProxyDownstreamNetworkconfIds
+}
+
+func (s *NetworkConf) GetIgmpProxyFor() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IgmpProxyFor
+}
+
+func (s *NetworkConf) GetIgmpProxyUpstream() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IgmpProxyUpstream
+}
+
+func (s *NetworkConf) GetIgmpQuerierSwitches() []NetworkConfIgmpQuerierSwitches {
+	if s == nil || s.IgmpQuerierSwitches == nil {
+		return nil
+	}
+
+	return *s.IgmpQuerierSwitches
+}
+
+func (s *NetworkConf) GetIgmpSnooping() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IgmpSnooping
+}
+
+func (s *NetworkConf) GetIgmpSupression() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IgmpSupression
+}
+
+func (s *NetworkConf) GetInterfaceMtu() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.InterfaceMtu
+}
+
+func (s *NetworkConf) GetInterfaceMtuEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.InterfaceMtuEnabled
+}
+
+func (s *NetworkConf) GetInternetAccessEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.InternetAccessEnabled
+}
+
+func (s *NetworkConf) GetIpSubnet() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpSubnet
+}
+
+func (s *NetworkConf) GetIpsecDhGroup() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpsecDhGroup
+}
+
+func (s *NetworkConf) GetIpsecDynamicRouting() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecDynamicRouting
+}
+
+func (s *NetworkConf) GetIpsecEncryption() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecEncryption
+}
+
+func (s *NetworkConf) GetIpsecEspDhGroup() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpsecEspDhGroup
+}
+
+func (s *NetworkConf) GetIpsecEspEncryption() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecEspEncryption
+}
+
+func (s *NetworkConf) GetIpsecEspHash() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecEspHash
+}
+
+func (s *NetworkConf) GetIpsecEspLifetime() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecEspLifetime
+}
+
+func (s *NetworkConf) GetIpsecHash() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecHash
+}
+
+func (s *NetworkConf) GetIpsecIkeDhGroup() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpsecIkeDhGroup
+}
+
+func (s *NetworkConf) GetIpsecIkeEncryption() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecIkeEncryption
+}
+
+func (s *NetworkConf) GetIpsecIkeHash() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecIkeHash
+}
+
+func (s *NetworkConf) GetIpsecIkeLifetime() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecIkeLifetime
+}
+
+func (s *NetworkConf) GetIpsecInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecInterface
+}
+
+func (s *NetworkConf) GetIpsecKeyExchange() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecKeyExchange
+}
+
+func (s *NetworkConf) GetIpsecLocalIdentifier() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecLocalIdentifier
+}
+
+func (s *NetworkConf) GetIpsecLocalIdentifierEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecLocalIdentifierEnabled
+}
+
+func (s *NetworkConf) GetIpsecLocalIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecLocalIp
+}
+
+func (s *NetworkConf) GetIpsecPeerIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecPeerIp
+}
+
+func (s *NetworkConf) GetIpsecPfs() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecPfs
+}
+
+func (s *NetworkConf) GetIpsecProfile() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecProfile
+}
+
+func (s *NetworkConf) GetIpsecRemoteIdentifier() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecRemoteIdentifier
+}
+
+func (s *NetworkConf) GetIpsecRemoteIdentifierEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecRemoteIdentifierEnabled
+}
+
+func (s *NetworkConf) GetIpsecSeparateIkev2Networks() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecSeparateIkev2Networks
+}
+
+func (s *NetworkConf) GetIpsecTunnelIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpsecTunnelIp
+}
+
+func (s *NetworkConf) GetIpsecTunnelIpEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IpsecTunnelIpEnabled
+}
+
+func (s *NetworkConf) GetIpv6ClientAddressAssignment() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6ClientAddressAssignment
+}
+
+func (s *NetworkConf) GetIpv6InterfaceType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6InterfaceType
+}
+
+func (s *NetworkConf) GetIpv6PdAutoPrefixidEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Ipv6PdAutoPrefixidEnabled
+}
+
+func (s *NetworkConf) GetIpv6PdInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6PdInterface
+}
+
+func (s *NetworkConf) GetIpv6PdPrefixid() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6PdPrefixid
+}
+
+func (s *NetworkConf) GetIpv6PdStart() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6PdStart
+}
+
+func (s *NetworkConf) GetIpv6PdStop() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6PdStop
+}
+
+func (s *NetworkConf) GetIpv6RaEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Ipv6RaEnabled
+}
+
+func (s *NetworkConf) GetIpv6RaPreferredLifetime() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Ipv6RaPreferredLifetime
+}
+
+func (s *NetworkConf) GetIpv6RaPriority() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6RaPriority
+}
+
+func (s *NetworkConf) GetIpv6RaValidLifetime() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Ipv6RaValidLifetime
+}
+
+func (s *NetworkConf) GetIpv6SettingPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6SettingPreference
+}
+
+func (s *NetworkConf) GetIpv6SingleNetworkInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6SingleNetworkInterface
+}
+
+func (s *NetworkConf) GetIpv6Subnet() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6Subnet
+}
+
+func (s *NetworkConf) GetIpv6WanDelegationType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipv6WanDelegationType
+}
+
+func (s *NetworkConf) GetIsNat() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IsNat
+}
+
+func (s *NetworkConf) GetL2TpAllowWeakCiphers() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.L2TpAllowWeakCiphers
+}
+
+func (s *NetworkConf) GetL2TpInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.L2TpInterface
+}
+
+func (s *NetworkConf) GetL2TpLocalWanIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.L2TpLocalWanIp
+}
+
+func (s *NetworkConf) GetLocalPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LocalPort
+}
+
+func (s *NetworkConf) GetLteLanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LteLanEnabled
+}
+
+func (s *NetworkConf) GetMacOverride() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.MacOverride
+}
+
+func (s *NetworkConf) GetMacOverrideEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.MacOverrideEnabled
+}
+
+func (s *NetworkConf) GetMdnsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.MdnsEnabled
+}
+
+func (s *NetworkConf) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *NetworkConf) GetNatOutboundIpAddresses() []NetworkConfNatOutboundIpAddresses {
+	if s == nil || s.NatOutboundIpAddresses == nil {
+		return nil
+	}
+
+	return *s.NatOutboundIpAddresses
+}
+
+func (s *NetworkConf) GetNetworkIsolationEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NetworkIsolationEnabled
+}
+
+func (s *NetworkConf) GetNetworkgroup() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Networkgroup
+}
+
+func (s *NetworkConf) GetOpenvpnConfiguration() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnConfiguration
+}
+
+func (s *NetworkConf) GetOpenvpnConfigurationFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnConfigurationFilename
+}
+
+func (s *NetworkConf) GetOpenvpnEncryptionCipher() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnEncryptionCipher
+}
+
+func (s *NetworkConf) GetOpenvpnInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnInterface
+}
+
+func (s *NetworkConf) GetOpenvpnLocalAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnLocalAddress
+}
+
+func (s *NetworkConf) GetOpenvpnLocalPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.OpenvpnLocalPort
+}
+
+func (s *NetworkConf) GetOpenvpnLocalWanIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnLocalWanIp
+}
+
+func (s *NetworkConf) GetOpenvpnMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnMode
+}
+
+func (s *NetworkConf) GetOpenvpnRemoteAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnRemoteAddress
+}
+
+func (s *NetworkConf) GetOpenvpnRemoteHost() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnRemoteHost
+}
+
+func (s *NetworkConf) GetOpenvpnRemotePort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.OpenvpnRemotePort
+}
+
+func (s *NetworkConf) GetOpenvpnUsername() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpenvpnUsername
+}
+
+func (s *NetworkConf) GetPptpcRequireMppe() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PptpcRequireMppe
+}
+
+func (s *NetworkConf) GetPptpcRouteDistance() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PptpcRouteDistance
+}
+
+func (s *NetworkConf) GetPptpcServerIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PptpcServerIp
+}
+
+func (s *NetworkConf) GetPptpcUsername() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PptpcUsername
+}
+
+func (s *NetworkConf) GetPriority() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Priority
+}
+
+func (s *NetworkConf) GetPurpose() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Purpose
+}
+
+func (s *NetworkConf) GetRadiusprofileId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.RadiusprofileId
+}
+
+func (s *NetworkConf) GetRemoteSiteId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.RemoteSiteId
+}
+
+func (s *NetworkConf) GetRemoteSiteSubnets() []string {
+	if s == nil || s.RemoteSiteSubnets == nil {
+		return nil
+	}
+
+	return *s.RemoteSiteSubnets
+}
+
+func (s *NetworkConf) GetRemoteVpnDynamicSubnetsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.RemoteVpnDynamicSubnetsEnabled
+}
+
+func (s *NetworkConf) GetRemoteVpnSubnets() []string {
+	if s == nil || s.RemoteVpnSubnets == nil {
+		return nil
+	}
+
+	return *s.RemoteVpnSubnets
+}
+
+func (s *NetworkConf) GetReportWanEvent() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.ReportWanEvent
+}
+
+func (s *NetworkConf) GetRequireMschapv2() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.RequireMschapv2
+}
+
+func (s *NetworkConf) GetRouteDistance() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.RouteDistance
+}
+
+func (s *NetworkConf) GetSettingPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SettingPreference
+}
+
+func (s *NetworkConf) GetSingleNetworkLan() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SingleNetworkLan
+}
+
+func (s *NetworkConf) GetUidPolicyEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UidPolicyEnabled
+}
+
+func (s *NetworkConf) GetUidPolicyName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UidPolicyName
+}
+
+func (s *NetworkConf) GetUidPublicGatewayPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.UidPublicGatewayPort
+}
+
+func (s *NetworkConf) GetUidTrafficRulesAllowedIpsAndHostnames() []string {
+	if s == nil || s.UidTrafficRulesAllowedIpsAndHostnames == nil {
+		return nil
+	}
+
+	return *s.UidTrafficRulesAllowedIpsAndHostnames
+}
+
+func (s *NetworkConf) GetUidTrafficRulesEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UidTrafficRulesEnabled
+}
+
+func (s *NetworkConf) GetUidVpnCustomRouting() []string {
+	if s == nil || s.UidVpnCustomRouting == nil {
+		return nil
+	}
+
+	return *s.UidVpnCustomRouting
+}
+
+func (s *NetworkConf) GetUidVpnDefaultDnsSuffix() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UidVpnDefaultDnsSuffix
+}
+
+func (s *NetworkConf) GetUidVpnMasqueradeEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UidVpnMasqueradeEnabled
+}
+
+func (s *NetworkConf) GetUidVpnMaxConnectionTimeSeconds() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.UidVpnMaxConnectionTimeSeconds
+}
+
+func (s *NetworkConf) GetUidVpnSyncPublicIp() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UidVpnSyncPublicIp
+}
+
+func (s *NetworkConf) GetUidVpnType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UidVpnType
+}
+
+func (s *NetworkConf) GetUidWorkspaceUrl() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UidWorkspaceUrl
+}
+
+func (s *NetworkConf) GetUpnpLanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UpnpLanEnabled
+}
+
+func (s *NetworkConf) GetUsergroupId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UsergroupId
+}
+
+func (s *NetworkConf) GetVlan() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Vlan
+}
+
+func (s *NetworkConf) GetVlanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VlanEnabled
+}
+
+func (s *NetworkConf) GetVpnClientConfigurationRemoteIpOverride() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VpnClientConfigurationRemoteIpOverride
+}
+
+func (s *NetworkConf) GetVpnClientConfigurationRemoteIpOverrideEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VpnClientConfigurationRemoteIpOverrideEnabled
+}
+
+func (s *NetworkConf) GetVpnClientDefaultRoute() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VpnClientDefaultRoute
+}
+
+func (s *NetworkConf) GetVpnClientPullDns() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VpnClientPullDns
+}
+
+func (s *NetworkConf) GetVpnProtocol() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VpnProtocol
+}
+
+func (s *NetworkConf) GetVpnType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VpnType
+}
+
+func (s *NetworkConf) GetVrrpIpSubnetGw1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VrrpIpSubnetGw1
+}
+
+func (s *NetworkConf) GetVrrpIpSubnetGw2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VrrpIpSubnetGw2
+}
+
+func (s *NetworkConf) GetVrrpVrid() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.VrrpVrid
+}
+
+func (s *NetworkConf) GetWanDhcpCos() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanDhcpCos
+}
+
+func (s *NetworkConf) GetWanDhcpOptions() []NetworkConfWanDhcpOptions {
+	if s == nil || s.WanDhcpOptions == nil {
+		return nil
+	}
+
+	return *s.WanDhcpOptions
+}
+
+func (s *NetworkConf) GetWanDhcpv6PdSize() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanDhcpv6PdSize
+}
+
+func (s *NetworkConf) GetWanDns1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDns1
+}
+
+func (s *NetworkConf) GetWanDns2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDns2
+}
+
+func (s *NetworkConf) GetWanDns3() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDns3
+}
+
+func (s *NetworkConf) GetWanDns4() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDns4
+}
+
+func (s *NetworkConf) GetWanDnsPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDnsPreference
+}
+
+func (s *NetworkConf) GetWanDsliteRemoteHost() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanDsliteRemoteHost
+}
+
+func (s *NetworkConf) GetWanEgressQos() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanEgressQos
+}
+
+func (s *NetworkConf) GetWanGateway() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanGateway
+}
+
+func (s *NetworkConf) GetWanGatewayV6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanGatewayV6
+}
+
+func (s *NetworkConf) GetWanIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanIp
+}
+
+func (s *NetworkConf) GetWanIpAliases() []string {
+	if s == nil || s.WanIpAliases == nil {
+		return nil
+	}
+
+	return *s.WanIpAliases
+}
+
+func (s *NetworkConf) GetWanIpv6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanIpv6
+}
+
+func (s *NetworkConf) GetWanIpv6Dns1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanIpv6Dns1
+}
+
+func (s *NetworkConf) GetWanIpv6Dns2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanIpv6Dns2
+}
+
+func (s *NetworkConf) GetWanIpv6DnsPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanIpv6DnsPreference
+}
+
+func (s *NetworkConf) GetWanLoadBalanceType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanLoadBalanceType
+}
+
+func (s *NetworkConf) GetWanLoadBalanceWeight() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanLoadBalanceWeight
+}
+
+func (s *NetworkConf) GetWanNetmask() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanNetmask
+}
+
+func (s *NetworkConf) GetWanNetworkgroup() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanNetworkgroup
+}
+
+func (s *NetworkConf) GetWanPppoePasswordEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WanPppoePasswordEnabled
+}
+
+func (s *NetworkConf) GetWanPppoeUsernameEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WanPppoeUsernameEnabled
+}
+
+func (s *NetworkConf) GetWanPrefixlen() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanPrefixlen
+}
+
+func (s *NetworkConf) GetWanProviderCapabilities() *NetworkConfWanProviderCapabilities {
+	if s == nil || s.WanProviderCapabilities == nil {
+		return nil
+	}
+
+	return s.WanProviderCapabilities
+}
+
+func (s *NetworkConf) GetWanSmartqDownRate() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanSmartqDownRate
+}
+
+func (s *NetworkConf) GetWanSmartqEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WanSmartqEnabled
+}
+
+func (s *NetworkConf) GetWanSmartqUpRate() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanSmartqUpRate
+}
+
+func (s *NetworkConf) GetWanType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanType
+}
+
+func (s *NetworkConf) GetWanTypeV6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanTypeV6
+}
+
+func (s *NetworkConf) GetWanUsername() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanUsername
+}
+
+func (s *NetworkConf) GetWanVlan() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WanVlan
+}
+
+func (s *NetworkConf) GetWanVlanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WanVlanEnabled
+}
+
+func (s *NetworkConf) GetWireguardClientConfigurationFile() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientConfigurationFile
+}
+
+func (s *NetworkConf) GetWireguardClientConfigurationFilename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientConfigurationFilename
+}
+
+func (s *NetworkConf) GetWireguardClientMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientMode
+}
+
+func (s *NetworkConf) GetWireguardClientPeerIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientPeerIp
+}
+
+func (s *NetworkConf) GetWireguardClientPeerPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.WireguardClientPeerPort
+}
+
+func (s *NetworkConf) GetWireguardClientPeerPublicKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientPeerPublicKey
+}
+
+func (s *NetworkConf) GetWireguardClientPresharedKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardClientPresharedKey
+}
+
+func (s *NetworkConf) GetWireguardClientPresharedKeyEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WireguardClientPresharedKeyEnabled
+}
+
+func (s *NetworkConf) GetWireguardInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardInterface
+}
+
+func (s *NetworkConf) GetWireguardLocalWanIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardLocalWanIp
+}
+
+func (s *NetworkConf) GetWireguardPublicKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WireguardPublicKey
+}
+
+func (s *NetworkConf) GetXAuthKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XAuthKey
+}
+
+func (s *NetworkConf) GetXCaCrt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XCaCrt
+}
+
+func (s *NetworkConf) GetXCaKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XCaKey
+}
+
+func (s *NetworkConf) GetXDhKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XDhKey
+}
+
+func (s *NetworkConf) GetXIpsecPreSharedKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XIpsecPreSharedKey
+}
+
+func (s *NetworkConf) GetXOpenvpnPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XOpenvpnPassword
+}
+
+func (s *NetworkConf) GetXOpenvpnSharedSecretKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XOpenvpnSharedSecretKey
+}
+
+func (s *NetworkConf) GetXPptpcPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XPptpcPassword
+}
+
+func (s *NetworkConf) GetXServerCrt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XServerCrt
+}
+
+func (s *NetworkConf) GetXServerKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XServerKey
+}
+
+func (s *NetworkConf) GetXSharedClientCrt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XSharedClientCrt
+}
+
+func (s *NetworkConf) GetXSharedClientKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XSharedClientKey
+}
+
+func (s *NetworkConf) GetXWanPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XWanPassword
+}
+
+func (s *NetworkConf) GetXWireguardPrivateKey() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XWireguardPrivateKey
+}
+
 type NetworkConfIgmpQuerierSwitches struct {
 	QuerierAddress *string `json:"querier_address,omitempty"`
 	SwitchMac      *string `json:"switch_mac,omitempty"`
+}
+
+func (s *NetworkConfIgmpQuerierSwitches) GetQuerierAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.QuerierAddress
+}
+
+func (s *NetworkConfIgmpQuerierSwitches) GetSwitchMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SwitchMac
 }
 
 type NetworkConfNatOutboundIpAddresses struct {
@@ -264,12 +2136,76 @@ type NetworkConfNatOutboundIpAddresses struct {
 	WanNetworkGroup *string   `json:"wan_network_group,omitempty"`
 }
 
+func (s *NetworkConfNatOutboundIpAddresses) GetIpAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IpAddress
+}
+
+func (s *NetworkConfNatOutboundIpAddresses) GetIpAddressPool() []string {
+	if s == nil || s.IpAddressPool == nil {
+		return nil
+	}
+
+	return *s.IpAddressPool
+}
+
+func (s *NetworkConfNatOutboundIpAddresses) GetMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Mode
+}
+
+func (s *NetworkConfNatOutboundIpAddresses) GetWanNetworkGroup() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.WanNetworkGroup
+}
+
 type NetworkConfWanDhcpOptions struct {
 	OptionNumber *float64 `json:"optionNumber,omitempty"`
 	Value        *string  `json:"value,omitempty"`
 }
 
+func (s *NetworkConfWanDhcpOptions) GetOptionNumber() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.OptionNumber
+}
+
+func (s *NetworkConfWanDhcpOptions) GetValue() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Value
+}
+
 type NetworkConfWanProviderCapabilities struct {
 	DownloadKilobitsPerSecond *int64 `json:"download_kilobits_per_second,omitempty"`
 	UploadKilobitsPerSecond   *int64 `json:"upload_kilobits_per_second,omitempty"`
+}
+
+func (s *NetworkConfWanProviderCapabilities) GetDownloadKilobitsPerSecond() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DownloadKilobitsPerSecond
+}
+
+func (s *NetworkConfWanProviderCapabilities) GetUploadKilobitsPerSecond() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.UploadKilobitsPerSecond
 }

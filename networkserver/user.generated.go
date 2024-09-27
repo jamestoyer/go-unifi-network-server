@@ -35,3 +35,131 @@ type User struct {
 	VirtualNetworkOverrideEnabled *bool   `json:"virtual_network_override_enabled,omitempty"`
 	VirtualNetworkOverrideId      *string `json:"virtual_network_override_id,omitempty"`
 }
+
+func (s *User) GetBlocked() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Blocked
+}
+
+func (s *User) GetFixedApEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.FixedApEnabled
+}
+
+func (s *User) GetFixedApMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FixedApMac
+}
+
+func (s *User) GetFixedIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FixedIp
+}
+
+func (s *User) GetHostname() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Hostname
+}
+
+func (s *User) GetLastSeen() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LastSeen
+}
+
+func (s *User) GetLocalDnsRecord() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LocalDnsRecord
+}
+
+func (s *User) GetLocalDnsRecordEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LocalDnsRecordEnabled
+}
+
+func (s *User) GetMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Mac
+}
+
+func (s *User) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *User) GetNetworkId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.NetworkId
+}
+
+func (s *User) GetNote() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Note
+}
+
+func (s *User) GetUseFixedip() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.UseFixedip
+}
+
+func (s *User) GetUsergroupId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UsergroupId
+}
+
+func (s *User) GetVirtualNetworkOverrideEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VirtualNetworkOverrideEnabled
+}
+
+func (s *User) GetVirtualNetworkOverrideId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VirtualNetworkOverrideId
+}
