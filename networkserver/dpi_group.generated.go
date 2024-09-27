@@ -27,17 +27,63 @@ import (
 )
 
 type DpiGroup struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID        *string   `json:"_id,omitempty"`
+	SiteID    *string   `json:"site_id,omitempty"`
+	Hidden    *bool     `json:"attr_hidden,omitempty"`
+	HiddenID  *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete  *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit    *bool     `json:"attr_no_edit,omitempty"`
 	DpiappIds *[]string `json:"dpiapp_ids,omitempty"`
 	Enabled   *bool     `json:"enabled,omitempty"`
 	Name      *string   `json:"name,omitempty"`
+}
+
+func (s *DpiGroup) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *DpiGroup) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *DpiGroup) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *DpiGroup) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *DpiGroup) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *DpiGroup) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *DpiGroup) GetDpiappIds() []string {
@@ -108,7 +154,7 @@ func (c *Client) DeleteDpiGroup(ctx context.Context, site string, id string) (*h
 		return resp, fmt.Errorf(`unable to delete DpiGroup: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDpiGroup(ctx context.Context, site, id string) (*DpiGroup, *http.Response, error) {
@@ -153,7 +199,7 @@ func (c *Client) ListDpiGroup(ctx context.Context, site string) ([]DpiGroup, *ht
 }
 
 func (c *Client) UpdateDpiGroup(ctx context.Context, site string, data *DpiGroup) (*DpiGroup, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

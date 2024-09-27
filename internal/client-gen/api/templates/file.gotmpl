@@ -107,7 +107,7 @@ func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }
 }
 
 func (c *Client) Update{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", *data.ID)
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", data.GetID())
     req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
     if err != nil {
         return nil, nil, err

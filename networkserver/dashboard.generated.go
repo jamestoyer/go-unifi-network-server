@@ -27,19 +27,65 @@ import (
 )
 
 type Dashboard struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                *string             `json:"_id,omitempty"`
+	SiteID            *string             `json:"site_id,omitempty"`
+	Hidden            *bool               `json:"attr_hidden,omitempty"`
+	HiddenID          *string             `json:"attr_hidden_id,omitempty"`
+	NoDelete          *bool               `json:"attr_no_delete,omitempty"`
+	NoEdit            *bool               `json:"attr_no_edit,omitempty"`
 	ControllerVersion *string             `json:"controller_version,omitempty"`
 	Desc              *string             `json:"desc,omitempty"`
 	IsPublic          *bool               `json:"is_public,omitempty"`
 	Modules           *[]DashboardModules `json:"modules,omitempty"`
 	Name              *string             `json:"name,omitempty"`
+}
+
+func (s *Dashboard) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Dashboard) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Dashboard) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Dashboard) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Dashboard) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Dashboard) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Dashboard) GetControllerVersion() string {
@@ -165,7 +211,7 @@ func (c *Client) DeleteDashboard(ctx context.Context, site string, id string) (*
 		return resp, fmt.Errorf(`unable to delete Dashboard: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDashboard(ctx context.Context, site, id string) (*Dashboard, *http.Response, error) {
@@ -210,7 +256,7 @@ func (c *Client) ListDashboard(ctx context.Context, site string) ([]Dashboard, *
 }
 
 func (c *Client) UpdateDashboard(ctx context.Context, site string, data *Dashboard) (*Dashboard, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "dashboard", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

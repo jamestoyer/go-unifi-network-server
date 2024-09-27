@@ -27,14 +27,12 @@ import (
 )
 
 type DpiApp struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID             *string  `json:"_id,omitempty"`
+	SiteID         *string  `json:"site_id,omitempty"`
+	Hidden         *bool    `json:"attr_hidden,omitempty"`
+	HiddenID       *string  `json:"attr_hidden_id,omitempty"`
+	NoDelete       *bool    `json:"attr_no_delete,omitempty"`
+	NoEdit         *bool    `json:"attr_no_edit,omitempty"`
 	Apps           *[]int64 `json:"apps,omitempty"`
 	Blocked        *bool    `json:"blocked,omitempty"`
 	Cats           *[]int64 `json:"cats,omitempty"`
@@ -43,6 +41,54 @@ type DpiApp struct {
 	Name           *string  `json:"name,omitempty"`
 	QosRateMaxDown *float64 `json:"qos_rate_max_down,omitempty"`
 	QosRateMaxUp   *float64 `json:"qos_rate_max_up,omitempty"`
+}
+
+func (s *DpiApp) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *DpiApp) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *DpiApp) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *DpiApp) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *DpiApp) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *DpiApp) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *DpiApp) GetApps() []int64 {
@@ -153,7 +199,7 @@ func (c *Client) DeleteDpiApp(ctx context.Context, site string, id string) (*htt
 		return resp, fmt.Errorf(`unable to delete DpiApp: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDpiApp(ctx context.Context, site, id string) (*DpiApp, *http.Response, error) {
@@ -198,7 +244,7 @@ func (c *Client) ListDpiApp(ctx context.Context, site string) ([]DpiApp, *http.R
 }
 
 func (c *Client) UpdateDpiApp(ctx context.Context, site string, data *DpiApp) (*DpiApp, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

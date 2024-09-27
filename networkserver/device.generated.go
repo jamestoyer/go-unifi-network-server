@@ -27,14 +27,12 @@ import (
 )
 
 type Device struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                          *string                    `json:"_id,omitempty"`
+	SiteID                      *string                    `json:"site_id,omitempty"`
+	Hidden                      *bool                      `json:"attr_hidden,omitempty"`
+	HiddenID                    *string                    `json:"attr_hidden_id,omitempty"`
+	NoDelete                    *bool                      `json:"attr_no_delete,omitempty"`
+	NoEdit                      *bool                      `json:"attr_no_edit,omitempty"`
 	AtfEnabled                  *bool                      `json:"atf_enabled,omitempty"`
 	BandsteeringMode            *string                    `json:"bandsteering_mode,omitempty"`
 	BaresipAuthUser             *string                    `json:"baresip_auth_user,omitempty"`
@@ -111,6 +109,54 @@ type Device struct {
 	X                           *string                    `json:"x,omitempty"`
 	XBaresipPassword            *string                    `json:"x_baresip_password,omitempty"`
 	Y                           *string                    `json:"y,omitempty"`
+}
+
+func (s *Device) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Device) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Device) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Device) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Device) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Device) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Device) GetAtfEnabled() bool {
@@ -1713,7 +1759,7 @@ func (c *Client) DeleteDevice(ctx context.Context, site string, id string) (*htt
 		return resp, fmt.Errorf(`unable to delete Device: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, *http.Response, error) {
@@ -1758,7 +1804,7 @@ func (c *Client) ListDevice(ctx context.Context, site string) ([]Device, *http.R
 }
 
 func (c *Client) UpdateDevice(ctx context.Context, site string, data *Device) (*Device, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "device", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "device", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

@@ -21,10 +21,42 @@ import (
 	"slices"
 )
 
+var rootObjectFields = []FieldDefinition{
+	{
+		Name:     "ID",
+		JSONName: "_id",
+		Type:     String,
+	},
+	{
+		Name:     "SiteID",
+		JSONName: "site_id",
+		Type:     String,
+	},
+	{
+		Name:     "Hidden",
+		JSONName: "attr_hidden",
+		Type:     Boolean,
+	},
+	{
+		Name:     "HiddenID",
+		JSONName: "attr_hidden_id",
+		Type:     String,
+	},
+	{
+		Name:     "NoDelete",
+		JSONName: "attr_no_delete",
+		Type:     Boolean,
+	},
+	{
+		Name:     "NoEdit",
+		JSONName: "attr_no_edit",
+		Type:     Boolean,
+	},
+}
+
 type EndpointObject struct {
 	Name   string
 	Fields []FieldDefinition
-	Root   bool
 }
 
 func NewEndpointObject(name string, values map[string]interface{}, namePrefix string, rootObject bool) (*EndpointObject, error) {
@@ -47,10 +79,13 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 		return nil, fmt.Errorf("invalid field definitions for endpoint object: %w", errors.Join(errs...))
 	}
 
+	if rootObject {
+		fields = append(rootObjectFields, fields...)
+	}
+
 	return &EndpointObject{
 		Name:   name,
 		Fields: fields,
-		Root:   rootObject,
 	}, nil
 }
 

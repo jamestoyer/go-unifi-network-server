@@ -27,19 +27,65 @@ import (
 )
 
 type DhcpOption struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
+	ID       *string `json:"_id,omitempty"`
+	SiteID   *string `json:"site_id,omitempty"`
 	Hidden   *bool   `json:"attr_hidden,omitempty"`
 	HiddenID *string `json:"attr_hidden_id,omitempty"`
 	NoDelete *bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+	Code     *string `json:"code,omitempty"`
+	Name     *string `json:"name,omitempty"`
+	Signed   *bool   `json:"signed,omitempty"`
+	Type     *string `json:"type,omitempty"`
+	Width    *int64  `json:"width,omitempty"`
+}
 
-	Code   *string `json:"code,omitempty"`
-	Name   *string `json:"name,omitempty"`
-	Signed *bool   `json:"signed,omitempty"`
-	Type   *string `json:"type,omitempty"`
-	Width  *int64  `json:"width,omitempty"`
+func (s *DhcpOption) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *DhcpOption) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *DhcpOption) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *DhcpOption) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *DhcpOption) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *DhcpOption) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *DhcpOption) GetCode() string {
@@ -126,7 +172,7 @@ func (c *Client) DeleteDhcpOption(ctx context.Context, site string, id string) (
 		return resp, fmt.Errorf(`unable to delete DhcpOption: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDhcpOption(ctx context.Context, site, id string) (*DhcpOption, *http.Response, error) {
@@ -171,7 +217,7 @@ func (c *Client) ListDhcpOption(ctx context.Context, site string) ([]DhcpOption,
 }
 
 func (c *Client) UpdateDhcpOption(ctx context.Context, site string, data *DhcpOption) (*DhcpOption, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "dhcpoption", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "dhcpoption", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

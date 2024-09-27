@@ -27,14 +27,12 @@ import (
 )
 
 type Routing struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                   *string `json:"_id,omitempty"`
+	SiteID               *string `json:"site_id,omitempty"`
+	Hidden               *bool   `json:"attr_hidden,omitempty"`
+	HiddenID             *string `json:"attr_hidden_id,omitempty"`
+	NoDelete             *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit               *bool   `json:"attr_no_edit,omitempty"`
 	Enabled              *bool   `json:"enabled,omitempty"`
 	GatewayDevice        *string `json:"gateway_device,omitempty"`
 	GatewayType          *string `json:"gateway_type,omitempty"`
@@ -45,6 +43,54 @@ type Routing struct {
 	StaticRouteNexthop   *string `json:"static-route_nexthop,omitempty"`
 	StaticRouteType      *string `json:"static-route_type,omitempty"`
 	Type                 *string `json:"type,omitempty"`
+}
+
+func (s *Routing) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Routing) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Routing) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Routing) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Routing) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Routing) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Routing) GetEnabled() bool {
@@ -171,7 +217,7 @@ func (c *Client) DeleteRouting(ctx context.Context, site string, id string) (*ht
 		return resp, fmt.Errorf(`unable to delete Routing: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetRouting(ctx context.Context, site, id string) (*Routing, *http.Response, error) {
@@ -216,7 +262,7 @@ func (c *Client) ListRouting(ctx context.Context, site string) ([]Routing, *http
 }
 
 func (c *Client) UpdateRouting(ctx context.Context, site string, data *Routing) (*Routing, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "routing", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "routing", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

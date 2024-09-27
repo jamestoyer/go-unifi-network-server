@@ -27,14 +27,12 @@ import (
 )
 
 type User struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                            *string `json:"_id,omitempty"`
+	SiteID                        *string `json:"site_id,omitempty"`
+	Hidden                        *bool   `json:"attr_hidden,omitempty"`
+	HiddenID                      *string `json:"attr_hidden_id,omitempty"`
+	NoDelete                      *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit                        *bool   `json:"attr_no_edit,omitempty"`
 	Blocked                       *string `json:"blocked,omitempty"`
 	FixedApEnabled                *bool   `json:"fixed_ap_enabled,omitempty"`
 	FixedApMac                    *string `json:"fixed_ap_mac,omitempty"`
@@ -51,6 +49,54 @@ type User struct {
 	UsergroupId                   *string `json:"usergroup_id,omitempty"`
 	VirtualNetworkOverrideEnabled *bool   `json:"virtual_network_override_enabled,omitempty"`
 	VirtualNetworkOverrideId      *string `json:"virtual_network_override_id,omitempty"`
+}
+
+func (s *User) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *User) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *User) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *User) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *User) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *User) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *User) GetBlocked() string {
@@ -225,7 +271,7 @@ func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.
 		return resp, fmt.Errorf(`unable to delete User: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Response, error) {
@@ -270,7 +316,7 @@ func (c *Client) ListUser(ctx context.Context, site string) ([]User, *http.Respo
 }
 
 func (c *Client) UpdateUser(ctx context.Context, site string, data *User) (*User, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "user", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

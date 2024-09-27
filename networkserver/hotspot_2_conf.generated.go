@@ -27,14 +27,12 @@ import (
 )
 
 type Hotspot2Conf struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                      *string                              `json:"_id,omitempty"`
+	SiteID                  *string                              `json:"site_id,omitempty"`
+	Hidden                  *bool                                `json:"attr_hidden,omitempty"`
+	HiddenID                *string                              `json:"attr_hidden_id,omitempty"`
+	NoDelete                *bool                                `json:"attr_no_delete,omitempty"`
+	NoEdit                  *bool                                `json:"attr_no_edit,omitempty"`
 	AnqpDomainId            *float64                             `json:"anqp_domain_id,omitempty"`
 	Capab                   *[]Hotspot2ConfCapab                 `json:"capab,omitempty"`
 	CellularNetworkList     *[]Hotspot2ConfCellularNetworkList   `json:"cellular_network_list,omitempty"`
@@ -85,6 +83,54 @@ type Hotspot2Conf struct {
 	VenueGroup              *int64                               `json:"venue_group,omitempty"`
 	VenueName               *[]Hotspot2ConfVenueName             `json:"venue_name,omitempty"`
 	VenueType               *float64                             `json:"venue_type,omitempty"`
+}
+
+func (s *Hotspot2Conf) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Hotspot2Conf) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Hotspot2Conf) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Hotspot2Conf) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Hotspot2Conf) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Hotspot2Conf) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Hotspot2Conf) GetAnqpDomainId() float64 {
@@ -975,7 +1021,7 @@ func (c *Client) DeleteHotspot2Conf(ctx context.Context, site string, id string)
 		return resp, fmt.Errorf(`unable to delete Hotspot2Conf: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetHotspot2Conf(ctx context.Context, site, id string) (*Hotspot2Conf, *http.Response, error) {
@@ -1020,7 +1066,7 @@ func (c *Client) ListHotspot2Conf(ctx context.Context, site string) ([]Hotspot2C
 }
 
 func (c *Client) UpdateHotspot2Conf(ctx context.Context, site string, data *Hotspot2Conf) (*Hotspot2Conf, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

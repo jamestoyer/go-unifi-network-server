@@ -27,16 +27,62 @@ import (
 )
 
 type Tag struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID          *string   `json:"_id,omitempty"`
+	SiteID      *string   `json:"site_id,omitempty"`
+	Hidden      *bool     `json:"attr_hidden,omitempty"`
+	HiddenID    *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete    *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit      *bool     `json:"attr_no_edit,omitempty"`
 	MemberTable *[]string `json:"member_table,omitempty"`
 	Name        *string   `json:"name,omitempty"`
+}
+
+func (s *Tag) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Tag) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Tag) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Tag) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Tag) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Tag) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Tag) GetMemberTable() []string {
@@ -99,7 +145,7 @@ func (c *Client) DeleteTag(ctx context.Context, site string, id string) (*http.R
 		return resp, fmt.Errorf(`unable to delete Tag: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetTag(ctx context.Context, site, id string) (*Tag, *http.Response, error) {
@@ -144,7 +190,7 @@ func (c *Client) ListTag(ctx context.Context, site string) ([]Tag, *http.Respons
 }
 
 func (c *Client) UpdateTag(ctx context.Context, site string, data *Tag) (*Tag, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "tag", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "tag", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
