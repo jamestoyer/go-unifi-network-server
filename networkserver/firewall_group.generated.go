@@ -18,6 +18,14 @@
 package networkserver
 
 type FirewallGroup struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	GroupMembers *[]string `json:"group_members,omitempty"`
 	GroupType    *string   `json:"group_type,omitempty"`
 	Name         *string   `json:"name,omitempty"`

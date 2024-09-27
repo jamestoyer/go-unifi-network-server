@@ -18,6 +18,14 @@
 package networkserver
 
 type PortForward struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	DestinationIp      *string                      `json:"destination_ip,omitempty"`
 	DestinationIps     *[]PortForwardDestinationIps `json:"destination_ips,omitempty"`
 	DstPort            *string                      `json:"dst_port,omitempty"`

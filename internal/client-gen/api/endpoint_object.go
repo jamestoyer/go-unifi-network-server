@@ -24,9 +24,10 @@ import (
 type EndpointObject struct {
 	Name   string
 	Fields []FieldDefinition
+	Root   bool
 }
 
-func NewEndpointObject(name string, values map[string]interface{}, namePrefix string) (*EndpointObject, error) {
+func NewEndpointObject(name string, values map[string]interface{}, namePrefix string, rootObject bool) (*EndpointObject, error) {
 	name = namePrefix + name
 	var fields []FieldDefinition
 	var errs []error
@@ -49,6 +50,7 @@ func NewEndpointObject(name string, values map[string]interface{}, namePrefix st
 	return &EndpointObject{
 		Name:   name,
 		Fields: fields,
+		Root:   rootObject,
 	}, nil
 }
 

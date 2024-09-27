@@ -34,7 +34,7 @@ type Endpoint struct {
 }
 
 func NewEndpoint(name string, spec map[string]interface{}) (*Endpoint, error) {
-	rootObject, err := NewEndpointObject(name, spec, "")
+	rootObject, err := NewEndpointObject(name, spec, "", true)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate objects for endpoint: %w", err)
 	}
