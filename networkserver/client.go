@@ -270,6 +270,11 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		c.csrfLock.Unlock()
 	}
 
+	err = checkResponseForError(resp)
+	if err != nil {
+		return nil, err
+	}
+
 	if v == nil {
 		return resp, nil
 	}
@@ -286,4 +291,45 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	}
 
 	return resp, nil
+}
+
+type ErrResponse struct {
+	Meta struct {
+		ResponseCode string `json:"rc"`
+		Message      string `json:"msg"`
+	} `json:"meta"`
+	Data     interface{} `json:"data"`
+	response *http.Response
+}
+
+func (e *ErrResponse) Error() string {
+	if e.response != nil && e.response.Request != nil {
+		return fmt.Sprintf("%v %v: %d %s %+v", e.response.Request.Method, e.response.Request.URL, e.response.StatusCode, e.Meta.Message, e.Data)
+	}
+
+	if e.response != nil {
+		return fmt.Sprintf("%d %s %+v", e.response.StatusCode, e.Meta.Message, e.Data)
+	}
+
+	return fmt.Sprintf("%s %+v", e.Meta.Message, e.Data)
+}
+
+func checkResponseForError(resp *http.Response) error {
+	if resp.StatusCode == http.StatusOK {
+		return nil
+	}
+
+	errResp := &ErrResponse{response: resp}
+	data, err := io.ReadAll(resp.Body)
+	if err == nil && data != nil {
+		if err = json.Unmarshal(data, errResp); err != nil {
+			// Reset the response to ensure we don't leave it in an inconsistent state after the failed unmarshalling
+			errResp = &ErrResponse{}
+		}
+	}
+
+	// Repopulate the body as it's unclear what the formal spec for the error response is. This allows for the user
+	// to interrogate this later.
+	resp.Body = io.NopCloser(bytes.NewBuffer(data))
+	return errResp
 }
