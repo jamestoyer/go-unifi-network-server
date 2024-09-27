@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type RadiusProfile struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -248,4 +257,118 @@ func (s *RadiusProfileAuthServers) GetXSecret() string {
 	}
 
 	return *s.XSecret
+}
+
+type responseBodyRadiusProfile struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []RadiusProfile `json:"data"`
+}
+
+func (c *Client) CreateRadiusProfile(ctx context.Context, site string, data *RadiusProfile) (*RadiusProfile, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyRadiusProfile
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create radiusprofile: %w`, err)
+	}
+
+	var item RadiusProfile
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create RadiusProfile`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteRadiusProfile(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyRadiusProfile
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete RadiusProfile: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetRadiusProfile(ctx context.Context, site, id string) (*RadiusProfile, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyRadiusProfile
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get RadiusProfile: %w`, err)
+	}
+
+	var item RadiusProfile
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListRadiusProfile(ctx context.Context, site string) ([]RadiusProfile, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyRadiusProfile
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get RadiusProfile: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateRadiusProfile(ctx context.Context, site string, data *RadiusProfile) (*RadiusProfile, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyRadiusProfile
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update radiusprofile: %w`, err)
+	}
+
+	var item RadiusProfile
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update RadiusProfile`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

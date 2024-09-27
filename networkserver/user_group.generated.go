@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type UserGroup struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -53,4 +62,118 @@ func (s *UserGroup) GetQosRateMaxUp() int64 {
 	}
 
 	return *s.QosRateMaxUp
+}
+
+type responseBodyUserGroup struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []UserGroup     `json:"data"`
+}
+
+func (c *Client) CreateUserGroup(ctx context.Context, site string, data *UserGroup) (*UserGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyUserGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create usergroup: %w`, err)
+	}
+
+	var item UserGroup
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create UserGroup`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteUserGroup(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyUserGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete UserGroup: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetUserGroup(ctx context.Context, site, id string) (*UserGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyUserGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get UserGroup: %w`, err)
+	}
+
+	var item UserGroup
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListUserGroup(ctx context.Context, site string) ([]UserGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyUserGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get UserGroup: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateUserGroup(ctx context.Context, site string, data *UserGroup) (*UserGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyUserGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update usergroup: %w`, err)
+	}
+
+	var item UserGroup
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update UserGroup`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

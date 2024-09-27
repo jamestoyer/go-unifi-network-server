@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type Device struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -1658,4 +1667,118 @@ func (s *DeviceRpsOverrideRpsPortTable) GetPortMode() string {
 	}
 
 	return *s.PortMode
+}
+
+type responseBodyDevice struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []Device        `json:"data"`
+}
+
+func (c *Client) CreateDevice(ctx context.Context, site string, data *Device) (*Device, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "device")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDevice
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create device: %w`, err)
+	}
+
+	var item Device
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create Device`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteDevice(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "device", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyDevice
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete Device: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "device", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDevice
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Device: %w`, err)
+	}
+
+	var item Device
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListDevice(ctx context.Context, site string) ([]Device, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "device")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDevice
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Device: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateDevice(ctx context.Context, site string, data *Device) (*Device, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "device", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDevice
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update device: %w`, err)
+	}
+
+	var item Device
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update Device`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

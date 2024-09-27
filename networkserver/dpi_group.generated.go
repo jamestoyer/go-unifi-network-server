@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type DpiGroup struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -53,4 +62,118 @@ func (s *DpiGroup) GetName() string {
 	}
 
 	return *s.Name
+}
+
+type responseBodyDpiGroup struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []DpiGroup      `json:"data"`
+}
+
+func (c *Client) CreateDpiGroup(ctx context.Context, site string, data *DpiGroup) (*DpiGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create dpigroup: %w`, err)
+	}
+
+	var item DpiGroup
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create DpiGroup`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteDpiGroup(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyDpiGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete DpiGroup: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetDpiGroup(ctx context.Context, site, id string) (*DpiGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get DpiGroup: %w`, err)
+	}
+
+	var item DpiGroup
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListDpiGroup(ctx context.Context, site string) ([]DpiGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get DpiGroup: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateDpiGroup(ctx context.Context, site string, data *DpiGroup) (*DpiGroup, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiGroup
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update dpigroup: %w`, err)
+	}
+
+	var item DpiGroup
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update DpiGroup`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }
