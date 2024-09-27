@@ -25,6 +25,7 @@ func TestNewEndpointObject(t *testing.T) {
 		name       string
 		namePrefix string
 		values     map[string]interface{}
+		rootObject bool
 
 		error bool
 		want  *EndpointObject
@@ -158,7 +159,7 @@ func TestNewEndpointObject(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := NewEndpointObject(test.name, test.values, test.namePrefix)
+			got, err := NewEndpointObject(test.name, test.values, test.namePrefix, test.rootObject)
 			if test.error {
 				assert.Error(t, err)
 			} else {

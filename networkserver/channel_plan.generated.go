@@ -18,6 +18,14 @@
 package networkserver
 
 type ChannelPlan struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	ApBlacklistedChannels   *[]ChannelPlanApBlacklistedChannels   `json:"ap_blacklisted_channels,omitempty"`
 	ConfSource              *string                               `json:"conf_source,omitempty"`
 	Coupling                *[]ChannelPlanCoupling                `json:"coupling,omitempty"`

@@ -99,7 +99,7 @@ func fieldTypeFromInterfaceValue(jsonName, endpointObjectName string, value []in
 func fieldTypeFromObjectValue(jsonName, endpointObjectName string, values map[string]interface{}) (FieldType, *EndpointObject, error) {
 	name := strcase.ToCamel(jsonName)
 	fieldType := Object(endpointObjectName + name)
-	object, err := NewEndpointObject(name, values, endpointObjectName)
+	object, err := NewEndpointObject(name, values, endpointObjectName, false)
 	if err != nil {
 		return FieldType{}, nil, fmt.Errorf("failed to create endpoint object for field: %w", err)
 	}

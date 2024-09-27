@@ -18,6 +18,14 @@
 package networkserver
 
 type NetworkConf struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	AutoScaleEnabled                              *bool                                `json:"auto_scale_enabled,omitempty"`
 	DhcpRelayEnabled                              *bool                                `json:"dhcp_relay_enabled,omitempty"`
 	DhcpdBootEnabled                              *bool                                `json:"dhcpd_boot_enabled,omitempty"`

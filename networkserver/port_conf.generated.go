@@ -18,6 +18,14 @@
 package networkserver
 
 type PortConf struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	Autoneg                       *bool               `json:"autoneg,omitempty"`
 	Dot1XCtrl                     *string             `json:"dot1x_ctrl,omitempty"`
 	Dot1XIdleTimeout              *float64            `json:"dot1x_idle_timeout,omitempty"`

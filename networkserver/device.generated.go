@@ -18,6 +18,14 @@
 package networkserver
 
 type Device struct {
+	ID     *string `json:"_id,omitempty"`
+	SiteID *string `json:"site_id,omitempty"`
+
+	Hidden   *bool   `json:"attr_hidden,omitempty"`
+	HiddenID *string `json:"attr_hidden_id,omitempty"`
+	NoDelete *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+
 	AtfEnabled                  *bool                      `json:"atf_enabled,omitempty"`
 	BandsteeringMode            *string                    `json:"bandsteering_mode,omitempty"`
 	BaresipAuthUser             *string                    `json:"baresip_auth_user,omitempty"`
