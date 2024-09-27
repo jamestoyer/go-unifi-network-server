@@ -27,19 +27,65 @@ import (
 )
 
 type ScheduleTask struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID              *string                       `json:"_id,omitempty"`
+	SiteID          *string                       `json:"site_id,omitempty"`
+	Hidden          *bool                         `json:"attr_hidden,omitempty"`
+	HiddenID        *string                       `json:"attr_hidden_id,omitempty"`
+	NoDelete        *bool                         `json:"attr_no_delete,omitempty"`
+	NoEdit          *bool                         `json:"attr_no_edit,omitempty"`
 	Action          *string                       `json:"action,omitempty"`
 	CronExpr        *string                       `json:"cron_expr,omitempty"`
 	ExecuteOnlyOnce *bool                         `json:"execute_only_once,omitempty"`
 	Name            *string                       `json:"name,omitempty"`
 	UpgradeTargets  *[]ScheduleTaskUpgradeTargets `json:"upgrade_targets,omitempty"`
+}
+
+func (s *ScheduleTask) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *ScheduleTask) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *ScheduleTask) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *ScheduleTask) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *ScheduleTask) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *ScheduleTask) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *ScheduleTask) GetAction() string {
@@ -138,7 +184,7 @@ func (c *Client) DeleteScheduleTask(ctx context.Context, site string, id string)
 		return resp, fmt.Errorf(`unable to delete ScheduleTask: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetScheduleTask(ctx context.Context, site, id string) (*ScheduleTask, *http.Response, error) {
@@ -183,7 +229,7 @@ func (c *Client) ListScheduleTask(ctx context.Context, site string) ([]ScheduleT
 }
 
 func (c *Client) UpdateScheduleTask(ctx context.Context, site string, data *ScheduleTask) (*ScheduleTask, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "scheduletask", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "scheduletask", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

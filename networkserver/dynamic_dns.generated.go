@@ -27,14 +27,12 @@ import (
 )
 
 type DynamicDNS struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID            *string   `json:"_id,omitempty"`
+	SiteID        *string   `json:"site_id,omitempty"`
+	Hidden        *bool     `json:"attr_hidden,omitempty"`
+	HiddenID      *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete      *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit        *bool     `json:"attr_no_edit,omitempty"`
 	CustomService *string   `json:"custom_service,omitempty"`
 	HostName      *string   `json:"host_name,omitempty"`
 	Interface     *string   `json:"interface,omitempty"`
@@ -43,6 +41,54 @@ type DynamicDNS struct {
 	Server        *string   `json:"server,omitempty"`
 	Service       *string   `json:"service,omitempty"`
 	XPassword     *string   `json:"x_password,omitempty"`
+}
+
+func (s *DynamicDNS) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *DynamicDNS) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *DynamicDNS) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *DynamicDNS) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *DynamicDNS) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *DynamicDNS) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *DynamicDNS) GetCustomService() string {
@@ -153,7 +199,7 @@ func (c *Client) DeleteDynamicDNS(ctx context.Context, site string, id string) (
 		return resp, fmt.Errorf(`unable to delete DynamicDNS: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetDynamicDNS(ctx context.Context, site, id string) (*DynamicDNS, *http.Response, error) {
@@ -198,7 +244,7 @@ func (c *Client) ListDynamicDNS(ctx context.Context, site string) ([]DynamicDNS,
 }
 
 func (c *Client) UpdateDynamicDNS(ctx context.Context, site string, data *DynamicDNS) (*DynamicDNS, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

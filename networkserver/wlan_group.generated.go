@@ -27,15 +27,61 @@ import (
 )
 
 type WlanGroup struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
+	ID       *string `json:"_id,omitempty"`
+	SiteID   *string `json:"site_id,omitempty"`
 	Hidden   *bool   `json:"attr_hidden,omitempty"`
 	HiddenID *string `json:"attr_hidden_id,omitempty"`
 	NoDelete *bool   `json:"attr_no_delete,omitempty"`
 	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
+	Name     *string `json:"name,omitempty"`
+}
 
-	Name *string `json:"name,omitempty"`
+func (s *WlanGroup) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *WlanGroup) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *WlanGroup) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *WlanGroup) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *WlanGroup) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *WlanGroup) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *WlanGroup) GetName() string {
@@ -90,7 +136,7 @@ func (c *Client) DeleteWlanGroup(ctx context.Context, site string, id string) (*
 		return resp, fmt.Errorf(`unable to delete WlanGroup: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetWlanGroup(ctx context.Context, site, id string) (*WlanGroup, *http.Response, error) {
@@ -135,7 +181,7 @@ func (c *Client) ListWlanGroup(ctx context.Context, site string) ([]WlanGroup, *
 }
 
 func (c *Client) UpdateWlanGroup(ctx context.Context, site string, data *WlanGroup) (*WlanGroup, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "wlangroup", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "wlangroup", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

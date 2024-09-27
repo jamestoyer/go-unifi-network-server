@@ -27,14 +27,12 @@ import (
 )
 
 type PortForward struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                 *string                      `json:"_id,omitempty"`
+	SiteID             *string                      `json:"site_id,omitempty"`
+	Hidden             *bool                        `json:"attr_hidden,omitempty"`
+	HiddenID           *string                      `json:"attr_hidden_id,omitempty"`
+	NoDelete           *bool                        `json:"attr_no_delete,omitempty"`
+	NoEdit             *bool                        `json:"attr_no_edit,omitempty"`
 	DestinationIp      *string                      `json:"destination_ip,omitempty"`
 	DestinationIps     *[]PortForwardDestinationIps `json:"destination_ips,omitempty"`
 	DstPort            *string                      `json:"dst_port,omitempty"`
@@ -49,6 +47,54 @@ type PortForward struct {
 	SrcFirewallGroupId *string                      `json:"src_firewall_group_id,omitempty"`
 	SrcLimitingEnabled *bool                        `json:"src_limiting_enabled,omitempty"`
 	SrcLimitingType    *string                      `json:"src_limiting_type,omitempty"`
+}
+
+func (s *PortForward) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *PortForward) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *PortForward) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *PortForward) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *PortForward) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *PortForward) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *PortForward) GetDestinationIp() string {
@@ -228,7 +274,7 @@ func (c *Client) DeletePortForward(ctx context.Context, site string, id string) 
 		return resp, fmt.Errorf(`unable to delete PortForward: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetPortForward(ctx context.Context, site, id string) (*PortForward, *http.Response, error) {
@@ -273,7 +319,7 @@ func (c *Client) ListPortForward(ctx context.Context, site string) ([]PortForwar
 }
 
 func (c *Client) UpdatePortForward(ctx context.Context, site string, data *PortForward) (*PortForward, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "portforward", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "portforward", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

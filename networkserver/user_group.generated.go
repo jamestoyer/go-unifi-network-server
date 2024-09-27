@@ -27,17 +27,63 @@ import (
 )
 
 type UserGroup struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID             *string `json:"_id,omitempty"`
+	SiteID         *string `json:"site_id,omitempty"`
+	Hidden         *bool   `json:"attr_hidden,omitempty"`
+	HiddenID       *string `json:"attr_hidden_id,omitempty"`
+	NoDelete       *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit         *bool   `json:"attr_no_edit,omitempty"`
 	Name           *string `json:"name,omitempty"`
 	QosRateMaxDown *int64  `json:"qos_rate_max_down,omitempty"`
 	QosRateMaxUp   *int64  `json:"qos_rate_max_up,omitempty"`
+}
+
+func (s *UserGroup) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *UserGroup) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *UserGroup) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *UserGroup) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *UserGroup) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *UserGroup) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *UserGroup) GetName() string {
@@ -108,7 +154,7 @@ func (c *Client) DeleteUserGroup(ctx context.Context, site string, id string) (*
 		return resp, fmt.Errorf(`unable to delete UserGroup: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetUserGroup(ctx context.Context, site, id string) (*UserGroup, *http.Response, error) {
@@ -153,7 +199,7 @@ func (c *Client) ListUserGroup(ctx context.Context, site string) ([]UserGroup, *
 }
 
 func (c *Client) UpdateUserGroup(ctx context.Context, site string, data *UserGroup) (*UserGroup, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "usergroup", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "usergroup", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

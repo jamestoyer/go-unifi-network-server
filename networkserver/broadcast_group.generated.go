@@ -27,16 +27,62 @@ import (
 )
 
 type BroadcastGroup struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID          *string   `json:"_id,omitempty"`
+	SiteID      *string   `json:"site_id,omitempty"`
+	Hidden      *bool     `json:"attr_hidden,omitempty"`
+	HiddenID    *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete    *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit      *bool     `json:"attr_no_edit,omitempty"`
 	MemberTable *[]string `json:"member_table,omitempty"`
 	Name        *string   `json:"name,omitempty"`
+}
+
+func (s *BroadcastGroup) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *BroadcastGroup) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *BroadcastGroup) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *BroadcastGroup) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *BroadcastGroup) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *BroadcastGroup) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *BroadcastGroup) GetMemberTable() []string {
@@ -99,7 +145,7 @@ func (c *Client) DeleteBroadcastGroup(ctx context.Context, site string, id strin
 		return resp, fmt.Errorf(`unable to delete BroadcastGroup: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetBroadcastGroup(ctx context.Context, site, id string) (*BroadcastGroup, *http.Response, error) {
@@ -144,7 +190,7 @@ func (c *Client) ListBroadcastGroup(ctx context.Context, site string) ([]Broadca
 }
 
 func (c *Client) UpdateBroadcastGroup(ctx context.Context, site string, data *BroadcastGroup) (*BroadcastGroup, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "broadcastgroup", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "broadcastgroup", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

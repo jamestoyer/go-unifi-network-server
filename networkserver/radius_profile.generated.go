@@ -27,14 +27,12 @@ import (
 )
 
 type RadiusProfile struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                        *string                     `json:"_id,omitempty"`
+	SiteID                    *string                     `json:"site_id,omitempty"`
+	Hidden                    *bool                       `json:"attr_hidden,omitempty"`
+	HiddenID                  *string                     `json:"attr_hidden_id,omitempty"`
+	NoDelete                  *bool                       `json:"attr_no_delete,omitempty"`
+	NoEdit                    *bool                       `json:"attr_no_edit,omitempty"`
 	AccountingEnabled         *bool                       `json:"accounting_enabled,omitempty"`
 	AcctServers               *[]RadiusProfileAcctServers `json:"acct_servers,omitempty"`
 	AuthServers               *[]RadiusProfileAuthServers `json:"auth_servers,omitempty"`
@@ -53,6 +51,54 @@ type RadiusProfile struct {
 	XClientPrivateKey         *string                     `json:"x_client_private_key,omitempty"`
 	XClientPrivateKeyFilename *string                     `json:"x_client_private_key_filename,omitempty"`
 	XClientPrivateKeyPassword *string                     `json:"x_client_private_key_password,omitempty"`
+}
+
+func (s *RadiusProfile) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *RadiusProfile) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *RadiusProfile) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *RadiusProfile) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *RadiusProfile) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *RadiusProfile) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *RadiusProfile) GetAccountingEnabled() bool {
@@ -303,7 +349,7 @@ func (c *Client) DeleteRadiusProfile(ctx context.Context, site string, id string
 		return resp, fmt.Errorf(`unable to delete RadiusProfile: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetRadiusProfile(ctx context.Context, site, id string) (*RadiusProfile, *http.Response, error) {
@@ -348,7 +394,7 @@ func (c *Client) ListRadiusProfile(ctx context.Context, site string) ([]RadiusPr
 }
 
 func (c *Client) UpdateRadiusProfile(ctx context.Context, site string, data *RadiusProfile) (*RadiusProfile, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

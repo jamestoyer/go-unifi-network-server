@@ -27,14 +27,12 @@ import (
 )
 
 type Account struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID               *string `json:"_id,omitempty"`
+	SiteID           *string `json:"site_id,omitempty"`
+	Hidden           *bool   `json:"attr_hidden,omitempty"`
+	HiddenID         *string `json:"attr_hidden_id,omitempty"`
+	NoDelete         *bool   `json:"attr_no_delete,omitempty"`
+	NoEdit           *bool   `json:"attr_no_edit,omitempty"`
 	Ip               *string `json:"ip,omitempty"`
 	Name             *string `json:"name,omitempty"`
 	NetworkconfId    *string `json:"networkconf_id,omitempty"`
@@ -43,6 +41,54 @@ type Account struct {
 	TunnelType       *int64  `json:"tunnel_type,omitempty"`
 	Vlan             *int64  `json:"vlan,omitempty"`
 	XPassword        *string `json:"x_password,omitempty"`
+}
+
+func (s *Account) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *Account) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *Account) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *Account) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *Account) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *Account) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *Account) GetIp() string {
@@ -153,7 +199,7 @@ func (c *Client) DeleteAccount(ctx context.Context, site string, id string) (*ht
 		return resp, fmt.Errorf(`unable to delete Account: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetAccount(ctx context.Context, site, id string) (*Account, *http.Response, error) {
@@ -198,7 +244,7 @@ func (c *Client) ListAccount(ctx context.Context, site string) ([]Account, *http
 }
 
 func (c *Client) UpdateAccount(ctx context.Context, site string, data *Account) (*Account, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "account", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "account", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

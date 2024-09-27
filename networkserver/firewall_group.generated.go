@@ -27,17 +27,63 @@ import (
 )
 
 type FirewallGroup struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID           *string   `json:"_id,omitempty"`
+	SiteID       *string   `json:"site_id,omitempty"`
+	Hidden       *bool     `json:"attr_hidden,omitempty"`
+	HiddenID     *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete     *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit       *bool     `json:"attr_no_edit,omitempty"`
 	GroupMembers *[]string `json:"group_members,omitempty"`
 	GroupType    *string   `json:"group_type,omitempty"`
 	Name         *string   `json:"name,omitempty"`
+}
+
+func (s *FirewallGroup) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *FirewallGroup) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *FirewallGroup) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *FirewallGroup) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *FirewallGroup) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *FirewallGroup) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *FirewallGroup) GetGroupMembers() []string {
@@ -108,7 +154,7 @@ func (c *Client) DeleteFirewallGroup(ctx context.Context, site string, id string
 		return resp, fmt.Errorf(`unable to delete FirewallGroup: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetFirewallGroup(ctx context.Context, site, id string) (*FirewallGroup, *http.Response, error) {
@@ -153,7 +199,7 @@ func (c *Client) ListFirewallGroup(ctx context.Context, site string) ([]Firewall
 }
 
 func (c *Client) UpdateFirewallGroup(ctx context.Context, site string, data *FirewallGroup) (*FirewallGroup, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "firewallgroup", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "firewallgroup", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

@@ -27,14 +27,12 @@ import (
 )
 
 type NetworkConf struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                                            *string                              `json:"_id,omitempty"`
+	SiteID                                        *string                              `json:"site_id,omitempty"`
+	Hidden                                        *bool                                `json:"attr_hidden,omitempty"`
+	HiddenID                                      *string                              `json:"attr_hidden_id,omitempty"`
+	NoDelete                                      *bool                                `json:"attr_no_delete,omitempty"`
+	NoEdit                                        *bool                                `json:"attr_no_edit,omitempty"`
 	AutoScaleEnabled                              *bool                                `json:"auto_scale_enabled,omitempty"`
 	DhcpRelayEnabled                              *bool                                `json:"dhcp_relay_enabled,omitempty"`
 	DhcpdBootEnabled                              *bool                                `json:"dhcpd_boot_enabled,omitempty"`
@@ -267,6 +265,54 @@ type NetworkConf struct {
 	XSharedClientKey                              *string                              `json:"x_shared_client_key,omitempty"`
 	XWanPassword                                  *string                              `json:"x_wan_password,omitempty"`
 	XWireguardPrivateKey                          *string                              `json:"x_wireguard_private_key,omitempty"`
+}
+
+func (s *NetworkConf) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *NetworkConf) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *NetworkConf) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *NetworkConf) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *NetworkConf) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *NetworkConf) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *NetworkConf) GetAutoScaleEnabled() bool {
@@ -2271,7 +2317,7 @@ func (c *Client) DeleteNetworkConf(ctx context.Context, site string, id string) 
 		return resp, fmt.Errorf(`unable to delete NetworkConf: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetNetworkConf(ctx context.Context, site, id string) (*NetworkConf, *http.Response, error) {
@@ -2316,7 +2362,7 @@ func (c *Client) ListNetworkConf(ctx context.Context, site string) ([]NetworkCon
 }
 
 func (c *Client) UpdateNetworkConf(ctx context.Context, site string, data *NetworkConf) (*NetworkConf, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "networkconf", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

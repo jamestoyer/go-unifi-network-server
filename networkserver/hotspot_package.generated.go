@@ -27,14 +27,12 @@ import (
 )
 
 type HotspotPackage struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                             *string  `json:"_id,omitempty"`
+	SiteID                         *string  `json:"site_id,omitempty"`
+	Hidden                         *bool    `json:"attr_hidden,omitempty"`
+	HiddenID                       *string  `json:"attr_hidden_id,omitempty"`
+	NoDelete                       *bool    `json:"attr_no_delete,omitempty"`
+	NoEdit                         *bool    `json:"attr_no_edit,omitempty"`
 	Amount                         *float64 `json:"amount,omitempty"`
 	ChargedAs                      *string  `json:"charged_as,omitempty"`
 	Currency                       *string  `json:"currency,omitempty"`
@@ -64,6 +62,54 @@ type HotspotPackage struct {
 	PaymentFieldsZipRequired       *bool    `json:"payment_fields_zip_required,omitempty"`
 	TrialDurationMinutes           *int64   `json:"trial_duration_minutes,omitempty"`
 	TrialReset                     *float64 `json:"trial_reset,omitempty"`
+}
+
+func (s *HotspotPackage) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *HotspotPackage) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *HotspotPackage) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *HotspotPackage) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *HotspotPackage) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *HotspotPackage) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *HotspotPackage) GetAmount() float64 {
@@ -342,7 +388,7 @@ func (c *Client) DeleteHotspotPackage(ctx context.Context, site string, id strin
 		return resp, fmt.Errorf(`unable to delete HotspotPackage: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetHotspotPackage(ctx context.Context, site, id string) (*HotspotPackage, *http.Response, error) {
@@ -387,7 +433,7 @@ func (c *Client) ListHotspotPackage(ctx context.Context, site string) ([]Hotspot
 }
 
 func (c *Client) UpdateHotspotPackage(ctx context.Context, site string, data *HotspotPackage) (*HotspotPackage, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "hotspotpackage", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "hotspotpackage", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

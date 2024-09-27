@@ -27,14 +27,12 @@ import (
 )
 
 type FirewallRule struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                    *string   `json:"_id,omitempty"`
+	SiteID                *string   `json:"site_id,omitempty"`
+	Hidden                *bool     `json:"attr_hidden,omitempty"`
+	HiddenID              *string   `json:"attr_hidden_id,omitempty"`
+	NoDelete              *bool     `json:"attr_no_delete,omitempty"`
+	NoEdit                *bool     `json:"attr_no_edit,omitempty"`
 	Action                *string   `json:"action,omitempty"`
 	Contiguous            *bool     `json:"contiguous,omitempty"`
 	DstAddress            *string   `json:"dst_address,omitempty"`
@@ -75,6 +73,54 @@ type FirewallRule struct {
 	Utc                   *bool     `json:"utc,omitempty"`
 	Weekdays              *string   `json:"weekdays,omitempty"`
 	WeekdaysNegate        *bool     `json:"weekdays_negate,omitempty"`
+}
+
+func (s *FirewallRule) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *FirewallRule) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *FirewallRule) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *FirewallRule) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *FirewallRule) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *FirewallRule) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *FirewallRule) GetAction() string {
@@ -441,7 +487,7 @@ func (c *Client) DeleteFirewallRule(ctx context.Context, site string, id string)
 		return resp, fmt.Errorf(`unable to delete FirewallRule: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetFirewallRule(ctx context.Context, site, id string) (*FirewallRule, *http.Response, error) {
@@ -486,7 +532,7 @@ func (c *Client) ListFirewallRule(ctx context.Context, site string) ([]FirewallR
 }
 
 func (c *Client) UpdateFirewallRule(ctx context.Context, site string, data *FirewallRule) (*FirewallRule, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "firewallrule", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "firewallrule", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

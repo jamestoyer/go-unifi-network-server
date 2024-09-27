@@ -27,14 +27,12 @@ import (
 )
 
 type ChannelPlan struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                      *string                               `json:"_id,omitempty"`
+	SiteID                  *string                               `json:"site_id,omitempty"`
+	Hidden                  *bool                                 `json:"attr_hidden,omitempty"`
+	HiddenID                *string                               `json:"attr_hidden_id,omitempty"`
+	NoDelete                *bool                                 `json:"attr_no_delete,omitempty"`
+	NoEdit                  *bool                                 `json:"attr_no_edit,omitempty"`
 	ApBlacklistedChannels   *[]ChannelPlanApBlacklistedChannels   `json:"ap_blacklisted_channels,omitempty"`
 	ConfSource              *string                               `json:"conf_source,omitempty"`
 	Coupling                *[]ChannelPlanCoupling                `json:"coupling,omitempty"`
@@ -46,6 +44,54 @@ type ChannelPlan struct {
 	Satisfaction            *string                               `json:"satisfaction,omitempty"`
 	SatisfactionTable       *[]ChannelPlanSatisfactionTable       `json:"satisfaction_table,omitempty"`
 	SiteBlacklistedChannels *[]ChannelPlanSiteBlacklistedChannels `json:"site_blacklisted_channels,omitempty"`
+}
+
+func (s *ChannelPlan) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *ChannelPlan) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *ChannelPlan) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *ChannelPlan) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *ChannelPlan) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *ChannelPlan) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *ChannelPlan) GetApBlacklistedChannels() []ChannelPlanApBlacklistedChannels {
@@ -348,7 +394,7 @@ func (c *Client) DeleteChannelPlan(ctx context.Context, site string, id string) 
 		return resp, fmt.Errorf(`unable to delete ChannelPlan: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetChannelPlan(ctx context.Context, site, id string) (*ChannelPlan, *http.Response, error) {
@@ -393,7 +439,7 @@ func (c *Client) ListChannelPlan(ctx context.Context, site string) ([]ChannelPla
 }
 
 func (c *Client) UpdateChannelPlan(ctx context.Context, site string, data *ChannelPlan) (*ChannelPlan, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "channelplan", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "channelplan", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err

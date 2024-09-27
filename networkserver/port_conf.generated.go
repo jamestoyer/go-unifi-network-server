@@ -27,14 +27,12 @@ import (
 )
 
 type PortConf struct {
-	ID     *string `json:"_id,omitempty"`
-	SiteID *string `json:"site_id,omitempty"`
-
-	Hidden   *bool   `json:"attr_hidden,omitempty"`
-	HiddenID *string `json:"attr_hidden_id,omitempty"`
-	NoDelete *bool   `json:"attr_no_delete,omitempty"`
-	NoEdit   *bool   `json:"attr_no_edit,omitempty"`
-
+	ID                            *string             `json:"_id,omitempty"`
+	SiteID                        *string             `json:"site_id,omitempty"`
+	Hidden                        *bool               `json:"attr_hidden,omitempty"`
+	HiddenID                      *string             `json:"attr_hidden_id,omitempty"`
+	NoDelete                      *bool               `json:"attr_no_delete,omitempty"`
+	NoEdit                        *bool               `json:"attr_no_edit,omitempty"`
 	Autoneg                       *bool               `json:"autoneg,omitempty"`
 	Dot1XCtrl                     *string             `json:"dot1x_ctrl,omitempty"`
 	Dot1XIdleTimeout              *float64            `json:"dot1x_idle_timeout,omitempty"`
@@ -75,6 +73,54 @@ type PortConf struct {
 	StpPortMode                   *bool               `json:"stp_port_mode,omitempty"`
 	TaggedVlanMgmt                *string             `json:"tagged_vlan_mgmt,omitempty"`
 	VoiceNetworkconfId            *string             `json:"voice_networkconf_id,omitempty"`
+}
+
+func (s *PortConf) GetID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ID
+}
+
+func (s *PortConf) GetSiteID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SiteID
+}
+
+func (s *PortConf) GetHidden() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Hidden
+}
+
+func (s *PortConf) GetHiddenID() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.HiddenID
+}
+
+func (s *PortConf) GetNoDelete() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoDelete
+}
+
+func (s *PortConf) GetNoEdit() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.NoEdit
 }
 
 func (s *PortConf) GetAutoneg() bool {
@@ -579,7 +625,7 @@ func (c *Client) DeletePortConf(ctx context.Context, site string, id string) (*h
 		return resp, fmt.Errorf(`unable to delete PortConf: %w`, err)
 	}
 
-	return nil, nil
+	return resp, nil
 }
 
 func (c *Client) GetPortConf(ctx context.Context, site, id string) (*PortConf, *http.Response, error) {
@@ -624,7 +670,7 @@ func (c *Client) ListPortConf(ctx context.Context, site string) ([]PortConf, *ht
 }
 
 func (c *Client) UpdatePortConf(ctx context.Context, site string, data *PortConf) (*PortConf, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "portconf", *data.ID)
+	endpointPath := path.Join("api/s/", site, "rest", "portconf", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
