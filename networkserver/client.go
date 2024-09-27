@@ -298,22 +298,20 @@ type ErrResponse struct {
 		ResponseCode string `json:"rc"`
 		Message      string `json:"msg"`
 	} `json:"meta"`
-
+	Data     interface{} `json:"data"`
 	response *http.Response
 }
 
 func (e *ErrResponse) Error() string {
 	if e.response != nil && e.response.Request != nil {
-		return fmt.Sprintf("%v %v: %d %s",
-			e.response.Request.Method, e.response.Request.URL,
-			e.response.StatusCode, e.Meta.Message)
+		return fmt.Sprintf("%v %v: %d %s %+v", e.response.Request.Method, e.response.Request.URL, e.response.StatusCode, e.Meta.Message, e.Data)
 	}
 
 	if e.response != nil {
-		return fmt.Sprintf("%d %s", e.response.StatusCode, e.Meta.Message)
+		return fmt.Sprintf("%d %s %+v", e.response.StatusCode, e.Meta.Message, e.Data)
 	}
 
-	return fmt.Sprintf("%s", e.Meta.Message)
+	return fmt.Sprintf("%s %+v", e.Meta.Message, e.Data)
 }
 
 func checkResponseForError(resp *http.Response) error {
