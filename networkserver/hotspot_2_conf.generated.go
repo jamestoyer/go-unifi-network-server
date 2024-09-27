@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type Hotspot2Conf struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -920,4 +929,118 @@ func (s *Hotspot2ConfVenueName) GetUrl() string {
 	}
 
 	return *s.Url
+}
+
+type responseBodyHotspot2Conf struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []Hotspot2Conf  `json:"data"`
+}
+
+func (c *Client) CreateHotspot2Conf(ctx context.Context, site string, data *Hotspot2Conf) (*Hotspot2Conf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyHotspot2Conf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create hotspot2conf: %w`, err)
+	}
+
+	var item Hotspot2Conf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create Hotspot2Conf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteHotspot2Conf(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyHotspot2Conf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete Hotspot2Conf: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetHotspot2Conf(ctx context.Context, site, id string) (*Hotspot2Conf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyHotspot2Conf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Hotspot2Conf: %w`, err)
+	}
+
+	var item Hotspot2Conf
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListHotspot2Conf(ctx context.Context, site string) ([]Hotspot2Conf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyHotspot2Conf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Hotspot2Conf: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateHotspot2Conf(ctx context.Context, site string, data *Hotspot2Conf) (*Hotspot2Conf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyHotspot2Conf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update hotspot2conf: %w`, err)
+	}
+
+	var item Hotspot2Conf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update Hotspot2Conf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

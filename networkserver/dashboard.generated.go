@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type Dashboard struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -110,4 +119,118 @@ func (s *DashboardModules) GetRestrictions() string {
 	}
 
 	return *s.Restrictions
+}
+
+type responseBodyDashboard struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []Dashboard     `json:"data"`
+}
+
+func (c *Client) CreateDashboard(ctx context.Context, site string, data *Dashboard) (*Dashboard, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDashboard
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create dashboard: %w`, err)
+	}
+
+	var item Dashboard
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create Dashboard`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteDashboard(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyDashboard
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete Dashboard: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetDashboard(ctx context.Context, site, id string) (*Dashboard, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDashboard
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Dashboard: %w`, err)
+	}
+
+	var item Dashboard
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListDashboard(ctx context.Context, site string) ([]Dashboard, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDashboard
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get Dashboard: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateDashboard(ctx context.Context, site string, data *Dashboard) (*Dashboard, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dashboard", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDashboard
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update dashboard: %w`, err)
+	}
+
+	var item Dashboard
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update Dashboard`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

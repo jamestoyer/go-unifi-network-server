@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type NetworkConf struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -2216,4 +2225,118 @@ func (s *NetworkConfWanProviderCapabilities) GetUploadKilobitsPerSecond() int64 
 	}
 
 	return *s.UploadKilobitsPerSecond
+}
+
+type responseBodyNetworkConf struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []NetworkConf   `json:"data"`
+}
+
+func (c *Client) CreateNetworkConf(ctx context.Context, site string, data *NetworkConf) (*NetworkConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyNetworkConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create networkconf: %w`, err)
+	}
+
+	var item NetworkConf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create NetworkConf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteNetworkConf(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyNetworkConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete NetworkConf: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetNetworkConf(ctx context.Context, site, id string) (*NetworkConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyNetworkConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get NetworkConf: %w`, err)
+	}
+
+	var item NetworkConf
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListNetworkConf(ctx context.Context, site string) ([]NetworkConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyNetworkConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get NetworkConf: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateNetworkConf(ctx context.Context, site string, data *NetworkConf) (*NetworkConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "networkconf", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyNetworkConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update networkconf: %w`, err)
+	}
+
+	var item NetworkConf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update NetworkConf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

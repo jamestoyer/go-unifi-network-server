@@ -22,6 +22,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/iancoleman/strcase"
@@ -60,6 +61,8 @@ func (e *Endpoint) Render(ctx context.Context, logger *slog.Logger, modulePath s
 
 	var buffer bytes.Buffer
 	endpointTmpl := endpointTemplate{
+		APIPath:     strings.ToLower(e.Name),
+		Name:        e.Name,
 		PackageName: modulePath,
 		Structs:     e.Objects(),
 	}
@@ -80,6 +83,8 @@ func (e *Endpoint) Render(ctx context.Context, logger *slog.Logger, modulePath s
 }
 
 type endpointTemplate struct {
+	APIPath     string
+	Name        string
 	PackageName string
 	Structs     []*EndpointObject
 }

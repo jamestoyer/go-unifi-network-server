@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type PortConf struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -524,4 +533,118 @@ func (s *PortConfQosProfileQosPoliciesQosMatching) GetSrcPort() float64 {
 	}
 
 	return *s.SrcPort
+}
+
+type responseBodyPortConf struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []PortConf      `json:"data"`
+}
+
+func (c *Client) CreatePortConf(ctx context.Context, site string, data *PortConf) (*PortConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "portconf")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyPortConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create portconf: %w`, err)
+	}
+
+	var item PortConf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create PortConf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeletePortConf(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "portconf", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyPortConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete PortConf: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetPortConf(ctx context.Context, site, id string) (*PortConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "portconf", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyPortConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get PortConf: %w`, err)
+	}
+
+	var item PortConf
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListPortConf(ctx context.Context, site string) ([]PortConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "portconf")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyPortConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get PortConf: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdatePortConf(ctx context.Context, site string, data *PortConf) (*PortConf, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "portconf", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyPortConf
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update portconf: %w`, err)
+	}
+
+	var item PortConf
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update PortConf`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

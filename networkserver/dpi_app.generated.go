@@ -17,6 +17,15 @@
 
 package networkserver
 
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"path"
+)
+
 type DpiApp struct {
 	ID     *string `json:"_id,omitempty"`
 	SiteID *string `json:"site_id,omitempty"`
@@ -98,4 +107,118 @@ func (s *DpiApp) GetQosRateMaxUp() float64 {
 	}
 
 	return *s.QosRateMaxUp
+}
+
+type responseBodyDpiApp struct {
+	Metadata json.RawMessage `json:"meta"`
+	Payload  []DpiApp        `json:"data"`
+}
+
+func (c *Client) CreateDpiApp(ctx context.Context, site string, data *DpiApp) (*DpiApp, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp")
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiApp
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to create dpiapp: %w`, err)
+	}
+
+	var item DpiApp
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to create DpiApp`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) DeleteDpiApp(ctx context.Context, site string, id string) (*http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", id)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var body responseBodyDpiApp
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return resp, fmt.Errorf(`unable to delete DpiApp: %w`, err)
+	}
+
+	return nil, nil
+}
+
+func (c *Client) GetDpiApp(ctx context.Context, site, id string) (*DpiApp, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", id)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiApp
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get DpiApp: %w`, err)
+	}
+
+	var item DpiApp
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
+}
+
+func (c *Client) ListDpiApp(ctx context.Context, site string) ([]DpiApp, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp")
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiApp
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get DpiApp: %w`, err)
+	}
+
+	return body.Payload, resp, nil
+}
+
+func (c *Client) UpdateDpiApp(ctx context.Context, site string, data *DpiApp) (*DpiApp, *http.Response, error) {
+	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", *data.ID)
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyDpiApp
+	resp, err := c.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to update dpiapp: %w`, err)
+	}
+
+	var item DpiApp
+	switch len(body.Payload) {
+	case 0:
+		err = errors.New(`failed to update DpiApp`)
+	case 1:
+		item = body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return &item, resp, err
 }

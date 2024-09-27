@@ -3,6 +3,131 @@
 
 {{ template "licence.gotmpl" }}
 package {{ .PackageName }}
+
+import (
+    "context"
+    "encoding/json"
+	"errors"
+    "fmt"
+    "net/http"
+	"path"
+)
+
 {{ range $struct := .Structs }}
 {{ template "struct.gotmpl" $struct }}
 {{ end }}
+
+
+type responseBody{{ .Name }} struct {
+    Metadata json.RawMessage `json:"meta"`
+	Payload  []{{ .Name }}   `json:"data"`
+}
+
+func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+    endpointPath := path.Join("api/s/", site, "rest", "{{ .APIPath }}")
+    req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    var body responseBody{{ .Name }}
+    resp, err := c.Do(ctx, req, &body)
+    if err != nil {
+        return nil, resp, fmt.Errorf(`unable to create {{ .APIPath }}: %w`, err)
+    }
+
+    var item {{ .Name }}
+    switch len(body.Payload) {
+    case 0:
+        err = errors.New(`failed to create {{ .Name }}`)
+    case 1:
+        item = body.Payload[0]
+    default:
+        err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+    }
+
+    return &item, resp, err
+}
+
+func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) (*http.Response, error) {
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
+    req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+    if err != nil {
+        return nil, err
+    }
+
+    var body responseBody{{ .Name }}
+    resp, err := c.Do(ctx, req, &body)
+    if err != nil {
+        return  resp, fmt.Errorf(`unable to delete {{ .Name }}: %w`, err)
+    }
+
+    return resp, nil
+}
+
+func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name }}, *http.Response, error) {
+	endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
+    req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+    if err != nil {
+        return nil, nil, err
+    }
+
+	var body responseBody{{ .Name }}
+    resp, err := c.Do(ctx, req, &body)
+    if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get {{ .Name }}: %w`, err)
+    }
+
+	var item {{ .Name }}
+	switch len(body.Payload) {
+	case 0:
+    case 1:
+		item = body.Payload[0]
+    default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+    }
+
+	return &item, resp, err
+}
+
+func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }}, *http.Response, error) {
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}")
+    req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    var body responseBody{{ .Name }}
+    resp, err := c.Do(ctx, req, &body)
+    if err != nil {
+        return nil, resp, fmt.Errorf(`unable to get {{ .Name }}: %w`, err)
+    }
+
+    return body.Payload, resp, nil
+}
+
+func (c *Client) Update{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", *data.ID)
+    req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    var body responseBody{{ .Name }}
+    resp, err := c.Do(ctx, req, &body)
+    if err != nil {
+        return nil, resp, fmt.Errorf(`unable to update {{ .APIPath }}: %w`, err)
+    }
+
+    var item {{ .Name }}
+    switch len(body.Payload) {
+    case 0:
+        err = errors.New(`failed to update {{ .Name }}`)
+    case 1:
+        item = body.Payload[0]
+    default:
+        err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+    }
+
+    return &item, resp, err
+}
