@@ -22,3 +22,27 @@ type UserGroup struct {
 	QosRateMaxDown *int64  `json:"qos_rate_max_down,omitempty"`
 	QosRateMaxUp   *int64  `json:"qos_rate_max_up,omitempty"`
 }
+
+func (s *UserGroup) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *UserGroup) GetQosRateMaxDown() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.QosRateMaxDown
+}
+
+func (s *UserGroup) GetQosRateMaxUp() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.QosRateMaxUp
+}

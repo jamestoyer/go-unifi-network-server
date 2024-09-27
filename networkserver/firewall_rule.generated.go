@@ -59,3 +59,323 @@ type FirewallRule struct {
 	Weekdays              *string   `json:"weekdays,omitempty"`
 	WeekdaysNegate        *bool     `json:"weekdays_negate,omitempty"`
 }
+
+func (s *FirewallRule) GetAction() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Action
+}
+
+func (s *FirewallRule) GetContiguous() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Contiguous
+}
+
+func (s *FirewallRule) GetDstAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstAddress
+}
+
+func (s *FirewallRule) GetDstAddressIpv6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstAddressIpv6
+}
+
+func (s *FirewallRule) GetDstFirewallgroupIds() []string {
+	if s == nil || s.DstFirewallgroupIds == nil {
+		return nil
+	}
+
+	return *s.DstFirewallgroupIds
+}
+
+func (s *FirewallRule) GetDstNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstNetworkconfId
+}
+
+func (s *FirewallRule) GetDstNetworkconfType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstNetworkconfType
+}
+
+func (s *FirewallRule) GetDstPort() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstPort
+}
+
+func (s *FirewallRule) GetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Enabled
+}
+
+func (s *FirewallRule) GetIcmpTypename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.IcmpTypename
+}
+
+func (s *FirewallRule) GetIcmpv6Typename() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Icmpv6Typename
+}
+
+func (s *FirewallRule) GetIpsec() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ipsec
+}
+
+func (s *FirewallRule) GetLogging() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Logging
+}
+
+func (s *FirewallRule) GetMonthdays() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Monthdays
+}
+
+func (s *FirewallRule) GetMonthdaysNegate() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.MonthdaysNegate
+}
+
+func (s *FirewallRule) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *FirewallRule) GetProtocol() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Protocol
+}
+
+func (s *FirewallRule) GetProtocolMatchExcepted() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.ProtocolMatchExcepted
+}
+
+func (s *FirewallRule) GetProtocolV6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ProtocolV6
+}
+
+func (s *FirewallRule) GetRuleIndex() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.RuleIndex
+}
+
+func (s *FirewallRule) GetRuleset() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ruleset
+}
+
+func (s *FirewallRule) GetSettingPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SettingPreference
+}
+
+func (s *FirewallRule) GetSrcAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcAddress
+}
+
+func (s *FirewallRule) GetSrcAddressIpv6() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcAddressIpv6
+}
+
+func (s *FirewallRule) GetSrcFirewallgroupIds() []string {
+	if s == nil || s.SrcFirewallgroupIds == nil {
+		return nil
+	}
+
+	return *s.SrcFirewallgroupIds
+}
+
+func (s *FirewallRule) GetSrcMacAddress() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcMacAddress
+}
+
+func (s *FirewallRule) GetSrcNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcNetworkconfId
+}
+
+func (s *FirewallRule) GetSrcNetworkconfType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcNetworkconfType
+}
+
+func (s *FirewallRule) GetSrcPort() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcPort
+}
+
+func (s *FirewallRule) GetStartdate() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Startdate
+}
+
+func (s *FirewallRule) GetStarttime() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Starttime
+}
+
+func (s *FirewallRule) GetStateEstablished() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StateEstablished
+}
+
+func (s *FirewallRule) GetStateInvalid() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StateInvalid
+}
+
+func (s *FirewallRule) GetStateNew() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StateNew
+}
+
+func (s *FirewallRule) GetStateRelated() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StateRelated
+}
+
+func (s *FirewallRule) GetStopdate() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Stopdate
+}
+
+func (s *FirewallRule) GetStoptime() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Stoptime
+}
+
+func (s *FirewallRule) GetUtc() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Utc
+}
+
+func (s *FirewallRule) GetWeekdays() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Weekdays
+}
+
+func (s *FirewallRule) GetWeekdaysNegate() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.WeekdaysNegate
+}

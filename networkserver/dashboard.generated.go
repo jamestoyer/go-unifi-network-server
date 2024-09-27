@@ -25,9 +25,81 @@ type Dashboard struct {
 	Name              *string             `json:"name,omitempty"`
 }
 
+func (s *Dashboard) GetControllerVersion() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ControllerVersion
+}
+
+func (s *Dashboard) GetDesc() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Desc
+}
+
+func (s *Dashboard) GetIsPublic() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.IsPublic
+}
+
+func (s *Dashboard) GetModules() []DashboardModules {
+	if s == nil || s.Modules == nil {
+		return nil
+	}
+
+	return *s.Modules
+}
+
+func (s *Dashboard) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
 type DashboardModules struct {
 	Config       *string `json:"config,omitempty"`
 	Id           *string `json:"id,omitempty"`
 	ModuleId     *string `json:"module_id,omitempty"`
 	Restrictions *string `json:"restrictions,omitempty"`
+}
+
+func (s *DashboardModules) GetConfig() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Config
+}
+
+func (s *DashboardModules) GetId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Id
+}
+
+func (s *DashboardModules) GetModuleId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ModuleId
+}
+
+func (s *DashboardModules) GetRestrictions() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Restrictions
 }

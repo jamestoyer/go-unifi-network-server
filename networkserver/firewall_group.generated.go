@@ -22,3 +22,27 @@ type FirewallGroup struct {
 	GroupType    *string   `json:"group_type,omitempty"`
 	Name         *string   `json:"name,omitempty"`
 }
+
+func (s *FirewallGroup) GetGroupMembers() []string {
+	if s == nil || s.GroupMembers == nil {
+		return nil
+	}
+
+	return *s.GroupMembers
+}
+
+func (s *FirewallGroup) GetGroupType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GroupType
+}
+
+func (s *FirewallGroup) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}

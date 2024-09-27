@@ -96,6 +96,614 @@ type Device struct {
 	Y                           *string                    `json:"y,omitempty"`
 }
 
+func (s *Device) GetAtfEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.AtfEnabled
+}
+
+func (s *Device) GetBandsteeringMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.BandsteeringMode
+}
+
+func (s *Device) GetBaresipAuthUser() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.BaresipAuthUser
+}
+
+func (s *Device) GetBaresipEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.BaresipEnabled
+}
+
+func (s *Device) GetBaresipExtension() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.BaresipExtension
+}
+
+func (s *Device) GetConfigNetwork() *DeviceConfigNetwork {
+	if s == nil || s.ConfigNetwork == nil {
+		return nil
+	}
+
+	return s.ConfigNetwork
+}
+
+func (s *Device) GetDisabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Disabled
+}
+
+func (s *Device) GetDot1XFallbackNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dot1XFallbackNetworkconfId
+}
+
+func (s *Device) GetDot1XPortctrlEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Dot1XPortctrlEnabled
+}
+
+func (s *Device) GetDpiEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.DpiEnabled
+}
+
+func (s *Device) GetEtherLighting() *DeviceEtherLighting {
+	if s == nil || s.EtherLighting == nil {
+		return nil
+	}
+
+	return s.EtherLighting
+}
+
+func (s *Device) GetEthernetOverrides() []DeviceEthernetOverrides {
+	if s == nil || s.EthernetOverrides == nil {
+		return nil
+	}
+
+	return *s.EthernetOverrides
+}
+
+func (s *Device) GetFlowctrlEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.FlowctrlEnabled
+}
+
+func (s *Device) GetGatewayVrrpMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GatewayVrrpMode
+}
+
+func (s *Device) GetGatewayVrrpPriority() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.GatewayVrrpPriority
+}
+
+func (s *Device) GetGreenApEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.GreenApEnabled
+}
+
+func (s *Device) GetHeightInMeters() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.HeightInMeters
+}
+
+func (s *Device) GetHostname() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Hostname
+}
+
+func (s *Device) GetJumboframeEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.JumboframeEnabled
+}
+
+func (s *Device) GetLcmBrightness() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LcmBrightness
+}
+
+func (s *Device) GetLcmBrightnessOverride() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LcmBrightnessOverride
+}
+
+func (s *Device) GetLcmIdleTimeout() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LcmIdleTimeout
+}
+
+func (s *Device) GetLcmIdleTimeoutOverride() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LcmIdleTimeoutOverride
+}
+
+func (s *Device) GetLcmNightModeBegins() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LcmNightModeBegins
+}
+
+func (s *Device) GetLcmNightModeEnds() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LcmNightModeEnds
+}
+
+func (s *Device) GetLcmOrientationOverride() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LcmOrientationOverride
+}
+
+func (s *Device) GetLcmSettingsRestrictedAccess() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LcmSettingsRestrictedAccess
+}
+
+func (s *Device) GetLcmTrackerEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LcmTrackerEnabled
+}
+
+func (s *Device) GetLcmTrackerSeed() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LcmTrackerSeed
+}
+
+func (s *Device) GetLedOverride() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LedOverride
+}
+
+func (s *Device) GetLedOverrideColor() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LedOverrideColor
+}
+
+func (s *Device) GetLedOverrideColorBrightness() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LedOverrideColorBrightness
+}
+
+func (s *Device) GetLocked() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Locked
+}
+
+func (s *Device) GetLowpfmodeOverride() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LowpfmodeOverride
+}
+
+func (s *Device) GetLteApn() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LteApn
+}
+
+func (s *Device) GetLteAuthType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LteAuthType
+}
+
+func (s *Device) GetLteDataLimitEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LteDataLimitEnabled
+}
+
+func (s *Device) GetLteDataWarningEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LteDataWarningEnabled
+}
+
+func (s *Device) GetLteExtAnt() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LteExtAnt
+}
+
+func (s *Device) GetLteHardLimit() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LteHardLimit
+}
+
+func (s *Device) GetLtePassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LtePassword
+}
+
+func (s *Device) GetLtePoe() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LtePoe
+}
+
+func (s *Device) GetLteRoamingAllowed() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LteRoamingAllowed
+}
+
+func (s *Device) GetLteSimPin() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LteSimPin
+}
+
+func (s *Device) GetLteSoftLimit() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.LteSoftLimit
+}
+
+func (s *Device) GetLteUsername() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.LteUsername
+}
+
+func (s *Device) GetMapId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.MapId
+}
+
+func (s *Device) GetMeshStaVapEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.MeshStaVapEnabled
+}
+
+func (s *Device) GetMgmtNetworkId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.MgmtNetworkId
+}
+
+func (s *Device) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *Device) GetOutdoorModeOverride() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OutdoorModeOverride
+}
+
+func (s *Device) GetOutletEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.OutletEnabled
+}
+
+func (s *Device) GetOutletOverrides() []DeviceOutletOverrides {
+	if s == nil || s.OutletOverrides == nil {
+		return nil
+	}
+
+	return *s.OutletOverrides
+}
+
+func (s *Device) GetOutletPowerCycleEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.OutletPowerCycleEnabled
+}
+
+func (s *Device) GetPeerToPeerMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PeerToPeerMode
+}
+
+func (s *Device) GetPoeMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PoeMode
+}
+
+func (s *Device) GetPortOverrides() []DevicePortOverrides {
+	if s == nil || s.PortOverrides == nil {
+		return nil
+	}
+
+	return *s.PortOverrides
+}
+
+func (s *Device) GetPowerSourceCtrl() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PowerSourceCtrl
+}
+
+func (s *Device) GetPowerSourceCtrlBudget() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PowerSourceCtrlBudget
+}
+
+func (s *Device) GetPowerSourceCtrlEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PowerSourceCtrlEnabled
+}
+
+func (s *Device) GetPtpApMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PtpApMac
+}
+
+func (s *Device) GetRadioTable() []DeviceRadioTable {
+	if s == nil || s.RadioTable == nil {
+		return nil
+	}
+
+	return *s.RadioTable
+}
+
+func (s *Device) GetRadiusprofileId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.RadiusprofileId
+}
+
+func (s *Device) GetResetbtnEnabled() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ResetbtnEnabled
+}
+
+func (s *Device) GetRpsOverride() *DeviceRpsOverride {
+	if s == nil || s.RpsOverride == nil {
+		return nil
+	}
+
+	return s.RpsOverride
+}
+
+func (s *Device) GetSnmpContact() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SnmpContact
+}
+
+func (s *Device) GetSnmpLocation() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SnmpLocation
+}
+
+func (s *Device) GetStationMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StationMode
+}
+
+func (s *Device) GetStpPriority() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StpPriority
+}
+
+func (s *Device) GetStpVersion() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StpVersion
+}
+
+func (s *Device) GetSwitchVlanEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.SwitchVlanEnabled
+}
+
+func (s *Device) GetUbbPairName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.UbbPairName
+}
+
+func (s *Device) GetVolume() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Volume
+}
+
+func (s *Device) GetX() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.X
+}
+
+func (s *Device) GetXBaresipPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XBaresipPassword
+}
+
+func (s *Device) GetY() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Y
+}
+
 type DeviceConfigNetwork struct {
 	BondingEnabled *bool   `json:"bonding_enabled,omitempty"`
 	Dns1           *string `json:"dns1,omitempty"`
@@ -107,10 +715,98 @@ type DeviceConfigNetwork struct {
 	Type           *string `json:"type,omitempty"`
 }
 
+func (s *DeviceConfigNetwork) GetBondingEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.BondingEnabled
+}
+
+func (s *DeviceConfigNetwork) GetDns1() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dns1
+}
+
+func (s *DeviceConfigNetwork) GetDns2() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dns2
+}
+
+func (s *DeviceConfigNetwork) GetDnssuffix() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dnssuffix
+}
+
+func (s *DeviceConfigNetwork) GetGateway() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Gateway
+}
+
+func (s *DeviceConfigNetwork) GetIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ip
+}
+
+func (s *DeviceConfigNetwork) GetNetmask() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Netmask
+}
+
+func (s *DeviceConfigNetwork) GetType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Type
+}
+
 type DeviceEtherLighting struct {
 	Behavior   *string `json:"behavior,omitempty"`
 	Brightness *int64  `json:"brightness,omitempty"`
 	Mode       *string `json:"mode,omitempty"`
+}
+
+func (s *DeviceEtherLighting) GetBehavior() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Behavior
+}
+
+func (s *DeviceEtherLighting) GetBrightness() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Brightness
+}
+
+func (s *DeviceEtherLighting) GetMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Mode
 }
 
 type DeviceEthernetOverrides struct {
@@ -118,11 +814,59 @@ type DeviceEthernetOverrides struct {
 	Networkgroup *string `json:"networkgroup,omitempty"`
 }
 
+func (s *DeviceEthernetOverrides) GetIfname() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ifname
+}
+
+func (s *DeviceEthernetOverrides) GetNetworkgroup() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Networkgroup
+}
+
 type DeviceOutletOverrides struct {
 	CycleEnabled *bool   `json:"cycle_enabled,omitempty"`
 	Index        *int64  `json:"index,omitempty"`
 	Name         *string `json:"name,omitempty"`
 	RelayState   *bool   `json:"relay_state,omitempty"`
+}
+
+func (s *DeviceOutletOverrides) GetCycleEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.CycleEnabled
+}
+
+func (s *DeviceOutletOverrides) GetIndex() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Index
+}
+
+func (s *DeviceOutletOverrides) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *DeviceOutletOverrides) GetRelayState() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.RelayState
 }
 
 type DevicePortOverrides struct {
@@ -172,14 +916,398 @@ type DevicePortOverrides struct {
 	VoiceNetworkconfId            *string                        `json:"voice_networkconf_id,omitempty"`
 }
 
+func (s *DevicePortOverrides) GetAggregateNumPorts() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.AggregateNumPorts
+}
+
+func (s *DevicePortOverrides) GetAutoneg() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Autoneg
+}
+
+func (s *DevicePortOverrides) GetDot1XCtrl() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Dot1XCtrl
+}
+
+func (s *DevicePortOverrides) GetDot1XIdleTimeout() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Dot1XIdleTimeout
+}
+
+func (s *DevicePortOverrides) GetEgressRateLimitKbps() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.EgressRateLimitKbps
+}
+
+func (s *DevicePortOverrides) GetEgressRateLimitKbpsEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.EgressRateLimitKbpsEnabled
+}
+
+func (s *DevicePortOverrides) GetExcludedNetworkconfIds() []string {
+	if s == nil || s.ExcludedNetworkconfIds == nil {
+		return nil
+	}
+
+	return *s.ExcludedNetworkconfIds
+}
+
+func (s *DevicePortOverrides) GetFecMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FecMode
+}
+
+func (s *DevicePortOverrides) GetForward() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Forward
+}
+
+func (s *DevicePortOverrides) GetFullDuplex() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.FullDuplex
+}
+
+func (s *DevicePortOverrides) GetIsolation() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Isolation
+}
+
+func (s *DevicePortOverrides) GetLldpmedEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LldpmedEnabled
+}
+
+func (s *DevicePortOverrides) GetLldpmedNotifyEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LldpmedNotifyEnabled
+}
+
+func (s *DevicePortOverrides) GetMirrorPortIdx() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.MirrorPortIdx
+}
+
+func (s *DevicePortOverrides) GetMulticastRouterNetworkconfIds() []string {
+	if s == nil || s.MulticastRouterNetworkconfIds == nil {
+		return nil
+	}
+
+	return *s.MulticastRouterNetworkconfIds
+}
+
+func (s *DevicePortOverrides) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *DevicePortOverrides) GetNativeNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.NativeNetworkconfId
+}
+
+func (s *DevicePortOverrides) GetOpMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.OpMode
+}
+
+func (s *DevicePortOverrides) GetPoeMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PoeMode
+}
+
+func (s *DevicePortOverrides) GetPortIdx() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PortIdx
+}
+
+func (s *DevicePortOverrides) GetPortKeepaliveEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PortKeepaliveEnabled
+}
+
+func (s *DevicePortOverrides) GetPortSecurityEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.PortSecurityEnabled
+}
+
+func (s *DevicePortOverrides) GetPortSecurityMacAddress() []string {
+	if s == nil || s.PortSecurityMacAddress == nil {
+		return nil
+	}
+
+	return *s.PortSecurityMacAddress
+}
+
+func (s *DevicePortOverrides) GetPortconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PortconfId
+}
+
+func (s *DevicePortOverrides) GetPriorityQueue1Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue1Level
+}
+
+func (s *DevicePortOverrides) GetPriorityQueue2Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue2Level
+}
+
+func (s *DevicePortOverrides) GetPriorityQueue3Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue3Level
+}
+
+func (s *DevicePortOverrides) GetPriorityQueue4Level() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PriorityQueue4Level
+}
+
+func (s *DevicePortOverrides) GetQosProfile() *DevicePortOverridesQosProfile {
+	if s == nil || s.QosProfile == nil {
+		return nil
+	}
+
+	return s.QosProfile
+}
+
+func (s *DevicePortOverrides) GetSettingPreference() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SettingPreference
+}
+
+func (s *DevicePortOverrides) GetSpeed() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Speed
+}
+
+func (s *DevicePortOverrides) GetStormctrlBcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlBcastEnabled
+}
+
+func (s *DevicePortOverrides) GetStormctrlBcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlBcastLevel
+}
+
+func (s *DevicePortOverrides) GetStormctrlBcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlBcastRate
+}
+
+func (s *DevicePortOverrides) GetStormctrlMcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlMcastEnabled
+}
+
+func (s *DevicePortOverrides) GetStormctrlMcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlMcastLevel
+}
+
+func (s *DevicePortOverrides) GetStormctrlMcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlMcastRate
+}
+
+func (s *DevicePortOverrides) GetStormctrlType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StormctrlType
+}
+
+func (s *DevicePortOverrides) GetStormctrlUcastEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StormctrlUcastEnabled
+}
+
+func (s *DevicePortOverrides) GetStormctrlUcastLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlUcastLevel
+}
+
+func (s *DevicePortOverrides) GetStormctrlUcastRate() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StormctrlUcastRate
+}
+
+func (s *DevicePortOverrides) GetStpPortMode() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.StpPortMode
+}
+
+func (s *DevicePortOverrides) GetTaggedVlanMgmt() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TaggedVlanMgmt
+}
+
+func (s *DevicePortOverrides) GetVoiceNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.VoiceNetworkconfId
+}
+
 type DevicePortOverridesQosProfile struct {
 	QosPolicies    *[]DevicePortOverridesQosProfileQosPolicies `json:"qos_policies,omitempty"`
 	QosProfileMode *string                                     `json:"qos_profile_mode,omitempty"`
 }
 
+func (s *DevicePortOverridesQosProfile) GetQosPolicies() []DevicePortOverridesQosProfileQosPolicies {
+	if s == nil || s.QosPolicies == nil {
+		return nil
+	}
+
+	return *s.QosPolicies
+}
+
+func (s *DevicePortOverridesQosProfile) GetQosProfileMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.QosProfileMode
+}
+
 type DevicePortOverridesQosProfileQosPolicies struct {
 	QosMarking  *DevicePortOverridesQosProfileQosPoliciesQosMarking  `json:"qos_marking,omitempty"`
 	QosMatching *DevicePortOverridesQosProfileQosPoliciesQosMatching `json:"qos_matching,omitempty"`
+}
+
+func (s *DevicePortOverridesQosProfileQosPolicies) GetQosMarking() *DevicePortOverridesQosProfileQosPoliciesQosMarking {
+	if s == nil || s.QosMarking == nil {
+		return nil
+	}
+
+	return s.QosMarking
+}
+
+func (s *DevicePortOverridesQosProfileQosPolicies) GetQosMatching() *DevicePortOverridesQosProfileQosPoliciesQosMatching {
+	if s == nil || s.QosMatching == nil {
+		return nil
+	}
+
+	return s.QosMatching
 }
 
 type DevicePortOverridesQosProfileQosPoliciesQosMarking struct {
@@ -189,6 +1317,38 @@ type DevicePortOverridesQosProfileQosPoliciesQosMarking struct {
 	Queue            *int64   `json:"queue,omitempty"`
 }
 
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMarking) GetCosCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.CosCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMarking) GetDscpCode() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DscpCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMarking) GetIpPrecedenceCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpPrecedenceCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMarking) GetQueue() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Queue
+}
+
 type DevicePortOverridesQosProfileQosPoliciesQosMatching struct {
 	CosCode          *int64   `json:"cos_code,omitempty"`
 	DscpCode         *int64   `json:"dscp_code,omitempty"`
@@ -196,6 +1356,54 @@ type DevicePortOverridesQosProfileQosPoliciesQosMatching struct {
 	IpPrecedenceCode *int64   `json:"ip_precedence_code,omitempty"`
 	Protocol         *string  `json:"protocol,omitempty"`
 	SrcPort          *float64 `json:"src_port,omitempty"`
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetCosCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.CosCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetDscpCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DscpCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetDstPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.DstPort
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetIpPrecedenceCode() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.IpPrecedenceCode
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetProtocol() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Protocol
+}
+
+func (s *DevicePortOverridesQosProfileQosPoliciesQosMatching) GetSrcPort() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.SrcPort
 }
 
 type DeviceRadioTable struct {
@@ -220,9 +1428,177 @@ type DeviceRadioTable struct {
 	VwireEnabled               *bool                               `json:"vwire_enabled,omitempty"`
 }
 
+func (s *DeviceRadioTable) GetAntennaGain() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.AntennaGain
+}
+
+func (s *DeviceRadioTable) GetAntennaId() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.AntennaId
+}
+
+func (s *DeviceRadioTable) GetBackupChannel() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.BackupChannel
+}
+
+func (s *DeviceRadioTable) GetChannel() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Channel
+}
+
+func (s *DeviceRadioTable) GetChannelOptimizationEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.ChannelOptimizationEnabled
+}
+
+func (s *DeviceRadioTable) GetHardNoiseFloorEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.HardNoiseFloorEnabled
+}
+
+func (s *DeviceRadioTable) GetHt() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Ht
+}
+
+func (s *DeviceRadioTable) GetLoadbalanceEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.LoadbalanceEnabled
+}
+
+func (s *DeviceRadioTable) GetMaxsta() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Maxsta
+}
+
+func (s *DeviceRadioTable) GetMinRssi() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.MinRssi
+}
+
+func (s *DeviceRadioTable) GetMinRssiEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.MinRssiEnabled
+}
+
+func (s *DeviceRadioTable) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *DeviceRadioTable) GetRadio() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Radio
+}
+
+func (s *DeviceRadioTable) GetRadioIdentifiers() []DeviceRadioTableRadioIdentifiers {
+	if s == nil || s.RadioIdentifiers == nil {
+		return nil
+	}
+
+	return *s.RadioIdentifiers
+}
+
+func (s *DeviceRadioTable) GetSensLevel() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.SensLevel
+}
+
+func (s *DeviceRadioTable) GetSensLevelEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.SensLevelEnabled
+}
+
+func (s *DeviceRadioTable) GetTxPower() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TxPower
+}
+
+func (s *DeviceRadioTable) GetTxPowerMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TxPowerMode
+}
+
+func (s *DeviceRadioTable) GetVwireEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.VwireEnabled
+}
+
 type DeviceRadioTableRadioIdentifiers struct {
 	DeviceId  *string `json:"device_id,omitempty"`
 	RadioName *string `json:"radio_name,omitempty"`
+}
+
+func (s *DeviceRadioTableRadioIdentifiers) GetDeviceId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DeviceId
+}
+
+func (s *DeviceRadioTableRadioIdentifiers) GetRadioName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.RadioName
 }
 
 type DeviceRpsOverride struct {
@@ -230,8 +1606,48 @@ type DeviceRpsOverride struct {
 	RpsPortTable        *[]DeviceRpsOverrideRpsPortTable `json:"rps_port_table,omitempty"`
 }
 
+func (s *DeviceRpsOverride) GetPowerManagementMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PowerManagementMode
+}
+
+func (s *DeviceRpsOverride) GetRpsPortTable() []DeviceRpsOverrideRpsPortTable {
+	if s == nil || s.RpsPortTable == nil {
+		return nil
+	}
+
+	return *s.RpsPortTable
+}
+
 type DeviceRpsOverrideRpsPortTable struct {
 	Name     *string `json:"name,omitempty"`
 	PortIdx  *int64  `json:"port_idx,omitempty"`
 	PortMode *string `json:"port_mode,omitempty"`
+}
+
+func (s *DeviceRpsOverrideRpsPortTable) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *DeviceRpsOverrideRpsPortTable) GetPortIdx() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.PortIdx
+}
+
+func (s *DeviceRpsOverrideRpsPortTable) GetPortMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PortMode
 }

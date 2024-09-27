@@ -22,3 +22,27 @@ type DpiGroup struct {
 	Enabled   *bool     `json:"enabled,omitempty"`
 	Name      *string   `json:"name,omitempty"`
 }
+
+func (s *DpiGroup) GetDpiappIds() []string {
+	if s == nil || s.DpiappIds == nil {
+		return nil
+	}
+
+	return *s.DpiappIds
+}
+
+func (s *DpiGroup) GetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Enabled
+}
+
+func (s *DpiGroup) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}

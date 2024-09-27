@@ -25,6 +25,54 @@ type ScheduleTask struct {
 	UpgradeTargets  *[]ScheduleTaskUpgradeTargets `json:"upgrade_targets,omitempty"`
 }
 
+func (s *ScheduleTask) GetAction() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Action
+}
+
+func (s *ScheduleTask) GetCronExpr() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.CronExpr
+}
+
+func (s *ScheduleTask) GetExecuteOnlyOnce() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.ExecuteOnlyOnce
+}
+
+func (s *ScheduleTask) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *ScheduleTask) GetUpgradeTargets() []ScheduleTaskUpgradeTargets {
+	if s == nil || s.UpgradeTargets == nil {
+		return nil
+	}
+
+	return *s.UpgradeTargets
+}
+
 type ScheduleTaskUpgradeTargets struct {
 	Mac *string `json:"mac,omitempty"`
+}
+
+func (s *ScheduleTaskUpgradeTargets) GetMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Mac
 }

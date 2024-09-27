@@ -21,3 +21,19 @@ type BroadcastGroup struct {
 	MemberTable *[]string `json:"member_table,omitempty"`
 	Name        *string   `json:"name,omitempty"`
 }
+
+func (s *BroadcastGroup) GetMemberTable() []string {
+	if s == nil || s.MemberTable == nil {
+		return nil
+	}
+
+	return *s.MemberTable
+}
+
+func (s *BroadcastGroup) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}

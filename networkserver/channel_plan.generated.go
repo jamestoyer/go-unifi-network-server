@@ -31,16 +31,152 @@ type ChannelPlan struct {
 	SiteBlacklistedChannels *[]ChannelPlanSiteBlacklistedChannels `json:"site_blacklisted_channels,omitempty"`
 }
 
+func (s *ChannelPlan) GetApBlacklistedChannels() []ChannelPlanApBlacklistedChannels {
+	if s == nil || s.ApBlacklistedChannels == nil {
+		return nil
+	}
+
+	return *s.ApBlacklistedChannels
+}
+
+func (s *ChannelPlan) GetConfSource() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.ConfSource
+}
+
+func (s *ChannelPlan) GetCoupling() []ChannelPlanCoupling {
+	if s == nil || s.Coupling == nil {
+		return nil
+	}
+
+	return *s.Coupling
+}
+
+func (s *ChannelPlan) GetDate() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Date
+}
+
+func (s *ChannelPlan) GetFitness() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Fitness
+}
+
+func (s *ChannelPlan) GetNote() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Note
+}
+
+func (s *ChannelPlan) GetRadio() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Radio
+}
+
+func (s *ChannelPlan) GetRadioTable() []ChannelPlanRadioTable {
+	if s == nil || s.RadioTable == nil {
+		return nil
+	}
+
+	return *s.RadioTable
+}
+
+func (s *ChannelPlan) GetSatisfaction() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Satisfaction
+}
+
+func (s *ChannelPlan) GetSatisfactionTable() []ChannelPlanSatisfactionTable {
+	if s == nil || s.SatisfactionTable == nil {
+		return nil
+	}
+
+	return *s.SatisfactionTable
+}
+
+func (s *ChannelPlan) GetSiteBlacklistedChannels() []ChannelPlanSiteBlacklistedChannels {
+	if s == nil || s.SiteBlacklistedChannels == nil {
+		return nil
+	}
+
+	return *s.SiteBlacklistedChannels
+}
+
 type ChannelPlanApBlacklistedChannels struct {
 	Channel   *float64 `json:"channel,omitempty"`
 	Mac       *string  `json:"mac,omitempty"`
 	Timestamp *int64   `json:"timestamp,omitempty"`
 }
 
+func (s *ChannelPlanApBlacklistedChannels) GetChannel() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Channel
+}
+
+func (s *ChannelPlanApBlacklistedChannels) GetMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Mac
+}
+
+func (s *ChannelPlanApBlacklistedChannels) GetTimestamp() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Timestamp
+}
+
 type ChannelPlanCoupling struct {
 	Rssi   *int64  `json:"rssi,omitempty"`
 	Source *string `json:"source,omitempty"`
 	Target *string `json:"target,omitempty"`
+}
+
+func (s *ChannelPlanCoupling) GetRssi() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Rssi
+}
+
+func (s *ChannelPlanCoupling) GetSource() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Source
+}
+
+func (s *ChannelPlanCoupling) GetTarget() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Target
 }
 
 type ChannelPlanRadioTable struct {
@@ -53,12 +189,100 @@ type ChannelPlanRadioTable struct {
 	Width         *int64  `json:"width,omitempty"`
 }
 
+func (s *ChannelPlanRadioTable) GetBackupChannel() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.BackupChannel
+}
+
+func (s *ChannelPlanRadioTable) GetChannel() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Channel
+}
+
+func (s *ChannelPlanRadioTable) GetDeviceMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DeviceMac
+}
+
+func (s *ChannelPlanRadioTable) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *ChannelPlanRadioTable) GetTxPower() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TxPower
+}
+
+func (s *ChannelPlanRadioTable) GetTxPowerMode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TxPowerMode
+}
+
+func (s *ChannelPlanRadioTable) GetWidth() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Width
+}
+
 type ChannelPlanSatisfactionTable struct {
 	DeviceMac    *string `json:"device_mac,omitempty"`
 	Satisfaction *string `json:"satisfaction,omitempty"`
 }
 
+func (s *ChannelPlanSatisfactionTable) GetDeviceMac() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DeviceMac
+}
+
+func (s *ChannelPlanSatisfactionTable) GetSatisfaction() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Satisfaction
+}
+
 type ChannelPlanSiteBlacklistedChannels struct {
 	Channel   *float64 `json:"channel,omitempty"`
 	Timestamp *int64   `json:"timestamp,omitempty"`
+}
+
+func (s *ChannelPlanSiteBlacklistedChannels) GetChannel() float64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Channel
+}
+
+func (s *ChannelPlanSiteBlacklistedChannels) GetTimestamp() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Timestamp
 }

@@ -27,3 +27,67 @@ type Account struct {
 	Vlan             *int64  `json:"vlan,omitempty"`
 	XPassword        *string `json:"x_password,omitempty"`
 }
+
+func (s *Account) GetIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Ip
+}
+
+func (s *Account) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *Account) GetNetworkconfId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.NetworkconfId
+}
+
+func (s *Account) GetTunnelConfigType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.TunnelConfigType
+}
+
+func (s *Account) GetTunnelMediumType() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.TunnelMediumType
+}
+
+func (s *Account) GetTunnelType() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.TunnelType
+}
+
+func (s *Account) GetVlan() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Vlan
+}
+
+func (s *Account) GetXPassword() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.XPassword
+}

@@ -24,3 +24,43 @@ type DhcpOption struct {
 	Type   *string `json:"type,omitempty"`
 	Width  *int64  `json:"width,omitempty"`
 }
+
+func (s *DhcpOption) GetCode() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Code
+}
+
+func (s *DhcpOption) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *DhcpOption) GetSigned() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Signed
+}
+
+func (s *DhcpOption) GetType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Type
+}
+
+func (s *DhcpOption) GetWidth() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.Width
+}

@@ -20,3 +20,11 @@ package networkserver
 type WlanGroup struct {
 	Name *string `json:"name,omitempty"`
 }
+
+func (s *WlanGroup) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}

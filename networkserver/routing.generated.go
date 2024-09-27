@@ -29,3 +29,83 @@ type Routing struct {
 	StaticRouteType      *string `json:"static-route_type,omitempty"`
 	Type                 *string `json:"type,omitempty"`
 }
+
+func (s *Routing) GetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Enabled
+}
+
+func (s *Routing) GetGatewayDevice() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GatewayDevice
+}
+
+func (s *Routing) GetGatewayType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.GatewayType
+}
+
+func (s *Routing) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *Routing) GetStaticRouteDistance() int64 {
+	if s == nil {
+		return 0
+	}
+
+	return *s.StaticRouteDistance
+}
+
+func (s *Routing) GetStaticRouteInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StaticRouteInterface
+}
+
+func (s *Routing) GetStaticRouteNetwork() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StaticRouteNetwork
+}
+
+func (s *Routing) GetStaticRouteNexthop() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StaticRouteNexthop
+}
+
+func (s *Routing) GetStaticRouteType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.StaticRouteType
+}
+
+func (s *Routing) GetType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Type
+}

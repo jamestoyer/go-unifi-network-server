@@ -34,7 +34,135 @@ type PortForward struct {
 	SrcLimitingType    *string                      `json:"src_limiting_type,omitempty"`
 }
 
+func (s *PortForward) GetDestinationIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DestinationIp
+}
+
+func (s *PortForward) GetDestinationIps() []PortForwardDestinationIps {
+	if s == nil || s.DestinationIps == nil {
+		return nil
+	}
+
+	return *s.DestinationIps
+}
+
+func (s *PortForward) GetDstPort() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DstPort
+}
+
+func (s *PortForward) GetEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Enabled
+}
+
+func (s *PortForward) GetFwd() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Fwd
+}
+
+func (s *PortForward) GetFwdPort() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FwdPort
+}
+
+func (s *PortForward) GetLog() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.Log
+}
+
+func (s *PortForward) GetName() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Name
+}
+
+func (s *PortForward) GetPfwdInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.PfwdInterface
+}
+
+func (s *PortForward) GetProto() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Proto
+}
+
+func (s *PortForward) GetSrc() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Src
+}
+
+func (s *PortForward) GetSrcFirewallGroupId() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcFirewallGroupId
+}
+
+func (s *PortForward) GetSrcLimitingEnabled() bool {
+	if s == nil {
+		return false
+	}
+
+	return *s.SrcLimitingEnabled
+}
+
+func (s *PortForward) GetSrcLimitingType() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.SrcLimitingType
+}
+
 type PortForwardDestinationIps struct {
 	DestinationIp *string `json:"destination_ip,omitempty"`
 	Interface     *string `json:"interface,omitempty"`
+}
+
+func (s *PortForwardDestinationIps) GetDestinationIp() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.DestinationIp
+}
+
+func (s *PortForwardDestinationIps) GetInterface() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.Interface
 }
