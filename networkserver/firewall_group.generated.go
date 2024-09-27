@@ -97,7 +97,7 @@ func (c *Client) CreateFirewallGroup(ctx context.Context, site string, data *Fir
 
 func (c *Client) DeleteFirewallGroup(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "firewallgroup", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (c *Client) DeleteFirewallGroup(ctx context.Context, site string, id string
 
 func (c *Client) GetFirewallGroup(ctx context.Context, site, id string) (*FirewallGroup, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "firewallgroup", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

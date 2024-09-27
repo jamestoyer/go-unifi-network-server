@@ -2260,7 +2260,7 @@ func (c *Client) CreateNetworkConf(ctx context.Context, site string, data *Netwo
 
 func (c *Client) DeleteNetworkConf(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "networkconf", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -2276,7 +2276,7 @@ func (c *Client) DeleteNetworkConf(ctx context.Context, site string, id string) 
 
 func (c *Client) GetNetworkConf(ctx context.Context, site, id string) (*NetworkConf, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "networkconf", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

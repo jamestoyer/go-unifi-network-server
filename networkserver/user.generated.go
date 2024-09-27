@@ -214,7 +214,7 @@ func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User
 
 func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +230,7 @@ func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.
 
 func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

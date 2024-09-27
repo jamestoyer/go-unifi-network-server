@@ -142,7 +142,7 @@ func (c *Client) CreateDynamicDNS(ctx context.Context, site string, data *Dynami
 
 func (c *Client) DeleteDynamicDNS(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (c *Client) DeleteDynamicDNS(ctx context.Context, site string, id string) (
 
 func (c *Client) GetDynamicDNS(ctx context.Context, site, id string) (*DynamicDNS, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

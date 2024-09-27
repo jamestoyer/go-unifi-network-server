@@ -127,7 +127,7 @@ func (c *Client) CreateScheduleTask(ctx context.Context, site string, data *Sche
 
 func (c *Client) DeleteScheduleTask(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "scheduletask", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (c *Client) DeleteScheduleTask(ctx context.Context, site string, id string)
 
 func (c *Client) GetScheduleTask(ctx context.Context, site, id string) (*ScheduleTask, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "scheduletask", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

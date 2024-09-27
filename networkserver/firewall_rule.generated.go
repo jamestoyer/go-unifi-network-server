@@ -430,7 +430,7 @@ func (c *Client) CreateFirewallRule(ctx context.Context, site string, data *Fire
 
 func (c *Client) DeleteFirewallRule(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "firewallrule", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -446,7 +446,7 @@ func (c *Client) DeleteFirewallRule(ctx context.Context, site string, id string)
 
 func (c *Client) GetFirewallRule(ctx context.Context, site, id string) (*FirewallRule, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "firewallrule", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

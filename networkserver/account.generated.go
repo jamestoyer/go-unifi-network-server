@@ -142,7 +142,7 @@ func (c *Client) CreateAccount(ctx context.Context, site string, data *Account) 
 
 func (c *Client) DeleteAccount(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "account", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (c *Client) DeleteAccount(ctx context.Context, site string, id string) (*ht
 
 func (c *Client) GetAccount(ctx context.Context, site, id string) (*Account, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "account", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

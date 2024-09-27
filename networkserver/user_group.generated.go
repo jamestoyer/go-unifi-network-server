@@ -97,7 +97,7 @@ func (c *Client) CreateUserGroup(ctx context.Context, site string, data *UserGro
 
 func (c *Client) DeleteUserGroup(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "usergroup", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (c *Client) DeleteUserGroup(ctx context.Context, site string, id string) (*
 
 func (c *Client) GetUserGroup(ctx context.Context, site, id string) (*UserGroup, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "usergroup", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

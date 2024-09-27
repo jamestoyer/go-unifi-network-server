@@ -337,7 +337,7 @@ func (c *Client) CreateChannelPlan(ctx context.Context, site string, data *Chann
 
 func (c *Client) DeleteChannelPlan(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "channelplan", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -353,7 +353,7 @@ func (c *Client) DeleteChannelPlan(ctx context.Context, site string, id string) 
 
 func (c *Client) GetChannelPlan(ctx context.Context, site, id string) (*ChannelPlan, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "channelplan", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

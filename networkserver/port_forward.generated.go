@@ -217,7 +217,7 @@ func (c *Client) CreatePortForward(ctx context.Context, site string, data *PortF
 
 func (c *Client) DeletePortForward(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "portforward", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func (c *Client) DeletePortForward(ctx context.Context, site string, id string) 
 
 func (c *Client) GetPortForward(ctx context.Context, site, id string) (*PortForward, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "portforward", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

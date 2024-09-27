@@ -331,7 +331,7 @@ func (c *Client) CreateHotspotPackage(ctx context.Context, site string, data *Ho
 
 func (c *Client) DeleteHotspotPackage(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "hotspotpackage", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +347,7 @@ func (c *Client) DeleteHotspotPackage(ctx context.Context, site string, id strin
 
 func (c *Client) GetHotspotPackage(ctx context.Context, site, id string) (*HotspotPackage, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "hotspotpackage", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

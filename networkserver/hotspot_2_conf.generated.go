@@ -964,7 +964,7 @@ func (c *Client) CreateHotspot2Conf(ctx context.Context, site string, data *Hots
 
 func (c *Client) DeleteHotspot2Conf(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -980,7 +980,7 @@ func (c *Client) DeleteHotspot2Conf(ctx context.Context, site string, id string)
 
 func (c *Client) GetHotspot2Conf(ctx context.Context, site, id string) (*Hotspot2Conf, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "hotspot2conf", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

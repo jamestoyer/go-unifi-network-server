@@ -568,7 +568,7 @@ func (c *Client) CreatePortConf(ctx context.Context, site string, data *PortConf
 
 func (c *Client) DeletePortConf(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "portconf", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -584,7 +584,7 @@ func (c *Client) DeletePortConf(ctx context.Context, site string, id string) (*h
 
 func (c *Client) GetPortConf(ctx context.Context, site, id string) (*PortConf, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "portconf", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

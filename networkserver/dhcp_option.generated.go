@@ -115,7 +115,7 @@ func (c *Client) CreateDhcpOption(ctx context.Context, site string, data *DhcpOp
 
 func (c *Client) DeleteDhcpOption(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dhcpoption", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (c *Client) DeleteDhcpOption(ctx context.Context, site string, id string) (
 
 func (c *Client) GetDhcpOption(ctx context.Context, site, id string) (*DhcpOption, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dhcpoption", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

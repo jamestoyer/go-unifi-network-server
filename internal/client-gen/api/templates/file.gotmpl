@@ -51,7 +51,7 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .N
 
 func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) (*http.Response, error) {
     endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
-    req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+    req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
     if err != nil {
         return nil, err
     }
@@ -62,12 +62,12 @@ func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) 
         return  resp, fmt.Errorf(`unable to delete {{ .Name }}: %w`, err)
     }
 
-    return nil, nil
+    return resp, nil
 }
 
 func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name }}, *http.Response, error) {
 	endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
-    req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+    req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
     if err != nil {
         return nil, nil, err
     }

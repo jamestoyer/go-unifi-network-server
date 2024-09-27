@@ -292,7 +292,7 @@ func (c *Client) CreateRadiusProfile(ctx context.Context, site string, data *Rad
 
 func (c *Client) DeleteRadiusProfile(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -308,7 +308,7 @@ func (c *Client) DeleteRadiusProfile(ctx context.Context, site string, id string
 
 func (c *Client) GetRadiusProfile(ctx context.Context, site, id string) (*RadiusProfile, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "radiusprofile", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

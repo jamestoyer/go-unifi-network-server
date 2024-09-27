@@ -142,7 +142,7 @@ func (c *Client) CreateDpiApp(ctx context.Context, site string, data *DpiApp) (*
 
 func (c *Client) DeleteDpiApp(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (c *Client) DeleteDpiApp(ctx context.Context, site string, id string) (*htt
 
 func (c *Client) GetDpiApp(ctx context.Context, site, id string) (*DpiApp, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dpiapp", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

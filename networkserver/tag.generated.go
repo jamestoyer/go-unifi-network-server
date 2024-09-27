@@ -88,7 +88,7 @@ func (c *Client) CreateTag(ctx context.Context, site string, data *Tag) (*Tag, *
 
 func (c *Client) DeleteTag(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "tag", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (c *Client) DeleteTag(ctx context.Context, site string, id string) (*http.R
 
 func (c *Client) GetTag(ctx context.Context, site, id string) (*Tag, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "tag", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

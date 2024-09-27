@@ -79,7 +79,7 @@ func (c *Client) CreateWlanGroup(ctx context.Context, site string, data *WlanGro
 
 func (c *Client) DeleteWlanGroup(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "wlangroup", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (c *Client) DeleteWlanGroup(ctx context.Context, site string, id string) (*
 
 func (c *Client) GetWlanGroup(ctx context.Context, site, id string) (*WlanGroup, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "wlangroup", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

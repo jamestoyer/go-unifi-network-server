@@ -1702,7 +1702,7 @@ func (c *Client) CreateDevice(ctx context.Context, site string, data *Device) (*
 
 func (c *Client) DeleteDevice(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "device", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1718,7 +1718,7 @@ func (c *Client) DeleteDevice(ctx context.Context, site string, id string) (*htt
 
 func (c *Client) GetDevice(ctx context.Context, site, id string) (*Device, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "device", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -97,7 +97,7 @@ func (c *Client) CreateDpiGroup(ctx context.Context, site string, data *DpiGroup
 
 func (c *Client) DeleteDpiGroup(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (c *Client) DeleteDpiGroup(ctx context.Context, site string, id string) (*h
 
 func (c *Client) GetDpiGroup(ctx context.Context, site, id string) (*DpiGroup, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dpigroup", id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
