@@ -24,6 +24,7 @@ import (
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
+	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
 )
 
 const packageName = "networkserver"
@@ -45,7 +46,8 @@ func main() {
 		logLevel = slog.LevelDebug
 	}
 
-	logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
+	logger = slog.New(logging.Handler{Handler: slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})})
+	slog.SetDefault(logger)
 	logger.InfoContext(ctx, "Generating API client")
 
 	var apiSpecDir string
