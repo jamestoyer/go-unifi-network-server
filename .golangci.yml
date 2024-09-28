@@ -21,3 +21,4 @@ linters-settings:
   wrapcheck:
     ignorePackageGlobs:
       - github.com/jamestoyer/go-unifi-network-server/*
+      - log/slog

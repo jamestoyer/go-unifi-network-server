@@ -24,6 +24,9 @@ import (
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
+	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
+	"gopkg.in/yaml.v3"
 )
 
 const packageName = "networkserver"
@@ -31,6 +34,7 @@ const packageName = "networkserver"
 var (
 	verboseFlag    = flag.Bool("v", false, "Print verbose logs")
 	apiSpecDirFlag = flag.String("dir", "", "Directory containing api spec files. If not set the latest API spec will be downloaded")
+	configFileFlag = flag.String("config", filepath.Join("internal", "client-gen", "config.yml"), "Path to configuration file")
 
 	logger *slog.Logger
 )
@@ -45,7 +49,8 @@ func main() {
 		logLevel = slog.LevelDebug
 	}
 
-	logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
+	logger = slog.New(logging.Handler{Handler: slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})})
+	slog.SetDefault(logger)
 	logger.InfoContext(ctx, "Generating API client")
 
 	var apiSpecDir string
@@ -63,13 +68,32 @@ func main() {
 		apiSpecDir = *apiSpecDirFlag
 	}
 
-	err := generateAPIClient(ctx, apiSpecDir)
+	config, err := unmarshalConfig()
 	if err != nil {
+		logger.ErrorContext(ctx, "Failed to unmarshal configuration", slog.Any("error", err))
+		os.Exit(1)
+	}
+
+	slog.InfoContext(ctx, "Parsing API specification directory")
+	parser := spec.NewParser(*config)
+	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
+	switch {
+	case err != nil:
+		slog.ErrorContext(ctx, "Failed to parse API specification directory", slog.Any("error", err))
+		os.Exit(1)
+	case len(endpoints) == 0:
+		slog.InfoContext(ctx, "No endpoints found to generate")
+		os.Exit(0)
+	default:
+		slog.InfoContext(ctx, "Found endpoints to generate", slog.Int("endpointCount", len(endpoints)))
+	}
+
+	if err = generateAPIClient(ctx, endpoints); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
 		os.Exit(1)
 	}
 
-	logger.InfoContext(ctx, "Generated API client")
+	logger.InfoContext(ctx, "API client generated")
 }
 
 func downloadAPISpec(ctx context.Context) (string, error) {
@@ -107,10 +131,24 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	return apiDestination, nil
 }
 
-func generateAPIClient(ctx context.Context, apiSpecDir string) error {
+func generateAPIClient(ctx context.Context, endpoints []*api.Endpoint) error {
 	if err := os.MkdirAll(packageName, 0o775); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
 	}
 
-	return api.Generate(ctx, logger, apiSpecDir, packageName)
+	return api.Generate(ctx, logger, endpoints, packageName)
+}
+
+func unmarshalConfig() (*spec.ParserConfig, error) {
+	contents, err := os.ReadFile(*configFileFlag)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
+	}
+
+	var config spec.ParserConfig
+	if err = yaml.Unmarshal(contents, &config); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
+	}
+
+	return &config, nil
 }

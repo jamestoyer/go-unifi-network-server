@@ -1,0 +1,10 @@
+skippedFiles:
+  - "AuthenticationRequest.json"
+  - "HeatMap.json"
+  - "HeatMapPoint.json"
+  - "Map.json"
+  - "MediaFile.json"
+  - "Setting.json"
+  - "SpatialRecord.json"
+  - "VirtualDevice.json"
+  - "Wall.json"

@@ -26,7 +26,7 @@ import (
 	"path"
 )
 
-type DynamicDNS struct {
+type DynamicDns struct {
 	ID            *string   `json:"_id,omitempty"`
 	SiteID        *string   `json:"site_id,omitempty"`
 	Hidden        *bool     `json:"attr_hidden,omitempty"`
@@ -43,7 +43,7 @@ type DynamicDNS struct {
 	XPassword     *string   `json:"x_password,omitempty"`
 }
 
-func (s *DynamicDNS) GetID() string {
+func (s *DynamicDns) GetID() string {
 	if s == nil {
 		return ""
 	}
@@ -51,7 +51,7 @@ func (s *DynamicDNS) GetID() string {
 	return *s.ID
 }
 
-func (s *DynamicDNS) GetSiteID() string {
+func (s *DynamicDns) GetSiteID() string {
 	if s == nil {
 		return ""
 	}
@@ -59,7 +59,7 @@ func (s *DynamicDNS) GetSiteID() string {
 	return *s.SiteID
 }
 
-func (s *DynamicDNS) GetHidden() bool {
+func (s *DynamicDns) GetHidden() bool {
 	if s == nil {
 		return false
 	}
@@ -67,7 +67,7 @@ func (s *DynamicDNS) GetHidden() bool {
 	return *s.Hidden
 }
 
-func (s *DynamicDNS) GetHiddenID() string {
+func (s *DynamicDns) GetHiddenID() string {
 	if s == nil {
 		return ""
 	}
@@ -75,7 +75,7 @@ func (s *DynamicDNS) GetHiddenID() string {
 	return *s.HiddenID
 }
 
-func (s *DynamicDNS) GetNoDelete() bool {
+func (s *DynamicDns) GetNoDelete() bool {
 	if s == nil {
 		return false
 	}
@@ -83,7 +83,7 @@ func (s *DynamicDNS) GetNoDelete() bool {
 	return *s.NoDelete
 }
 
-func (s *DynamicDNS) GetNoEdit() bool {
+func (s *DynamicDns) GetNoEdit() bool {
 	if s == nil {
 		return false
 	}
@@ -91,7 +91,7 @@ func (s *DynamicDNS) GetNoEdit() bool {
 	return *s.NoEdit
 }
 
-func (s *DynamicDNS) GetCustomService() string {
+func (s *DynamicDns) GetCustomService() string {
 	if s == nil {
 		return ""
 	}
@@ -99,7 +99,7 @@ func (s *DynamicDNS) GetCustomService() string {
 	return *s.CustomService
 }
 
-func (s *DynamicDNS) GetHostName() string {
+func (s *DynamicDns) GetHostName() string {
 	if s == nil {
 		return ""
 	}
@@ -107,7 +107,7 @@ func (s *DynamicDNS) GetHostName() string {
 	return *s.HostName
 }
 
-func (s *DynamicDNS) GetInterface() string {
+func (s *DynamicDns) GetInterface() string {
 	if s == nil {
 		return ""
 	}
@@ -115,7 +115,7 @@ func (s *DynamicDNS) GetInterface() string {
 	return *s.Interface
 }
 
-func (s *DynamicDNS) GetLogin() string {
+func (s *DynamicDns) GetLogin() string {
 	if s == nil {
 		return ""
 	}
@@ -123,7 +123,7 @@ func (s *DynamicDNS) GetLogin() string {
 	return *s.Login
 }
 
-func (s *DynamicDNS) GetOptions() []string {
+func (s *DynamicDns) GetOptions() []string {
 	if s == nil || s.Options == nil {
 		return nil
 	}
@@ -131,7 +131,7 @@ func (s *DynamicDNS) GetOptions() []string {
 	return *s.Options
 }
 
-func (s *DynamicDNS) GetServer() string {
+func (s *DynamicDns) GetServer() string {
 	if s == nil {
 		return ""
 	}
@@ -139,7 +139,7 @@ func (s *DynamicDNS) GetServer() string {
 	return *s.Server
 }
 
-func (s *DynamicDNS) GetService() string {
+func (s *DynamicDns) GetService() string {
 	if s == nil {
 		return ""
 	}
@@ -147,7 +147,7 @@ func (s *DynamicDNS) GetService() string {
 	return *s.Service
 }
 
-func (s *DynamicDNS) GetXPassword() string {
+func (s *DynamicDns) GetXPassword() string {
 	if s == nil {
 		return ""
 	}
@@ -155,28 +155,28 @@ func (s *DynamicDNS) GetXPassword() string {
 	return *s.XPassword
 }
 
-type responseBodyDynamicDNS struct {
+type responseBodyDynamicDns struct {
 	Metadata json.RawMessage `json:"meta"`
-	Payload  []DynamicDNS    `json:"data"`
+	Payload  []DynamicDns    `json:"data"`
 }
 
-func (c *Client) CreateDynamicDNS(ctx context.Context, site string, data *DynamicDNS) (*DynamicDNS, *http.Response, error) {
+func (c *Client) CreateDynamicDns(ctx context.Context, site string, data *DynamicDns) (*DynamicDns, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns")
 	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyDynamicDNS
+	var body responseBodyDynamicDns
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to create dynamicdns: %w`, err)
 	}
 
-	var item DynamicDNS
+	var item DynamicDns
 	switch len(body.Payload) {
 	case 0:
-		err = errors.New(`failed to create DynamicDNS`)
+		err = errors.New(`failed to create DynamicDns`)
 	case 1:
 		item = body.Payload[0]
 	default:
@@ -186,36 +186,36 @@ func (c *Client) CreateDynamicDNS(ctx context.Context, site string, data *Dynami
 	return &item, resp, err
 }
 
-func (c *Client) DeleteDynamicDNS(ctx context.Context, site string, id string) (*http.Response, error) {
+func (c *Client) DeleteDynamicDns(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", id)
 	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var body responseBodyDynamicDNS
+	var body responseBodyDynamicDns
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return resp, fmt.Errorf(`unable to delete DynamicDNS: %w`, err)
+		return resp, fmt.Errorf(`unable to delete DynamicDns: %w`, err)
 	}
 
 	return resp, nil
 }
 
-func (c *Client) GetDynamicDNS(ctx context.Context, site, id string) (*DynamicDNS, *http.Response, error) {
+func (c *Client) GetDynamicDns(ctx context.Context, site, id string) (*DynamicDns, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", id)
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyDynamicDNS
+	var body responseBodyDynamicDns
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to get DynamicDNS: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to get DynamicDns: %w`, err)
 	}
 
-	var item DynamicDNS
+	var item DynamicDns
 	switch len(body.Payload) {
 	case 0:
 	case 1:
@@ -227,39 +227,39 @@ func (c *Client) GetDynamicDNS(ctx context.Context, site, id string) (*DynamicDN
 	return &item, resp, err
 }
 
-func (c *Client) ListDynamicDNS(ctx context.Context, site string) ([]DynamicDNS, *http.Response, error) {
+func (c *Client) ListDynamicDns(ctx context.Context, site string) ([]DynamicDns, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns")
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyDynamicDNS
+	var body responseBodyDynamicDns
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to get DynamicDNS: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to get DynamicDns: %w`, err)
 	}
 
 	return body.Payload, resp, nil
 }
 
-func (c *Client) UpdateDynamicDNS(ctx context.Context, site string, data *DynamicDNS) (*DynamicDNS, *http.Response, error) {
+func (c *Client) UpdateDynamicDns(ctx context.Context, site string, data *DynamicDns) (*DynamicDns, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "dynamicdns", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyDynamicDNS
+	var body responseBodyDynamicDns
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to update dynamicdns: %w`, err)
 	}
 
-	var item DynamicDNS
+	var item DynamicDns
 	switch len(body.Payload) {
 	case 0:
-		err = errors.New(`failed to update DynamicDNS`)
+		err = errors.New(`failed to update DynamicDns`)
 	case 1:
 		item = body.Payload[0]
 	default:
