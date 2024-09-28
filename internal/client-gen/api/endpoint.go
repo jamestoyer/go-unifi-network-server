@@ -46,7 +46,7 @@ func NewEndpoint(name, file string, spec map[string]interface{}) (*Endpoint, err
 	return &Endpoint{
 		Name:           name,
 		definitionFile: file,
-		goFilePath:     strcase.ToSnake(name) + ".generated.go",
+		goFilePath:     strcase.ToSnake(name) + golangGeneratedFileSuffix,
 		rootObject:     rootObject,
 	}, nil
 }
