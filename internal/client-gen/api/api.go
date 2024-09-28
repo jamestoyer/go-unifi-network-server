@@ -18,14 +18,26 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"io/fs"
 	"log/slog"
+	"os"
+	"path/filepath"
+	"strings"
 	"text/template"
 )
+
+const golangGeneratedFileSuffix = ".generated.go"
 
 //go:embed templates
 var templatesFs embed.FS
 
 func Generate(ctx context.Context, logger *slog.Logger, endpoints []*Endpoint, outputDir string) error {
+	slog.InfoContext(ctx, "Removing previously generated files")
+	if err := removeGeneratedFiles(ctx, outputDir); err != nil {
+		return err
+	}
+
+	slog.InfoContext(ctx, "Generating endpoints")
 	tmpl, err := template.ParseFS(templatesFs, "templates/*")
 	if err != nil {
 		return fmt.Errorf("error parsing API templates: %w", err)
@@ -35,6 +47,32 @@ func Generate(ctx context.Context, logger *slog.Logger, endpoints []*Endpoint, o
 		if err = endpoint.Render(ctx, logger, outputDir, tmpl); err != nil {
 			return fmt.Errorf("failed to render API endpoint: %w", err)
 		}
+	}
+
+	return nil
+}
+
+func removeGeneratedFiles(ctx context.Context, outputDir string) error {
+	err := filepath.WalkDir(outputDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() && path != outputDir {
+			return filepath.SkipDir
+		}
+
+		if strings.HasSuffix(filepath.Base(path), golangGeneratedFileSuffix) {
+			slog.DebugContext(ctx, "Removing generated file", slog.String("filename", path))
+			if err = os.Remove(path); err != nil {
+				return fmt.Errorf("failed to remove generated file: %w", err)
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		return fmt.Errorf("unable to remove generated files: %w", err)
 	}
 
 	return nil
