@@ -29,21 +29,25 @@ import (
 )
 
 type Endpoint struct {
-	Name       string
-	goFilePath string
-	rootObject *EndpointObject
+	Name           string
+	definitionFile string
+	goFilePath     string
+	rootObject     *EndpointObject
 }
 
-func NewEndpoint(name string, spec map[string]interface{}) (*Endpoint, error) {
+func NewEndpoint(name, file string, spec map[string]interface{}) (*Endpoint, error) {
+	// Ensure the endpoint name is always camel case, which is analogous to title case for our purposes.
+	name = strcase.ToCamel(name)
 	rootObject, err := NewEndpointObject(name, spec, "", true)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate objects for endpoint: %w", err)
 	}
 
 	return &Endpoint{
-		Name:       name,
-		goFilePath: strcase.ToSnake(name) + ".generated.go",
-		rootObject: rootObject,
+		Name:           name,
+		definitionFile: file,
+		goFilePath:     strcase.ToSnake(name) + ".generated.go",
+		rootObject:     rootObject,
 	}, nil
 }
 

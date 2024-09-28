@@ -91,7 +91,7 @@ func generateAPIFile(ctx context.Context, logger *slog.Logger, file, outputDir s
 	}
 
 	endpointName := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
-	endpoint, err := NewEndpoint(endpointName, fields)
+	endpoint, err := NewEndpoint(endpointName, file, fields)
 	if err != nil {
 		return fmt.Errorf("failed to create API endpoint: %w", err)
 	}

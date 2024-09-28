@@ -23,12 +23,14 @@ import (
 
 func TestEndpoint_Objects(t *testing.T) {
 	tests := map[string]struct {
-		name string
-		spec map[string]interface{}
-		want []*EndpointObject
+		name     string
+		filename string
+		spec     map[string]interface{}
+		want     []*EndpointObject
 	}{
 		"no nested objects": {
-			name: "Simple",
+			name:     "Simple",
+			filename: "simple.json",
 			spec: map[string]interface{}{
 				"empty_string": "",
 				"string":       "string",
@@ -76,7 +78,8 @@ func TestEndpoint_Objects(t *testing.T) {
 			},
 		},
 		"nested objects": {
-			name: "Nested",
+			name:     "Nested",
+			filename: "nested.json",
 			spec: map[string]interface{}{
 				"object": map[string]interface{}{
 					"decimal": `[0-9].[0-9]+`,
@@ -192,7 +195,7 @@ func TestEndpoint_Objects(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			endpoint, err := NewEndpoint(test.name, test.spec)
+			endpoint, err := NewEndpoint(test.name, test.filename, test.spec)
 			require.NoError(t, err)
 
 			assert.Equal(t, test.want, endpoint.Objects())
