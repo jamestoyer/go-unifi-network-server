@@ -55,8 +55,8 @@ func TestParseDir(t *testing.T) {
 		"skipped files": {
 			config: ParserConfig{
 				SkippedFiles: []string{
-					filepath.Join("testdata", "valid-specs", "account.json"),
-					filepath.Join("testdata", "valid-specs", "Device.json"),
+					"account.json",
+					"Device.json",
 				},
 			},
 			dir: filepath.Join("testdata", "valid-specs"),

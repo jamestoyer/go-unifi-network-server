@@ -82,8 +82,8 @@ func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*api.Endpoint, err
 			return nil
 		}
 
-		if slices.Contains(p.config.SkippedFiles, path) {
-			slog.InfoContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+		if slices.Contains(p.config.SkippedFiles, filepath.Base(path)) {
+			slog.DebugContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
 			return nil
 		}
 
@@ -109,7 +109,7 @@ func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*api.Endpoint, err
 
 func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*api.Endpoint, error) {
 	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("filename", filename)))
-	slog.InfoContext(ctx, "Parsing specification file for endpoints")
+	slog.DebugContext(ctx, "Parsing specification file for endpoints")
 
 	if filepath.Ext(filename) != ".json" {
 		return nil, errors.New("unsupported specification file type")
