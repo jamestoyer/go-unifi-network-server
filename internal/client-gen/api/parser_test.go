@@ -12,30 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package spec
+package api
 
 import (
 	"context"
-	"log/slog"
-	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
-	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestParseDir(t *testing.T) {
-	logger := slog.New(logging.Handler{Handler: slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})})
-	slog.SetDefault(logger)
-
 	tests := map[string]struct {
 		config ParserConfig
 		dir    string
 
-		want    []*api.Endpoint
+		want    []*spec.Endpoint
 		wantErr assert.ErrorAssertionFunc
 	}{
 		"no files in dir": {
@@ -45,7 +39,7 @@ func TestParseDir(t *testing.T) {
 		},
 		"files in dir": {
 			dir: filepath.Join("testdata", "valid-specs"),
-			want: []*api.Endpoint{
+			want: []*spec.Endpoint{
 				accountEndpoint(t, filepath.Join("testdata", "valid-specs", "account.json")),
 				deviceEndpoint(t, filepath.Join("testdata", "valid-specs", "Device.json")),
 				userEndpoint(t, filepath.Join("testdata", "valid-specs", "User.json")),
@@ -60,7 +54,7 @@ func TestParseDir(t *testing.T) {
 				},
 			},
 			dir: filepath.Join("testdata", "valid-specs"),
-			want: []*api.Endpoint{
+			want: []*spec.Endpoint{
 				userEndpoint(t, filepath.Join("testdata", "valid-specs", "User.json")),
 			},
 			wantErr: assert.NoError,
@@ -72,7 +66,7 @@ func TestParseDir(t *testing.T) {
 				},
 			},
 			dir: filepath.Join("testdata", "valid-specs"),
-			want: []*api.Endpoint{
+			want: []*spec.Endpoint{
 				accountEndpoint(t, filepath.Join("testdata", "valid-specs", "account.json")),
 				userEndpoint(t, filepath.Join("testdata", "valid-specs", "User.json")),
 			},
@@ -101,7 +95,7 @@ func TestParser_ParseFile(t *testing.T) {
 	tests := map[string]struct {
 		config   ParserConfig
 		filename string
-		want     []*api.Endpoint
+		want     []*spec.Endpoint
 		wantErr  assert.ErrorAssertionFunc
 	}{
 		"no file found": {
@@ -118,7 +112,7 @@ func TestParser_ParseFile(t *testing.T) {
 		},
 		"valid spec file": {
 			filename: filepath.Join("testdata", "valid-specs", "account.json"),
-			want: []*api.Endpoint{
+			want: []*spec.Endpoint{
 				accountEndpoint(t, filepath.Join("testdata", "valid-specs", "account.json")),
 			},
 			wantErr: assert.NoError,
@@ -136,27 +130,28 @@ func TestParser_ParseFile(t *testing.T) {
 	}
 }
 
-func accountEndpoint(t *testing.T, filename string) *api.Endpoint {
+func accountEndpoint(t *testing.T, filename string) *spec.Endpoint {
 	t.Helper()
-	endpoint, err := api.NewEndpoint("Account", filename, map[string]interface{}{
+	endpoint, err := spec.EndpointFromAPISpec("Account", filename, map[string]interface{}{
 		"name": "^[^\"' ]+$",
 	})
 	require.NoError(t, err)
 	return endpoint
 }
 
-func deviceEndpoint(t *testing.T, filename string) *api.Endpoint {
+func deviceEndpoint(t *testing.T, filename string) *spec.Endpoint {
 	t.Helper()
-	endpoint, err := api.NewEndpoint("Device", filename, map[string]interface{}{
+	endpoint, err := spec.EndpointFromAPISpec("Device", filename, map[string]interface{}{
 		"name": ".{0,128}",
 	})
+
 	require.NoError(t, err)
 	return endpoint
 }
 
-func userEndpoint(t *testing.T, filename string) *api.Endpoint {
+func userEndpoint(t *testing.T, filename string) *spec.Endpoint {
 	t.Helper()
-	endpoint, err := api.NewEndpoint("User", filename, map[string]interface{}{
+	endpoint, err := spec.EndpointFromAPISpec("User", filename, map[string]interface{}{
 		"mac": "^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$",
 	})
 	require.NoError(t, err)

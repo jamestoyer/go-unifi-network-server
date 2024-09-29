@@ -75,7 +75,7 @@ func main() {
 	}
 
 	slog.InfoContext(ctx, "Parsing API specification directory")
-	parser := spec.NewParser(*config)
+	parser := api.NewParser(*config)
 	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
 	switch {
 	case err != nil:
@@ -85,10 +85,10 @@ func main() {
 		slog.InfoContext(ctx, "No endpoints found to generate")
 		os.Exit(0)
 	default:
-		slog.InfoContext(ctx, "Found endpoints to generate", slog.Int("endpointCount", len(endpoints)))
+		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(endpoints)))
 	}
 
-	if err = generateAPIClient(ctx, endpoints); err != nil {
+	if err = renderAPIClient(ctx, endpoints); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
 		os.Exit(1)
 	}
@@ -131,21 +131,32 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	return apiDestination, nil
 }
 
-func generateAPIClient(ctx context.Context, endpoints []*api.Endpoint) error {
+func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	if err := os.MkdirAll(packageName, 0o775); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
 	}
 
-	return api.Generate(ctx, logger, endpoints, packageName)
+	slog.InfoContext(ctx, "Removing previously generated files")
+	if err := api.RemoveGeneratedFiles(ctx, packageName); err != nil {
+		return err
+	}
+
+	renderer, err := api.NewRenderer()
+	if err != nil {
+		return err
+	}
+
+	slog.InfoContext(ctx, "Rendering API client")
+	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
 }
 
-func unmarshalConfig() (*spec.ParserConfig, error) {
+func unmarshalConfig() (*api.ParserConfig, error) {
 	contents, err := os.ReadFile(*configFileFlag)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
 	}
 
-	var config spec.ParserConfig
+	var config api.ParserConfig
 	if err = yaml.Unmarshal(contents, &config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 	}

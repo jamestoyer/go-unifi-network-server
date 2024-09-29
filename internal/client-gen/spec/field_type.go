@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package spec
 
 var (
-	Boolean = FieldType{
+	FieldTypeBoolean = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "bool", defaultValue: "false"},
 	}
-	Decimal = FieldType{
+	FieldTypeDecimal = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "float64", defaultValue: "0"},
 	}
-	Number = FieldType{
+	FieldTypeNumber = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "int64", defaultValue: "0"},
 	}
-	String = FieldType{
+	FieldTypeString = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "string", defaultValue: `""`},
 	}
 
-	UnknownType = FieldType{
+	unknownType = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "Field Type Unknown"},
 	}
 )
@@ -75,10 +75,6 @@ func (t FieldType) ElementType() *FieldType {
 	return nil
 }
 
-func (t FieldType) String() string {
-	return t.fieldTypeImpl.GoType()
-}
-
 type primitiveFieldType struct {
 	defaultValue string
 	kind         string
@@ -104,7 +100,7 @@ func (t listFieldType) DefaultValue() string {
 	return "nil"
 }
 
-func List(element FieldType) FieldType {
+func FieldTypeList(element FieldType) FieldType {
 	return FieldType{
 		fieldTypeImpl: listFieldType{elementType: element},
 	}
@@ -122,7 +118,7 @@ func (t objectFieldType) DefaultValue() string {
 	return "nil"
 }
 
-func Object(name string) FieldType {
+func FieldTypeObject(name string) FieldType {
 	return FieldType{
 		fieldTypeImpl: objectFieldType{kind: name},
 	}
