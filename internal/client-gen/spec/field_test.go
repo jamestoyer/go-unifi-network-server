@@ -264,8 +264,9 @@ Element Validation: None`,
 
 func Test_parseFieldDefinition(t *testing.T) {
 	tests := map[string]struct {
-		name  string
-		value interface{}
+		name         string
+		parentObject string
+		value        interface{}
 
 		wantField  Field
 		wantObject *fieldObject
@@ -448,6 +449,32 @@ Validation: None`,
 			},
 			wantErr: assert.NoError,
 		},
+		"value is an object with a parent field": {
+			name:         "config",
+			parentObject: "Root",
+			value: map[string]interface{}{
+				"list":   []interface{}{},
+				"number": `[0-9]`,
+				"string": ``,
+			},
+			wantField: Field{
+				Name: "Config",
+				Description: `Config has been auto generated from the Unifi Network Server API specification
+
+Validation: None`,
+				JSONName: "config",
+				Type:     FieldTypeObject("RootConfig"),
+			},
+			wantObject: &fieldObject{
+				Name: "RootConfig",
+				Value: map[string]interface{}{
+					"list":   []interface{}{},
+					"number": `[0-9]`,
+					"string": ``,
+				},
+			},
+			wantErr: assert.NoError,
+		},
 		"value is a nested object": {
 			name: "config",
 			value: map[string]interface{}{
@@ -504,7 +531,7 @@ Element Validation: None`,
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			gotField, gotObjects, gotErr := parseFieldDefinition(test.name, test.value)
+			gotField, gotObjects, gotErr := parseFieldDefinition(test.name, test.parentObject, test.value)
 			test.wantErr(t, gotErr)
 			assert.Equal(t, test.wantField, gotField)
 			assert.Equal(t, test.wantObject, gotObjects)

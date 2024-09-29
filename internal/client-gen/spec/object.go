@@ -29,7 +29,7 @@ type Object struct {
 	Fields []Field
 }
 
-func objectFromAPISpec(name string, values map[string]interface{}) (*Object, []*fieldObject, error) {
+func objectFromAPISpec(name, parentObject string, values map[string]interface{}) (*Object, []*fieldObject, error) {
 	if strings.TrimSpace(name) == "" {
 		return nil, nil, errors.New("invalid endpoint name")
 	}
@@ -43,7 +43,7 @@ func objectFromAPISpec(name string, values map[string]interface{}) (*Object, []*
 	sortedFieldNames := slices.Sorted(maps.Keys(values))
 	for _, fieldName := range sortedFieldNames {
 		value := values[fieldName]
-		field, object, err := parseFieldDefinition(fieldName, value)
+		field, object, err := parseFieldDefinition(fieldName, parentObject+name, value)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to parse field %s: %w", fieldName, err)
 		}

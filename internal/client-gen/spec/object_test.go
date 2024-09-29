@@ -24,6 +24,7 @@ import (
 func Test_objectFromAPISpec(t *testing.T) {
 	tests := map[string]struct {
 		name             string
+		parentObject     string
 		values           map[string]interface{}
 		wantObject       *Object
 		wantFieldObjects []*fieldObject
@@ -174,7 +175,7 @@ Validation: string`,
 						Description: `ListB has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-						Type:     FieldTypeList(FieldTypeObject("ListB")),
+						Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundListB")),
 						JSONName: "listB",
 					},
 					{
@@ -182,7 +183,7 @@ Element Validation: None`,
 						Description: `NestedListObjectC has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-						Type:     FieldTypeList(FieldTypeObject("NestedListObjectC")),
+						Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundNestedListObjectC")),
 						JSONName: "nested_list_object_c",
 					},
 					{
@@ -190,7 +191,7 @@ Element Validation: None`,
 						Description: `NestedObjectListObjectD has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-						Type:     FieldTypeObject("NestedObjectListObjectD"),
+						Type:     FieldTypeObject("FieldObjectsFoundNestedObjectListObjectD"),
 						JSONName: "nested_object_list_object_d",
 					},
 					{
@@ -198,20 +199,20 @@ Validation: None`,
 						Description: `ObjectA has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-						Type:     FieldTypeObject("ObjectA"),
+						Type:     FieldTypeObject("FieldObjectsFoundObjectA"),
 						JSONName: "object_a",
 					},
 				},
 			},
 			wantFieldObjects: []*fieldObject{
 				{
-					Name: "ListB",
+					Name: "FieldObjectsFoundListB",
 					Value: map[string]interface{}{
 						"decimal": `[0-9].[0-9]+`,
 					},
 				},
 				{
-					Name: "NestedListObjectC",
+					Name: "FieldObjectsFoundNestedListObjectC",
 					Value: map[string]interface{}{
 						"nested_list": map[string]interface{}{
 							"decimal": `[0-9].[0-9]+`,
@@ -219,7 +220,7 @@ Validation: None`,
 					},
 				},
 				{
-					Name: "NestedObjectListObjectD",
+					Name: "FieldObjectsFoundNestedObjectListObjectD",
 					Value: map[string]interface{}{
 						"topObject": map[string]interface{}{
 							"nestedList": []interface{}{
@@ -231,7 +232,38 @@ Validation: None`,
 					},
 				},
 				{
-					Name: "ObjectA",
+					Name: "FieldObjectsFoundObjectA",
+					Value: map[string]interface{}{
+						"value": `\w`,
+					},
+				},
+			},
+			wantErr: assert.NoError,
+		},
+		"field object has a parent field": {
+			name:         "ParentFieldObject",
+			parentObject: "Root",
+			values: map[string]interface{}{
+				"sub_object": map[string]interface{}{
+					"value": `\w`,
+				},
+			},
+			wantObject: &Object{
+				Name: "ParentFieldObject",
+				Fields: []Field{
+					{
+						Name: "SubObject",
+						Description: `SubObject has been auto generated from the Unifi Network Server API specification
+
+Validation: None`,
+						Type:     FieldTypeObject("RootParentFieldObjectSubObject"),
+						JSONName: "sub_object",
+					},
+				},
+			},
+			wantFieldObjects: []*fieldObject{
+				{
+					Name: "RootParentFieldObjectSubObject",
 					Value: map[string]interface{}{
 						"value": `\w`,
 					},
@@ -243,7 +275,7 @@ Validation: None`,
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			gotObject, gotFieldObjects, err := objectFromAPISpec(test.name, test.values)
+			gotObject, gotFieldObjects, err := objectFromAPISpec(test.name, test.parentObject, test.values)
 			test.wantErr(t, err)
 			assert.Equal(t, test.wantObject, gotObject)
 			assert.Equal(t, test.wantFieldObjects, gotFieldObjects)

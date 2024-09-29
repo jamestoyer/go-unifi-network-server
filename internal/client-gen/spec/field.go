@@ -119,8 +119,8 @@ type fieldObject struct {
 	Value map[string]interface{}
 }
 
-func parseFieldDefinition(name string, value interface{}) (Field, *fieldObject, error) {
-	fieldType, object, err := getFieldType(name, value)
+func parseFieldDefinition(name, parentObject string, value interface{}) (Field, *fieldObject, error) {
+	fieldType, object, err := getFieldType(name, parentObject, value)
 	if err != nil {
 		return defaultField, nil, fmt.Errorf("failed to parse type for field %s: %w", name, err)
 	}
@@ -142,14 +142,14 @@ func parseFieldDefinition(name string, value interface{}) (Field, *fieldObject, 
 	return f, object, nil
 }
 
-func getFieldType(name string, value interface{}) (FieldType, *fieldObject, error) {
+func getFieldType(name, parentObject string, value interface{}) (FieldType, *fieldObject, error) {
 	switch t := value.(type) {
 	case string:
 		return fieldTypeFromStringValue(value), nil, nil
 	case []interface{}:
-		return fieldTypeFromInterfaceValue(name, t)
+		return fieldTypeFromInterfaceValue(name, parentObject, t)
 	case map[string]interface{}:
-		ft, object := fieldTypeFromObjectValue(name, t)
+		ft, object := fieldTypeFromObjectValue(name, parentObject, t)
 		return ft, object, nil
 	}
 
@@ -181,20 +181,21 @@ func getValidationRegex(value interface{}) (*regexp.Regexp, error) {
 	return regex, nil
 }
 
-func fieldTypeFromInterfaceValue(name string, value []interface{}) (FieldType, *fieldObject, error) {
+func fieldTypeFromInterfaceValue(name, parentObject string, value []interface{}) (FieldType, *fieldObject, error) {
 	switch len(value) {
 	case 0:
 		return FieldTypeList(FieldTypeString), nil, nil
 	case 1:
-		ft, object, err := getFieldType(name, value[0])
+		ft, object, err := getFieldType(name, parentObject, value[0])
 		return FieldTypeList(ft), object, err
 	default:
 		return FieldTypeList(unknownType), nil, fmt.Errorf("unsupported validation for list: %v", value)
 	}
 }
 
-func fieldTypeFromObjectValue(name string, values map[string]interface{}) (FieldType, *fieldObject) {
-	name = strcase.ToCamel(name)
+func fieldTypeFromObjectValue(name, parentObject string, values map[string]interface{}) (FieldType, *fieldObject) {
+	// Explicitly add a dash here to ensure correct casing for the object name
+	name = strcase.ToCamel(parentObject + "-" + name)
 	return FieldTypeObject(name), &fieldObject{Name: name, Value: values}
 }
 
