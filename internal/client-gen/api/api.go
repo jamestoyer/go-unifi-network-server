@@ -22,31 +22,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 )
 
 const golangGeneratedFileSuffix = ".generated.go"
-
-func Generate(ctx context.Context, logger *slog.Logger, endpoints []*Endpoint, outputDir string) error {
-	slog.InfoContext(ctx, "Removing previously generated files")
-	if err := RemoveGeneratedFiles(ctx, outputDir); err != nil {
-		return err
-	}
-
-	slog.InfoContext(ctx, "Generating endpoints")
-	tmpl, err := template.ParseFS(templatesFs, "templates/*")
-	if err != nil {
-		return fmt.Errorf("error parsing API templates: %w", err)
-	}
-
-	for _, endpoint := range endpoints {
-		if err = endpoint.Render(ctx, logger, outputDir, tmpl); err != nil {
-			return fmt.Errorf("failed to render API endpoint: %w", err)
-		}
-	}
-
-	return nil
-}
 
 func RemoveGeneratedFiles(ctx context.Context, outputDir string) error {
 	err := filepath.WalkDir(outputDir, func(path string, d fs.DirEntry, err error) error {
