@@ -13,7 +13,7 @@ import (
 	"path"
 )
 
-{{ range $struct := .Structs }}
+{{ range $struct := .Objects }}
 {{ template "struct.gotmpl" $struct }}
 {{ end }}
 
@@ -24,7 +24,7 @@ type responseBody{{ .Name }} struct {
 }
 
 func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
-    endpointPath := path.Join("api/s/", site, "rest", "{{ .APIPath }}")
+    endpointPath := path.Join("api/s/", site, "rest", "{{ .ResourcePath }}")
     req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
     if err != nil {
         return nil, nil, err
@@ -33,7 +33,7 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .N
     var body responseBody{{ .Name }}
     resp, err := c.Do(ctx, req, &body)
     if err != nil {
-        return nil, resp, fmt.Errorf(`unable to create {{ .APIPath }}: %w`, err)
+        return nil, resp, fmt.Errorf(`unable to create {{ .ResourcePath }}: %w`, err)
     }
 
     var item {{ .Name }}
@@ -50,7 +50,7 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .N
 }
 
 func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) (*http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", id)
     req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
     if err != nil {
         return nil, err
@@ -66,7 +66,7 @@ func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) 
 }
 
 func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name }}, *http.Response, error) {
-	endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", id)
+	endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", id)
     req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
     if err != nil {
         return nil, nil, err
@@ -91,7 +91,7 @@ func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name
 }
 
 func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }}, *http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}")
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}")
     req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
     if err != nil {
         return nil, nil, err
@@ -107,7 +107,7 @@ func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }
 }
 
 func (c *Client) Update{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .APIPath }}", data.GetID())
+    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", data.GetID())
     req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
     if err != nil {
         return nil, nil, err
@@ -116,7 +116,7 @@ func (c *Client) Update{{ .Name }}(ctx context.Context, site string, data *{{ .N
     var body responseBody{{ .Name }}
     resp, err := c.Do(ctx, req, &body)
     if err != nil {
-        return nil, resp, fmt.Errorf(`unable to update {{ .APIPath }}: %w`, err)
+        return nil, resp, fmt.Errorf(`unable to update {{ .ResourcePath }}: %w`, err)
     }
 
     var item {{ .Name }}

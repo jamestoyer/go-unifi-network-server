@@ -26,6 +26,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
 )
 
@@ -63,9 +64,9 @@ func NewParser(config ParserConfig) *Parser {
 	return &Parser{config: config}
 }
 
-func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*Endpoint, error) {
+func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*spec.Endpoint, error) {
 	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("specDir", dir)))
-	var endpoints []*Endpoint
+	var endpoints []*spec.Endpoint
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -99,14 +100,14 @@ func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*Endpoint, error) 
 	}
 
 	// Sort the endpoints so that they are always in the same order.
-	slices.SortFunc(endpoints, func(a, b *Endpoint) int {
+	slices.SortFunc(endpoints, func(a, b *spec.Endpoint) int {
 		return strings.Compare(a.Name, b.Name)
 	})
 
 	return endpoints, nil
 }
 
-func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*Endpoint, error) {
+func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*spec.Endpoint, error) {
 	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("filename", filename)))
 	slog.DebugContext(ctx, "Parsing specification file for endpoints")
 
@@ -142,10 +143,10 @@ func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*Endpoint, e
 		return nil, nil
 	}
 
-	endpoint, err := NewEndpoint(endpointName, filename, fields)
+	endpoint, err := spec.EndpointFromAPISpec(endpointName, filename, fields)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse endpoint: %w", err)
 	}
 
-	return []*Endpoint{endpoint}, nil
+	return []*spec.Endpoint{endpoint}, nil
 }

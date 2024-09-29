@@ -24,6 +24,7 @@ import (
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
 	"gopkg.in/yaml.v3"
 )
@@ -130,12 +131,19 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	return apiDestination, nil
 }
 
-func generateAPIClient(ctx context.Context, endpoints []*api.Endpoint) error {
+func generateAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	if err := os.MkdirAll(packageName, 0o775); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
 	}
 
-	return api.Generate(ctx, logger, endpoints, packageName)
+	// TODO: (jtoyer) Move this look in to the api package
+	for _, endpoint := range endpoints {
+		if err := api.RenderEndpoint(ctx, endpoint, packageName, packageName); err != nil {
+			return fmt.Errorf("failed to render endpoint %s: %w", endpoint.Name, err)
+		}
+	}
+
+	return nil
 }
 
 func unmarshalConfig() (*api.ParserConfig, error) {

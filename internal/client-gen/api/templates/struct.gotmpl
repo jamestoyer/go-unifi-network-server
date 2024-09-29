@@ -4,7 +4,7 @@ type {{ .Name }} struct {
 	{{- end }}
 }
 {{ range $field := .Fields }}
-func (s *{{ $.Name }}) Get{{ $field.Name }}() {{ if $field.Type.IsObjectType }}*{{ end }}{{ $field.Type }} {
+func (s *{{ $.Name }}) Get{{ $field.Name }}() {{ if $field.Type.IsObjectType }}*{{ end }}{{ $field.Type.GoType }} {
 	if s == nil {{ if not $field.Type.IsPrimitiveType }}|| s.{{ $field.Name}} == nil {{ end }}{
 		return {{ $field.Type.DefaultValue }}
 	}
