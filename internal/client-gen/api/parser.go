@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package spec
+package api
 
 import (
 	"context"
@@ -26,7 +26,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
 )
 
@@ -64,9 +63,9 @@ func NewParser(config ParserConfig) *Parser {
 	return &Parser{config: config}
 }
 
-func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*api.Endpoint, error) {
+func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*Endpoint, error) {
 	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("specDir", dir)))
-	var endpoints []*api.Endpoint
+	var endpoints []*Endpoint
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -100,14 +99,14 @@ func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*api.Endpoint, err
 	}
 
 	// Sort the endpoints so that they are always in the same order.
-	slices.SortFunc(endpoints, func(a, b *api.Endpoint) int {
+	slices.SortFunc(endpoints, func(a, b *Endpoint) int {
 		return strings.Compare(a.Name, b.Name)
 	})
 
 	return endpoints, nil
 }
 
-func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*api.Endpoint, error) {
+func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*Endpoint, error) {
 	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("filename", filename)))
 	slog.DebugContext(ctx, "Parsing specification file for endpoints")
 
@@ -143,10 +142,10 @@ func (p *Parser) ParseFile(ctx context.Context, filename string) ([]*api.Endpoin
 		return nil, nil
 	}
 
-	endpoint, err := api.NewEndpoint(endpointName, filename, fields)
+	endpoint, err := NewEndpoint(endpointName, filename, fields)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse endpoint: %w", err)
 	}
 
-	return []*api.Endpoint{endpoint}, nil
+	return []*Endpoint{endpoint}, nil
 }

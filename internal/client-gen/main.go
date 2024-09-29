@@ -24,7 +24,6 @@ import (
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
-	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
 	"gopkg.in/yaml.v3"
 )
@@ -75,7 +74,7 @@ func main() {
 	}
 
 	slog.InfoContext(ctx, "Parsing API specification directory")
-	parser := spec.NewParser(*config)
+	parser := api.NewParser(*config)
 	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
 	switch {
 	case err != nil:
@@ -139,13 +138,13 @@ func generateAPIClient(ctx context.Context, endpoints []*api.Endpoint) error {
 	return api.Generate(ctx, logger, endpoints, packageName)
 }
 
-func unmarshalConfig() (*spec.ParserConfig, error) {
+func unmarshalConfig() (*api.ParserConfig, error) {
 	contents, err := os.ReadFile(*configFileFlag)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
 	}
 
-	var config spec.ParserConfig
+	var config api.ParserConfig
 	if err = yaml.Unmarshal(contents, &config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 	}
