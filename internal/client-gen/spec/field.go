@@ -30,14 +30,6 @@ var (
 	repetitionsRegex      = regexp.MustCompile(`\?|\+|\*|\{\d*,?\d*\}`)
 )
 
-type FieldOverrides struct {
-	Description *string        `yaml:"description,omitempty"`
-	JSONName    *string        `yaml:"jsonName,omitempty"`
-	Name        *string        `yaml:"name,omitempty"`
-	Type        *FieldType     `yaml:"type,omitempty"`
-	Validation  *regexp.Regexp `yaml:"validation,omitempty"`
-}
-
 type Field struct {
 	Name        string
 	Description string
@@ -45,49 +37,6 @@ type Field struct {
 
 	JSONName   string
 	Validation *regexp.Regexp
-}
-
-// ApplyOverrides will return a mutated Field with the given FieldOverrides applied.
-//
-// When useDefaultDescription is true the description will automatically be updated to a default generated description,
-// which is useful when updating the name or validation of the field. However, if this is true and the description is
-// explicitly overridden then the override will take priority.
-func (f Field) ApplyOverrides(overrides *FieldOverrides, useDefaultDescription bool) Field {
-	if overrides == nil {
-		if useDefaultDescription {
-			f.Description = f.defaultDescription()
-		}
-
-		return f
-	}
-
-	if overrides.Description != nil {
-		f.Description = *overrides.Description
-	}
-
-	if overrides.JSONName != nil {
-		f.JSONName = *overrides.JSONName
-	}
-
-	if overrides.Name != nil {
-		f.Name = strcase.ToCamel(*overrides.Name)
-	}
-
-	if overrides.Type != nil {
-		f.Type = *overrides.Type
-	}
-
-	if overrides.Validation != nil {
-		f.Validation = overrides.Validation
-	}
-
-	if overrides.Description != nil {
-		f.Description = *overrides.Description
-	} else if useDefaultDescription {
-		f.Description = f.defaultDescription()
-	}
-
-	return f
 }
 
 func (f Field) defaultDescription() string {
