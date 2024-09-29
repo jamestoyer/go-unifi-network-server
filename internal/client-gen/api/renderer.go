@@ -1,0 +1,97 @@
+// Copyright 2024 James Toyer
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package api
+
+import (
+	"bytes"
+	"context"
+	"embed"
+	"fmt"
+	"go/format"
+	"log/slog"
+	"os"
+	"path/filepath"
+	"text/template"
+
+	"github.com/iancoleman/strcase"
+	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
+	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
+)
+
+//go:embed templates
+var templatesFs embed.FS
+
+type Renderer struct {
+	templates *template.Template
+}
+
+func NewRenderer() (*Renderer, error) {
+	tmpl, err := template.ParseFS(templatesFs, "templates/*")
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse API templates: %w", err)
+	}
+
+	return &Renderer{
+		templates: tmpl,
+	}, nil
+}
+
+func (r *Renderer) RenderEndpoint(ctx context.Context, endpoint *spec.Endpoint, targetDir, packageName string) error {
+	filename := filepath.Join(targetDir, generatedFilename(endpoint.Name))
+	ctx = logging.CtxWithValues(ctx, slog.String("endpoint", endpoint.Name), slog.String("filename", filename))
+	slog.DebugContext(ctx, "Rendering endpoint")
+
+	var buffer bytes.Buffer
+	templateContent := struct {
+		Name         string
+		Objects      []*spec.Object
+		PackageName  string
+		ResourcePath string
+	}{
+		Name:         endpoint.Name,
+		Objects:      endpoint.Objects,
+		PackageName:  packageName,
+		ResourcePath: endpoint.ResourcePath,
+	}
+	if err := r.templates.ExecuteTemplate(&buffer, "file.gotmpl", templateContent); err != nil {
+		return fmt.Errorf("failed to generate API endpoint file: %w", err)
+	}
+
+	src, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return fmt.Errorf("failed to format API endpoint: %w", err)
+	}
+
+	if err := os.WriteFile(filename, src, 0o644); err != nil {
+		return fmt.Errorf("failed to write API endpoint file: %w", err)
+	}
+
+	return nil
+}
+
+func (r *Renderer) RenderEndpoints(ctx context.Context, endpoints []*spec.Endpoint, targetDir, packageName string) error {
+	slog.DebugContext(ctx, "Rendering endpoints", slog.Int("endpointCount", len(endpoints)))
+	for _, endpoint := range endpoints {
+		if err := r.RenderEndpoint(ctx, endpoint, targetDir, packageName); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func generatedFilename(name string) string {
+	return strcase.ToSnake(name) + golangGeneratedFileSuffix
+}

@@ -16,7 +16,6 @@ package api
 
 import (
 	"context"
-	"embed"
 	"fmt"
 	"io/fs"
 	"log/slog"
@@ -28,12 +27,9 @@ import (
 
 const golangGeneratedFileSuffix = ".generated.go"
 
-//go:embed templates
-var templatesFs embed.FS
-
 func Generate(ctx context.Context, logger *slog.Logger, endpoints []*Endpoint, outputDir string) error {
 	slog.InfoContext(ctx, "Removing previously generated files")
-	if err := removeGeneratedFiles(ctx, outputDir); err != nil {
+	if err := RemoveGeneratedFiles(ctx, outputDir); err != nil {
 		return err
 	}
 
@@ -52,7 +48,7 @@ func Generate(ctx context.Context, logger *slog.Logger, endpoints []*Endpoint, o
 	return nil
 }
 
-func removeGeneratedFiles(ctx context.Context, outputDir string) error {
+func RemoveGeneratedFiles(ctx context.Context, outputDir string) error {
 	err := filepath.WalkDir(outputDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err

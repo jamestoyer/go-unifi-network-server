@@ -85,10 +85,10 @@ func main() {
 		slog.InfoContext(ctx, "No endpoints found to generate")
 		os.Exit(0)
 	default:
-		slog.InfoContext(ctx, "Found endpoints to generate", slog.Int("endpointCount", len(endpoints)))
+		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(endpoints)))
 	}
 
-	if err = generateAPIClient(ctx, endpoints); err != nil {
+	if err = renderAPIClient(ctx, endpoints); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
 		os.Exit(1)
 	}
@@ -131,19 +131,23 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	return apiDestination, nil
 }
 
-func generateAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
+func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	if err := os.MkdirAll(packageName, 0o775); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
 	}
 
-	// TODO: (jtoyer) Move this look in to the api package
-	for _, endpoint := range endpoints {
-		if err := api.RenderEndpoint(ctx, endpoint, packageName, packageName); err != nil {
-			return fmt.Errorf("failed to render endpoint %s: %w", endpoint.Name, err)
-		}
+	slog.InfoContext(ctx, "Removing previously generated files")
+	if err := api.RemoveGeneratedFiles(ctx, packageName); err != nil {
+		return err
 	}
 
-	return nil
+	renderer, err := api.NewRenderer()
+	if err != nil {
+		return err
+	}
+
+	slog.InfoContext(ctx, "Rendering API client")
+	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
 }
 
 func unmarshalConfig() (*api.ParserConfig, error) {
