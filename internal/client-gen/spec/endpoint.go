@@ -25,8 +25,9 @@ import (
 type Endpoint struct {
 	Name string
 
-	Filename string
-	Objects  []*Object
+	Filename     string
+	Objects      []*Object
+	ResourcePath string
 }
 
 func EndpointFromAPISpec(name, filename string, values map[string]interface{}) (*Endpoint, error) {
@@ -52,9 +53,10 @@ func EndpointFromAPISpec(name, filename string, values map[string]interface{}) (
 	allObjects = append(allObjects, o...)
 
 	return &Endpoint{
-		Name:     name,
-		Filename: filename,
-		Objects:  allObjects,
+		Name:         name,
+		Filename:     filename,
+		Objects:      allObjects,
+		ResourcePath: strings.ToLower(name),
 	}, nil
 }
 
