@@ -115,8 +115,9 @@ func (f Field) defaultDescription() string {
 }
 
 type fieldObject struct {
-	Name  string
-	Value map[string]interface{}
+	Name         string
+	ParentObject string
+	Value        map[string]interface{}
 }
 
 func parseFieldDefinition(name, parentObject string, value interface{}) (Field, *fieldObject, error) {

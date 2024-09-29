@@ -24,12 +24,14 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+var rootObjectFields []Field
+
 type Object struct {
 	Name   string
 	Fields []Field
 }
 
-func objectFromAPISpec(name, parentObject string, values map[string]interface{}) (*Object, []*fieldObject, error) {
+func objectFromAPISpec(name string, values map[string]interface{}, addDefaultFields bool) (*Object, []*fieldObject, error) {
 	if strings.TrimSpace(name) == "" {
 		return nil, nil, errors.New("invalid endpoint name")
 	}
@@ -39,11 +41,15 @@ func objectFromAPISpec(name, parentObject string, values map[string]interface{})
 	name = strcase.ToCamel(name)
 
 	var fields []Field
+	if addDefaultFields {
+		fields = append(fields, rootObjectFields...)
+	}
+
 	var fieldObjects []*fieldObject
 	sortedFieldNames := slices.Sorted(maps.Keys(values))
 	for _, fieldName := range sortedFieldNames {
 		value := values[fieldName]
-		field, object, err := parseFieldDefinition(fieldName, parentObject+name, value)
+		field, object, err := parseFieldDefinition(fieldName, name, value)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to parse field %s: %w", fieldName, err)
 		}
@@ -58,4 +64,28 @@ func objectFromAPISpec(name, parentObject string, values map[string]interface{})
 		Name:   name,
 		Fields: fields,
 	}, fieldObjects, nil
+}
+
+func init() {
+	id := Field{Name: "ID", Type: FieldTypeString, JSONName: "_id"}
+	id.Description = id.defaultDescription()
+	siteID := Field{Name: "SiteID", Type: FieldTypeString, JSONName: "site_id"}
+	siteID.Description = siteID.defaultDescription()
+	hidden := Field{Name: "Hidden", Type: FieldTypeBoolean, JSONName: "attr_hidden"}
+	hidden.Description = hidden.defaultDescription()
+	hiddenID := Field{Name: "HiddenID", Type: FieldTypeString, JSONName: "attr_hidden_id"}
+	hiddenID.Description = hiddenID.defaultDescription()
+	noDelete := Field{Name: "NoDelete", Type: FieldTypeBoolean, JSONName: "attr_no_delete"}
+	noDelete.Description = noDelete.defaultDescription()
+	noEdit := Field{Name: "NoEdit", Type: FieldTypeBoolean, JSONName: "attr_no_edit"}
+	noEdit.Description = noEdit.defaultDescription()
+
+	rootObjectFields = []Field{
+		id,
+		siteID,
+		hidden,
+		hiddenID,
+		noDelete,
+		noEdit,
+	}
 }

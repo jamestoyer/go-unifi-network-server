@@ -22,9 +22,48 @@ import (
 )
 
 func Test_objectFromAPISpec(t *testing.T) {
+	rootFields := []Field{
+		{
+			Name:        "ID",
+			Description: "ID has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "_id",
+			Type:        FieldTypeString,
+		},
+		{
+			Name:        "SiteID",
+			Description: "SiteID has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "site_id",
+			Type:        FieldTypeString,
+		},
+		{
+			Name:        "Hidden",
+			Description: "Hidden has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "attr_hidden",
+			Type:        FieldTypeBoolean,
+		},
+		{
+			Name:        "HiddenID",
+			Description: "HiddenID has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "attr_hidden_id",
+			Type:        FieldTypeString,
+		},
+		{
+			Name:        "NoDelete",
+			Description: "NoDelete has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "attr_no_delete",
+			Type:        FieldTypeBoolean,
+		},
+		{
+			Name:        "NoEdit",
+			Description: "NoEdit has been auto generated from the Unifi Network Server API specification\n\nValidation: None",
+			JSONName:    "attr_no_edit",
+			Type:        FieldTypeBoolean,
+		},
+	}
+
 	tests := map[string]struct {
 		name             string
-		parentObject     string
+		addDefaultFields bool
 		values           map[string]interface{}
 		wantObject       *Object
 		wantFieldObjects []*fieldObject
@@ -52,6 +91,16 @@ func Test_objectFromAPISpec(t *testing.T) {
 			},
 			wantErr: assert.NoError,
 		},
+		"add default fields": {
+			name:             "emptyValues",
+			addDefaultFields: true,
+			values:           map[string]interface{}{},
+			wantObject: &Object{
+				Name:   "EmptyValues",
+				Fields: rootFields,
+			},
+			wantErr: assert.NoError,
+		},
 		"name is not camel case": {
 			name:   "not A camel Case-Object",
 			values: nil,
@@ -61,7 +110,8 @@ func Test_objectFromAPISpec(t *testing.T) {
 			wantErr: assert.NoError,
 		},
 		"values are primitives and lists of primitives": {
-			name: "NoFieldObjects",
+			name:             "NoFieldObjects",
+			addDefaultFields: true,
 			values: map[string]interface{}{
 				"empty_string": "",
 				"string":       "string",
@@ -73,74 +123,77 @@ func Test_objectFromAPISpec(t *testing.T) {
 			},
 			wantObject: &Object{
 				Name: "NoFieldObjects",
-				Fields: []Field{
-					{
-						Name: "Bool",
-						Description: `Bool has been auto generated from the Unifi Network Server API specification
+				Fields: append(rootFields,
+					[]Field{
+						{
+							Name: "Bool",
+							Description: `Bool has been auto generated from the Unifi Network Server API specification
 
 Validation: true|false`,
-						JSONName:   "bool",
-						Type:       FieldTypeBoolean,
-						Validation: regexp.MustCompile(`true|false`),
-					},
-					{
-						Name: "Decimal",
-						Description: `Decimal has been auto generated from the Unifi Network Server API specification
+							JSONName:   "bool",
+							Type:       FieldTypeBoolean,
+							Validation: regexp.MustCompile(`true|false`),
+						},
+						{
+							Name: "Decimal",
+							Description: `Decimal has been auto generated from the Unifi Network Server API specification
 
 Validation: [0-9].[0-9]+`,
-						JSONName:   "decimal",
-						Type:       FieldTypeDecimal,
-						Validation: regexp.MustCompile(`[0-9].[0-9]+`),
-					},
-					{
-						Name: "EmptyList",
-						Description: `EmptyList has been auto generated from the Unifi Network Server API specification
+							JSONName:   "decimal",
+							Type:       FieldTypeDecimal,
+							Validation: regexp.MustCompile(`[0-9].[0-9]+`),
+						},
+						{
+							Name: "EmptyList",
+							Description: `EmptyList has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-						JSONName: "emptyList",
-						Type:     FieldTypeList(FieldTypeString),
-					},
-					{
-						Name: "EmptyString",
-						Description: `EmptyString has been auto generated from the Unifi Network Server API specification
+							JSONName: "emptyList",
+							Type:     FieldTypeList(FieldTypeString),
+						},
+						{
+							Name: "EmptyString",
+							Description: `EmptyString has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-						JSONName: "empty_string",
-						Type:     FieldTypeString,
-					},
-					{
-						Name: "List",
-						Description: `List has been auto generated from the Unifi Network Server API specification
+							JSONName: "empty_string",
+							Type:     FieldTypeString,
+						},
+						{
+							Name: "List",
+							Description: `List has been auto generated from the Unifi Network Server API specification
 
 Element Validation: [0-9].[0-9]+`,
-						JSONName:   "list",
-						Type:       FieldTypeList(FieldTypeDecimal),
-						Validation: regexp.MustCompile(`[0-9].[0-9]+`),
-					},
-					{
-						Name: "Number",
-						Description: `Number has been auto generated from the Unifi Network Server API specification
+							JSONName:   "list",
+							Type:       FieldTypeList(FieldTypeDecimal),
+							Validation: regexp.MustCompile(`[0-9].[0-9]+`),
+						},
+						{
+							Name: "Number",
+							Description: `Number has been auto generated from the Unifi Network Server API specification
 
 Validation: [0-9]`,
-						JSONName:   "number",
-						Type:       FieldTypeNumber,
-						Validation: regexp.MustCompile(`[0-9]`),
-					},
-					{
-						Name: "String",
-						Description: `String has been auto generated from the Unifi Network Server API specification
+							JSONName:   "number",
+							Type:       FieldTypeNumber,
+							Validation: regexp.MustCompile(`[0-9]`),
+						},
+						{
+							Name: "String",
+							Description: `String has been auto generated from the Unifi Network Server API specification
 
 Validation: string`,
-						JSONName:   "string",
-						Type:       FieldTypeString,
-						Validation: regexp.MustCompile(`string`),
-					},
-				},
+							JSONName:   "string",
+							Type:       FieldTypeString,
+							Validation: regexp.MustCompile(`string`),
+						},
+					}...,
+				),
 			},
 			wantErr: assert.NoError,
 		},
 		"values are objects and lists of objects": {
-			name: "FieldObjectsFound",
+			name:             "FieldObjectsFound",
+			addDefaultFields: true,
 			values: map[string]interface{}{
 				"object_a": map[string]interface{}{
 					"value": `\w`,
@@ -169,40 +222,43 @@ Validation: string`,
 			},
 			wantObject: &Object{
 				Name: "FieldObjectsFound",
-				Fields: []Field{
-					{
-						Name: "ListB",
-						Description: `ListB has been auto generated from the Unifi Network Server API specification
+				Fields: append(
+					rootFields,
+					[]Field{
+						{
+							Name: "ListB",
+							Description: `ListB has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-						Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundListB")),
-						JSONName: "listB",
-					},
-					{
-						Name: "NestedListObjectC",
-						Description: `NestedListObjectC has been auto generated from the Unifi Network Server API specification
+							Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundListB")),
+							JSONName: "listB",
+						},
+						{
+							Name: "NestedListObjectC",
+							Description: `NestedListObjectC has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-						Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundNestedListObjectC")),
-						JSONName: "nested_list_object_c",
-					},
-					{
-						Name: "NestedObjectListObjectD",
-						Description: `NestedObjectListObjectD has been auto generated from the Unifi Network Server API specification
+							Type:     FieldTypeList(FieldTypeObject("FieldObjectsFoundNestedListObjectC")),
+							JSONName: "nested_list_object_c",
+						},
+						{
+							Name: "NestedObjectListObjectD",
+							Description: `NestedObjectListObjectD has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-						Type:     FieldTypeObject("FieldObjectsFoundNestedObjectListObjectD"),
-						JSONName: "nested_object_list_object_d",
-					},
-					{
-						Name: "ObjectA",
-						Description: `ObjectA has been auto generated from the Unifi Network Server API specification
+							Type:     FieldTypeObject("FieldObjectsFoundNestedObjectListObjectD"),
+							JSONName: "nested_object_list_object_d",
+						},
+						{
+							Name: "ObjectA",
+							Description: `ObjectA has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-						Type:     FieldTypeObject("FieldObjectsFoundObjectA"),
-						JSONName: "object_a",
-					},
-				},
+							Type:     FieldTypeObject("FieldObjectsFoundObjectA"),
+							JSONName: "object_a",
+						},
+					}...,
+				),
 			},
 			wantFieldObjects: []*fieldObject{
 				{
@@ -240,42 +296,11 @@ Validation: None`,
 			},
 			wantErr: assert.NoError,
 		},
-		"field object has a parent field": {
-			name:         "ParentFieldObject",
-			parentObject: "Root",
-			values: map[string]interface{}{
-				"sub_object": map[string]interface{}{
-					"value": `\w`,
-				},
-			},
-			wantObject: &Object{
-				Name: "ParentFieldObject",
-				Fields: []Field{
-					{
-						Name: "SubObject",
-						Description: `SubObject has been auto generated from the Unifi Network Server API specification
-
-Validation: None`,
-						Type:     FieldTypeObject("RootParentFieldObjectSubObject"),
-						JSONName: "sub_object",
-					},
-				},
-			},
-			wantFieldObjects: []*fieldObject{
-				{
-					Name: "RootParentFieldObjectSubObject",
-					Value: map[string]interface{}{
-						"value": `\w`,
-					},
-				},
-			},
-			wantErr: assert.NoError,
-		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			gotObject, gotFieldObjects, err := objectFromAPISpec(test.name, test.parentObject, test.values)
+			gotObject, gotFieldObjects, err := objectFromAPISpec(test.name, test.values, test.addDefaultFields)
 			test.wantErr(t, err)
 			assert.Equal(t, test.wantObject, gotObject)
 			assert.Equal(t, test.wantFieldObjects, gotFieldObjects)

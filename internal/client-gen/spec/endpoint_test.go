@@ -41,10 +41,14 @@ func TestEndpointFromAPISpec(t *testing.T) {
 			filename: "emptyEndpoint.json",
 			values:   nil,
 			want: &Endpoint{
-				Name:     "EmptyEndpoint",
-				Filename: "emptyEndpoint.json",
+				Name:         "EmptyEndpoint",
+				Filename:     "emptyEndpoint.json",
+				ResourcePath: "emptyendpoint",
 				Objects: []*Object{
-					{Name: "EmptyEndpoint"},
+					{
+						Name:   "EmptyEndpoint",
+						Fields: rootObjectFields,
+					},
 				},
 			},
 			wantErr: assert.NoError,
@@ -54,10 +58,14 @@ func TestEndpointFromAPISpec(t *testing.T) {
 			filename: "emptyEndpoint.json",
 			values:   map[string]interface{}{},
 			want: &Endpoint{
-				Name:     "EmptyEndpoint",
-				Filename: "emptyEndpoint.json",
+				Name:         "EmptyEndpoint",
+				Filename:     "emptyEndpoint.json",
+				ResourcePath: "emptyendpoint",
 				Objects: []*Object{
-					{Name: "EmptyEndpoint"},
+					{
+						Name:   "EmptyEndpoint",
+						Fields: rootObjectFields,
+					},
 				},
 			},
 			wantErr: assert.NoError,
@@ -67,10 +75,14 @@ func TestEndpointFromAPISpec(t *testing.T) {
 			filename: "endpoint.json",
 			values:   nil,
 			want: &Endpoint{
-				Name:     "NotCamelCaseEndpoint",
-				Filename: "endpoint.json",
+				Name:         "NotCamelCaseEndpoint",
+				Filename:     "endpoint.json",
+				ResourcePath: "notcamelcaseendpoint",
 				Objects: []*Object{
-					{Name: "NotCamelCaseEndpoint"},
+					{
+						Name:   "NotCamelCaseEndpoint",
+						Fields: rootObjectFields,
+					},
 				},
 			},
 			wantErr: assert.NoError,
@@ -83,30 +95,33 @@ func TestEndpointFromAPISpec(t *testing.T) {
 				"listPrimitive": []interface{}{},
 			},
 			want: &Endpoint{
-				Name:     "SingleObject",
-				Filename: "singleObject.json",
+				Name:         "SingleObject",
+				Filename:     "singleObject.json",
+				ResourcePath: "singleobject",
 				Objects: []*Object{
 					{
 						Name: "SingleObject",
-						Fields: []Field{
-							{
-								Name: "ListPrimitive",
-								Description: `ListPrimitive has been auto generated from the Unifi Network Server API specification
+						Fields: append(rootObjectFields,
+							[]Field{
+								{
+									Name: "ListPrimitive",
+									Description: `ListPrimitive has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-								JSONName: "listPrimitive",
-								Type:     FieldTypeList(FieldTypeString),
-							},
-							{
-								Name: "Primitive",
-								Description: `Primitive has been auto generated from the Unifi Network Server API specification
+									JSONName: "listPrimitive",
+									Type:     FieldTypeList(FieldTypeString),
+								},
+								{
+									Name: "Primitive",
+									Description: `Primitive has been auto generated from the Unifi Network Server API specification
 
 Validation: [0-9].[0-9]+`,
-								JSONName:   "primitive",
-								Type:       FieldTypeDecimal,
-								Validation: regexp.MustCompile(`[0-9].[0-9]+`),
-							},
-						},
+									JSONName:   "primitive",
+									Type:       FieldTypeDecimal,
+									Validation: regexp.MustCompile(`[0-9].[0-9]+`),
+								},
+							}...,
+						),
 					},
 				},
 			},
@@ -131,38 +146,41 @@ Validation: [0-9].[0-9]+`,
 				},
 			},
 			want: &Endpoint{
-				Name:     "MultipleObjects",
-				Filename: "multipleObjects.json",
+				Name:         "MultipleObjects",
+				Filename:     "multipleObjects.json",
+				ResourcePath: "multipleobjects",
 				Objects: []*Object{
 					{
 						Name: "MultipleObjects",
-						Fields: []Field{
-							{
-								Name: "List",
-								Description: `List has been auto generated from the Unifi Network Server API specification
+						Fields: append(rootObjectFields,
+							[]Field{
+								{
+									Name: "List",
+									Description: `List has been auto generated from the Unifi Network Server API specification
 
 Element Validation: None`,
-								JSONName: "list",
-								Type:     FieldTypeList(FieldTypeObject("MultipleObjectsList")),
-							},
-							{
-								Name: "Object",
-								Description: `Object has been auto generated from the Unifi Network Server API specification
+									JSONName: "list",
+									Type:     FieldTypeList(FieldTypeObject("MultipleObjectsList")),
+								},
+								{
+									Name: "Object",
+									Description: `Object has been auto generated from the Unifi Network Server API specification
 
 Validation: None`,
-								JSONName: "object",
-								Type:     FieldTypeObject("MultipleObjectsObject"),
-							},
-							{
-								Name: "Primitive",
-								Description: `Primitive has been auto generated from the Unifi Network Server API specification
+									JSONName: "object",
+									Type:     FieldTypeObject("MultipleObjectsObject"),
+								},
+								{
+									Name: "Primitive",
+									Description: `Primitive has been auto generated from the Unifi Network Server API specification
 
 Validation: [0-9].[0-9]+`,
-								JSONName:   "primitive",
-								Type:       FieldTypeDecimal,
-								Validation: regexp.MustCompile(`[0-9].[0-9]+`),
-							},
-						},
+									JSONName:   "primitive",
+									Type:       FieldTypeDecimal,
+									Validation: regexp.MustCompile(`[0-9].[0-9]+`),
+								},
+							}...,
+						),
 					},
 					{
 						Name: "MultipleObjectsList",
@@ -239,63 +257,16 @@ Element Validation: None`,
 
 func Test_endpointSubObjects(t *testing.T) {
 	tests := map[string]struct {
-		parentObject string
 		fieldObjects []*fieldObject
 		want         []*Object
 		wantErr      assert.ErrorAssertionFunc
 	}{
 		"object with no field objects": {
-			parentObject: "",
 			fieldObjects: []*fieldObject{},
 			want:         nil,
 			wantErr:      assert.NoError,
 		},
 		"object with no nested objects on field objects": {
-			parentObject: "",
-			fieldObjects: []*fieldObject{
-				{
-					Name:  "A",
-					Value: map[string]interface{}{"string": `string`},
-				},
-				{
-					Name:  "B",
-					Value: map[string]interface{}{"number": `[0-9]`},
-				},
-			},
-			want: []*Object{
-				{
-					Name: "A",
-					Fields: []Field{
-						{
-							Name: "String",
-							Description: `String has been auto generated from the Unifi Network Server API specification
-
-Validation: string`,
-							JSONName:   "string",
-							Type:       FieldTypeString,
-							Validation: regexp.MustCompile(`string`),
-						},
-					},
-				},
-				{
-					Name: "B",
-					Fields: []Field{
-						{
-							Name: "Number",
-							Description: `Number has been auto generated from the Unifi Network Server API specification
-
-Validation: [0-9]`,
-							JSONName:   "number",
-							Type:       FieldTypeNumber,
-							Validation: regexp.MustCompile(`[0-9]`),
-						},
-					},
-				},
-			},
-			wantErr: assert.NoError,
-		},
-		"object with parent object": {
-			parentObject: "Parent",
 			fieldObjects: []*fieldObject{
 				{
 					Name:  "A",
@@ -339,7 +310,6 @@ Validation: [0-9]`,
 			wantErr: assert.NoError,
 		},
 		"object with nested field objects": {
-			parentObject: "",
 			fieldObjects: []*fieldObject{
 				{
 					Name: "rootField",
@@ -385,7 +355,7 @@ Validation: string`,
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := endpointSubObjects(test.parentObject, test.fieldObjects)
+			got, err := endpointSubObjects(test.fieldObjects)
 			test.wantErr(t, err)
 			assert.Equal(t, test.want, got)
 		})

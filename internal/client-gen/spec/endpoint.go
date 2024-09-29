@@ -39,13 +39,13 @@ func EndpointFromAPISpec(name, filename string, values map[string]interface{}) (
 	// can be overridden later
 	name = strcase.ToCamel(name)
 
-	rootObject, fieldObjects, err := objectFromAPISpec(name, "", values)
+	rootObject, fieldObjects, err := objectFromAPISpec(name, values, true)
 	if err != nil {
 		return nil, fmt.Errorf("invalid endpoint root object: %w", err)
 	}
 
 	allObjects := []*Object{rootObject}
-	o, err := endpointSubObjects("", fieldObjects)
+	o, err := endpointSubObjects(fieldObjects)
 	if err != nil {
 		return nil, fmt.Errorf("invalid endpoint field objects: %w", err)
 	}
@@ -60,17 +60,17 @@ func EndpointFromAPISpec(name, filename string, values map[string]interface{}) (
 	}, nil
 }
 
-func endpointSubObjects(parentObject string, fieldObjects []*fieldObject) ([]*Object, error) {
+func endpointSubObjects(fieldObjects []*fieldObject) ([]*Object, error) {
 	var objects []*Object
 	for _, object := range fieldObjects {
-		o, fo, err := objectFromAPISpec(object.Name, parentObject, object.Value)
+		o, fo, err := objectFromAPISpec(object.Name, object.Value, false)
 		if err != nil {
 			return nil, err
 		}
 
 		objects = append(objects, o)
 
-		subObjects, err := endpointSubObjects(parentObject+o.Name, fo)
+		subObjects, err := endpointSubObjects(fo)
 		if err != nil {
 			return nil, err
 		}
