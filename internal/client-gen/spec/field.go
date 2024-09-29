@@ -184,18 +184,18 @@ func getValidationRegex(value interface{}) (*regexp.Regexp, error) {
 func fieldTypeFromInterfaceValue(name string, value []interface{}) (FieldType, *fieldObject, error) {
 	switch len(value) {
 	case 0:
-		return List(FieldTypeString), nil, nil
+		return FieldTypeList(FieldTypeString), nil, nil
 	case 1:
 		ft, object, err := getFieldType(name, value[0])
-		return List(ft), object, err
+		return FieldTypeList(ft), object, err
 	default:
-		return List(unknownType), nil, fmt.Errorf("unsupported validation for list: %v", value)
+		return FieldTypeList(unknownType), nil, fmt.Errorf("unsupported validation for list: %v", value)
 	}
 }
 
 func fieldTypeFromObjectValue(name string, values map[string]interface{}) (FieldType, *fieldObject) {
 	name = strcase.ToCamel(name)
-	return Object(name), &fieldObject{Name: name, Value: values}
+	return FieldTypeObject(name), &fieldObject{Name: name, Value: values}
 }
 
 func fieldTypeFromStringValue(value interface{}) FieldType {

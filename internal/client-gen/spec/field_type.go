@@ -100,7 +100,7 @@ func (t listFieldType) DefaultValue() string {
 	return "nil"
 }
 
-func List(element FieldType) FieldType {
+func FieldTypeList(element FieldType) FieldType {
 	return FieldType{
 		fieldTypeImpl: listFieldType{elementType: element},
 	}
@@ -118,7 +118,7 @@ func (t objectFieldType) DefaultValue() string {
 	return "nil"
 }
 
-func Object(name string) FieldType {
+func FieldTypeObject(name string) FieldType {
 	return FieldType{
 		fieldTypeImpl: objectFieldType{kind: name},
 	}
