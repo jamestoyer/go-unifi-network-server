@@ -39,7 +39,7 @@ type Field struct {
 	Validation *regexp.Regexp
 }
 
-func (f Field) defaultDescription() string {
+func (f Field) DefaultDescription() string {
 	var validationPrefix string
 	var validationRegex *regexp.Regexp
 
@@ -87,7 +87,7 @@ func parseFieldDefinition(name, parentObject string, value interface{}) (Field, 
 	}
 
 	f.Validation = regex
-	f.Description = f.defaultDescription()
+	f.Description = f.DefaultDescription()
 
 	return f, object, nil
 }

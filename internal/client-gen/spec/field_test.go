@@ -21,7 +21,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestField_defaultDescription(t *testing.T) {
+func TestField_DefaultDescription(t *testing.T) {
 	tests := map[string]struct {
 		field Field
 		want  string
@@ -80,7 +80,7 @@ Element Validation: None`,
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := test.field.defaultDescription()
+			got := test.field.DefaultDescription()
 			assert.Equal(t, test.want, got)
 		})
 	}

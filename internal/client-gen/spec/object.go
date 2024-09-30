@@ -68,17 +68,17 @@ func objectFromAPISpec(name string, values map[string]interface{}, addDefaultFie
 
 func init() {
 	id := Field{Name: "ID", Type: FieldTypeString, JSONName: "_id"}
-	id.Description = id.defaultDescription()
+	id.Description = id.DefaultDescription()
 	siteID := Field{Name: "SiteID", Type: FieldTypeString, JSONName: "site_id"}
-	siteID.Description = siteID.defaultDescription()
+	siteID.Description = siteID.DefaultDescription()
 	hidden := Field{Name: "Hidden", Type: FieldTypeBoolean, JSONName: "attr_hidden"}
-	hidden.Description = hidden.defaultDescription()
+	hidden.Description = hidden.DefaultDescription()
 	hiddenID := Field{Name: "HiddenID", Type: FieldTypeString, JSONName: "attr_hidden_id"}
-	hiddenID.Description = hiddenID.defaultDescription()
+	hiddenID.Description = hiddenID.DefaultDescription()
 	noDelete := Field{Name: "NoDelete", Type: FieldTypeBoolean, JSONName: "attr_no_delete"}
-	noDelete.Description = noDelete.defaultDescription()
+	noDelete.Description = noDelete.DefaultDescription()
 	noEdit := Field{Name: "NoEdit", Type: FieldTypeBoolean, JSONName: "attr_no_edit"}
-	noEdit.Description = noEdit.defaultDescription()
+	noEdit.Description = noEdit.DefaultDescription()
 
 	rootObjectFields = []Field{
 		id,
