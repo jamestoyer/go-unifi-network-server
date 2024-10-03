@@ -95,17 +95,17 @@ func (p *Parser) parseDir(ctx context.Context, dir string) ([]*spec.Endpoint, er
 		}
 
 		if d.IsDir() && path != dir {
-			slog.DebugContext(ctx, "Unexpected directory skipped", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "Unexpected directory skipped", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return filepath.SkipDir
 		}
 
 		if filepath.Ext(path) != ".json" {
-			slog.DebugContext(ctx, "Unsupported file extension skipped", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "Unsupported file extension skipped", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return nil
 		}
 
 		if slices.Contains(p.config.SkippedFiles, filepath.Base(path)) {
-			slog.DebugContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return nil
 		}
 
