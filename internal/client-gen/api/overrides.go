@@ -79,7 +79,7 @@ func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec
 				continue
 			}
 
-			f := ApplyFieldOverrides(field, fieldOverrides, true)
+			f := ApplyFieldOverrides(field, fieldOverrides)
 			overriddenFields = append(overriddenFields, f)
 		}
 
@@ -90,25 +90,37 @@ func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec
 }
 
 type FieldOverrides struct {
-	Description *string         `yaml:"description,omitempty"`
-	JSONName    *string         `yaml:"jsonName,omitempty"`
-	Name        *string         `yaml:"name,omitempty"`
-	Type        *spec.FieldType `yaml:"type,omitempty"`
-	Validation  *regexp.Regexp  `yaml:"validation,omitempty"`
+	Description *string `yaml:"description,omitempty"`
+
+	// GenerateDefaultDescription indicates whether the default description for the field should be set. When this is not
+	// set it defaults to `true`.
+	//
+	// The behaviour of this is strongly linked to Description. When this is true and Description is set, even to an
+	// empty string, then the Description will override the default description. If Description is nil then this will
+	// generate the default description.
+	//
+	// To remove the default description from the field without having to set Description to an empty string this should
+	// be set to false.
+	GenerateDefaultDescription *bool           `yaml:"generateDefaultDescription,omitempty"`
+	JSONName                   *string         `yaml:"jsonName,omitempty"`
+	Name                       *string         `yaml:"name,omitempty"`
+	Type                       *spec.FieldType `yaml:"type,omitempty"`
+	Validation                 *regexp.Regexp  `yaml:"validation,omitempty"`
 }
 
 // ApplyFieldOverrides will return a mutated spec.Field with the given FieldOverrides applied.
-//
-// When useDefaultDescription is true the description will automatically be updated to a default generated description,
-// which is useful when updating the name or validation of the field. However, if this is true and the description is
-// explicitly overridden then the override will take priority.
-func ApplyFieldOverrides(field spec.Field, overrides *FieldOverrides, useDefaultDescription bool) spec.Field {
+func ApplyFieldOverrides(field spec.Field, overrides *FieldOverrides) spec.Field {
 	if overrides == nil {
-		if useDefaultDescription {
-			field.Description = field.DefaultDescription()
-		}
-
 		return field
+	}
+
+	if field.Description == field.DefaultDescription() {
+		field.Description = ""
+	}
+
+	generateDefaultDescription := true
+	if overrides.GenerateDefaultDescription != nil {
+		generateDefaultDescription = *overrides.GenerateDefaultDescription && field.Description == ""
 	}
 
 	if overrides.Description != nil {
@@ -133,7 +145,7 @@ func ApplyFieldOverrides(field spec.Field, overrides *FieldOverrides, useDefault
 
 	if overrides.Description != nil {
 		field.Description = *overrides.Description
-	} else if useDefaultDescription {
+	} else if generateDefaultDescription && field.Description == "" {
 		field.Description = field.DefaultDescription()
 	}
 

@@ -179,7 +179,7 @@ func TestApplyEndpointOverrides(t *testing.T) {
 			},
 			want: &spec.Endpoint{
 				Name:         "Default",
-				ResourcePath: "new-path",
+				ResourcePath: "default-path",
 				Objects: []*spec.Object{
 					{
 						Name:   "A",
@@ -339,6 +339,9 @@ func TestApplyObjectOverrides(t *testing.T) {
 						Type:        spec.FieldTypeNumber,
 					},
 					{
+						Description: `D has been auto generated from the Unifi Network Server API specification
+
+Validation: None`,
 						Name: "D",
 						Type: spec.FieldTypeString,
 					},
@@ -365,11 +368,12 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		defaultDescription bool
-		overrides          *FieldOverrides
-		want               spec.Field
+		field     spec.Field
+		overrides *FieldOverrides
+		want      spec.Field
 	}{
 		"overrides is nil": {
+			field:     defaultField,
 			overrides: nil,
 			want: spec.Field{
 				Name:        "Default",
@@ -380,6 +384,7 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 			},
 		},
 		"overrides contains no overrides": {
+			field:     defaultField,
 			overrides: &FieldOverrides{},
 			want: spec.Field{
 				Name:        "Default",
@@ -390,6 +395,7 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 			},
 		},
 		"name is overridden": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				Name: networkserver.String("OverriddenName"),
 			},
@@ -402,6 +408,7 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 			},
 		},
 		"overridden name is not camel case": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				Name: networkserver.String("not A camel-cAse Name"),
 			},
@@ -414,6 +421,7 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 			},
 		},
 		"description is overridden": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				Description: networkserver.String(`An updated
 description field`),
@@ -428,6 +436,7 @@ description field`,
 			},
 		},
 		"type is overridden": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				Type: &spec.FieldTypeString,
 			},
@@ -440,6 +449,7 @@ description field`,
 			},
 		},
 		"json name is overridden": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				JSONName: networkserver.String("overriddenName"),
 			},
@@ -452,6 +462,7 @@ description field`,
 			},
 		},
 		"validation is overridden": {
+			field: defaultField,
 			overrides: &FieldOverrides{
 				Validation: regexp.MustCompile("[0-9]"),
 			},
@@ -463,10 +474,8 @@ description field`,
 				Validation:  regexp.MustCompile("[0-9]"),
 			},
 		},
-		"use default description with nil overrides": {
-			defaultDescription: true,
-			overrides:          nil,
-			want: spec.Field{
+		"generate default description is nil with default description": {
+			field: spec.Field{
 				Name: "Default",
 				Description: `Default has been auto generated from the Unifi Network Server API specification
 
@@ -475,22 +484,6 @@ Validation: false|true`,
 				JSONName:   "default",
 				Validation: regexp.MustCompile("false|true"),
 			},
-		},
-		"use default description with empty overrides": {
-			defaultDescription: true,
-			overrides:          &FieldOverrides{},
-			want: spec.Field{
-				Name: "Default",
-				Description: `Default has been auto generated from the Unifi Network Server API specification
-
-Validation: false|true`,
-				Type:       spec.FieldTypeBoolean,
-				JSONName:   "default",
-				Validation: regexp.MustCompile("false|true"),
-			},
-		},
-		"use default description with no description override": {
-			defaultDescription: true,
 			overrides: &FieldOverrides{
 				Name:       networkserver.String("Updated"),
 				Validation: regexp.MustCompile("[0-9]+"),
@@ -505,16 +498,79 @@ Validation: [0-9]+`,
 				Validation: regexp.MustCompile("[0-9]+"),
 			},
 		},
-		"use default description with description override": {
-			defaultDescription: true,
+		"generate default description is true with default description": {
+			field: spec.Field{
+				Name: "Default",
+				Description: `Default has been auto generated from the Unifi Network Server API specification
+
+Validation: false|true`,
+				Type:       spec.FieldTypeBoolean,
+				JSONName:   "default",
+				Validation: regexp.MustCompile("false|true"),
+			},
 			overrides: &FieldOverrides{
-				Description: networkserver.String("This will override the default description"),
+				GenerateDefaultDescription: networkserver.Bool(true),
+				Name:                       networkserver.String("Updated"),
+				Validation:                 regexp.MustCompile("[0-9]+"),
+			},
+			want: spec.Field{
+				Name: "Updated",
+				Description: `Updated has been auto generated from the Unifi Network Server API specification
+
+Validation: [0-9]+`,
+				Type:       spec.FieldTypeBoolean,
+				JSONName:   "default",
+				Validation: regexp.MustCompile("[0-9]+"),
+			},
+		},
+		"generate default description is false with default description": {
+			field: spec.Field{
+				Name: "Default",
+				Description: `Default has been auto generated from the Unifi Network Server API specification
+
+Validation: false|true`,
+				Type:       spec.FieldTypeBoolean,
+				JSONName:   "default",
+				Validation: regexp.MustCompile("false|true"),
+			},
+			overrides: &FieldOverrides{
+				GenerateDefaultDescription: networkserver.Bool(false),
+				Name:                       networkserver.String("Updated"),
+				Validation:                 regexp.MustCompile("[0-9]+"),
+			},
+			want: spec.Field{
+				Name:        "Updated",
+				Description: "",
+				Type:        spec.FieldTypeBoolean,
+				JSONName:    "default",
+				Validation:  regexp.MustCompile("[0-9]+"),
+			},
+		},
+		"generate default description is false with non default description": {
+			field: defaultField,
+			overrides: &FieldOverrides{
+				GenerateDefaultDescription: networkserver.Bool(false),
+				Name:                       networkserver.String("Updated"),
+				Validation:                 regexp.MustCompile("[0-9]+"),
+			},
+			want: spec.Field{
+				Name:        "Updated",
+				Description: "A default description",
+				Type:        spec.FieldTypeBoolean,
+				JSONName:    "default",
+				Validation:  regexp.MustCompile("[0-9]+"),
+			},
+		},
+		"generate default description with empty string override": {
+			field: defaultField,
+			overrides: &FieldOverrides{
+				Description: networkserver.String(""),
 				Name:        networkserver.String("Updated"),
 				Validation:  regexp.MustCompile("[0-9]+"),
 			},
 			want: spec.Field{
 				Name:        "Updated",
-				Description: "This will override the default description",
+				Description: "",
 				Type:        spec.FieldTypeBoolean,
 				JSONName:    "default",
 				Validation:  regexp.MustCompile("[0-9]+"),
@@ -524,7 +580,7 @@ Validation: [0-9]+`,
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := ApplyFieldOverrides(defaultField, test.overrides, test.defaultDescription)
+			got := ApplyFieldOverrides(test.field, test.overrides)
 			assert.Equal(t, test.want, got)
 		})
 	}
