@@ -23,6 +23,338 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestApplyEndpointOverrides(t *testing.T) {
+	defaultEndpoint := &spec.Endpoint{
+		Name:         "Default",
+		ResourcePath: "default-path",
+		Objects: []*spec.Object{
+			{
+				Name:   "A",
+				Fields: []spec.Field{},
+			},
+			{
+				Name:   "B",
+				Fields: []spec.Field{},
+			},
+			{
+				Name: "C",
+				Fields: []spec.Field{
+					{
+						Name: "Default",
+					},
+				},
+			},
+			{
+				Name:   "D",
+				Fields: []spec.Field{},
+			},
+		},
+	}
+
+	tests := map[string]struct {
+		endpoint  *spec.Endpoint
+		overrides *EndpointOverrides
+		want      *spec.Endpoint
+	}{
+		"endpoint is nil": {
+			endpoint: nil,
+			want:     nil,
+		},
+		"overrides is nil": {
+			endpoint:  defaultEndpoint,
+			overrides: nil,
+			want:      defaultEndpoint,
+		},
+		"name is overridden": {
+			endpoint: defaultEndpoint,
+			overrides: &EndpointOverrides{
+				Name: networkserver.String("Updated"),
+			},
+			want: &spec.Endpoint{
+				Name:         "Updated",
+				ResourcePath: "default-path",
+				Objects: []*spec.Object{
+					{
+						Name:   "A",
+						Fields: []spec.Field{},
+					},
+					{
+						Name:   "B",
+						Fields: []spec.Field{},
+					},
+					{
+						Name: "C",
+						Fields: []spec.Field{
+							{
+								Name: "Default",
+							},
+						},
+					},
+					{
+						Name:   "D",
+						Fields: []spec.Field{},
+					},
+				},
+			},
+		},
+		"overridden name is not camel case": {
+			endpoint: defaultEndpoint,
+			overrides: &EndpointOverrides{
+				Name: networkserver.String("not A camel-cAse Name"),
+			},
+			want: &spec.Endpoint{
+				Name:         "NotACamelCAseName",
+				ResourcePath: "default-path",
+				Objects: []*spec.Object{
+					{
+						Name:   "A",
+						Fields: []spec.Field{},
+					},
+					{
+						Name:   "B",
+						Fields: []spec.Field{},
+					},
+					{
+						Name: "C",
+						Fields: []spec.Field{
+							{
+								Name: "Default",
+							},
+						},
+					},
+					{
+						Name:   "D",
+						Fields: []spec.Field{},
+					},
+				},
+			},
+		},
+		"resource path is overridden": {
+			endpoint: defaultEndpoint,
+			overrides: &EndpointOverrides{
+				ResourcePath: networkserver.String("new-path"),
+			},
+			want: &spec.Endpoint{
+				Name:         "Default",
+				ResourcePath: "new-path",
+				Objects: []*spec.Object{
+					{
+						Name:   "A",
+						Fields: []spec.Field{},
+					},
+					{
+						Name:   "B",
+						Fields: []spec.Field{},
+					},
+					{
+						Name: "C",
+						Fields: []spec.Field{
+							{
+								Name: "Default",
+							},
+						},
+					},
+					{
+						Name:   "D",
+						Fields: []spec.Field{},
+					},
+				},
+			},
+		},
+		"objects are overridden": {
+			endpoint: defaultEndpoint,
+			overrides: &EndpointOverrides{
+				Objects: map[string]*ObjectOverrides{
+					"B": nil,
+					"C": {
+						Name: networkserver.String("Updated"),
+						Fields: map[string]*FieldOverrides{
+							"A": {
+								JSONName: networkserver.String("aString"),
+							},
+						},
+					},
+					"D": {},
+				},
+			},
+			want: &spec.Endpoint{
+				Name:         "Default",
+				ResourcePath: "new-path",
+				Objects: []*spec.Object{
+					{
+						Name:   "A",
+						Fields: []spec.Field{},
+					},
+					{
+						Name:   "B",
+						Fields: []spec.Field{},
+					},
+					{
+						Name: "C",
+						Fields: []spec.Field{
+							{
+								Name: "Default",
+							},
+						},
+					},
+					{
+						Name:   "D",
+						Fields: []spec.Field{},
+					},
+				},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := ApplyEndpointOverrides(test.endpoint, test.overrides)
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
+func TestApplyObjectOverrides(t *testing.T) {
+	defaultObject := &spec.Object{
+		Name: "Default",
+		Fields: []spec.Field{
+			{
+				Name: "A",
+				Type: spec.FieldTypeBoolean,
+			},
+			{
+				Name: "B",
+				Type: spec.FieldTypeDecimal,
+			},
+			{
+				Name: "C",
+				Type: spec.FieldTypeNumber,
+			},
+			{
+				Name: "D",
+				Type: spec.FieldTypeString,
+			},
+		},
+	}
+
+	tests := map[string]struct {
+		object    *spec.Object
+		overrides *ObjectOverrides
+		want      *spec.Object
+	}{
+		"object is nil": {
+			object: nil,
+			want:   nil,
+		},
+		"overrides is nil": {
+			object:    defaultObject,
+			overrides: nil,
+			want:      defaultObject,
+		},
+		"overrides contains no overrides": {
+			object:    defaultObject,
+			overrides: &ObjectOverrides{},
+			want:      defaultObject,
+		},
+		"name is overridden": {
+			object: defaultObject,
+			overrides: &ObjectOverrides{
+				Name: networkserver.String("Updated"),
+			},
+			want: &spec.Object{
+				Name: "Updated",
+				Fields: []spec.Field{
+					{
+						Name: "A",
+						Type: spec.FieldTypeBoolean,
+					},
+					{
+						Name: "B",
+						Type: spec.FieldTypeDecimal,
+					},
+					{
+						Name: "C",
+						Type: spec.FieldTypeNumber,
+					},
+					{
+						Name: "D",
+						Type: spec.FieldTypeString,
+					},
+				},
+			},
+		},
+		"overridden name is not camel case": {
+			object: defaultObject,
+			overrides: &ObjectOverrides{
+				Name: networkserver.String("not A camel-cAse Name"),
+			},
+			want: &spec.Object{
+				Name: "NotACamelCAseName",
+				Fields: []spec.Field{
+					{
+						Name: "A",
+						Type: spec.FieldTypeBoolean,
+					},
+					{
+						Name: "B",
+						Type: spec.FieldTypeDecimal,
+					},
+					{
+						Name: "C",
+						Type: spec.FieldTypeNumber,
+					},
+					{
+						Name: "D",
+						Type: spec.FieldTypeString,
+					},
+				},
+			},
+		},
+		"fields are overridden": {
+			object: defaultObject,
+			overrides: &ObjectOverrides{
+				Fields: map[string]*FieldOverrides{
+					"B": nil,
+					"C": {
+						Name:        networkserver.String("Updated"),
+						Description: networkserver.String("Updated description"),
+					},
+					"D": {},
+				},
+			},
+			want: &spec.Object{
+				Name: "Default",
+				Fields: []spec.Field{
+					{
+						Name: "A",
+						Type: spec.FieldTypeBoolean,
+					},
+					{
+						Name: "B",
+						Type: spec.FieldTypeDecimal,
+					},
+					{
+						Name:        "Updated",
+						Description: "Updated description",
+						Type:        spec.FieldTypeNumber,
+					},
+					{
+						Name: "D",
+						Type: spec.FieldTypeString,
+					},
+				},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := ApplyObjectOverrides(test.object, test.overrides)
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
 func TestField_ApplyFieldOverrides(t *testing.T) {
 	defaultField := spec.Field{
 		Name:        "Default",

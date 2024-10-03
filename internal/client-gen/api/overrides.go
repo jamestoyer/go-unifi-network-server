@@ -22,8 +22,9 @@ import (
 )
 
 type EndpointOverrides struct {
-	Name         *string `yaml:"name,omitempty"`
-	ResourcePath *string `yaml:"resourcePath,omitempty"`
+	Name         *string                     `yaml:"name,omitempty"`
+	Objects      map[string]*ObjectOverrides `yaml:"objects,omitempty"`
+	ResourcePath *string                     `yaml:"resourcePath,omitempty"`
 }
 
 // ApplyEndpointOverrides will return a mutated spec.Endpoint with the given EndpointOverrides applied.
@@ -39,7 +40,7 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 	}
 
 	if overrides.Name != nil {
-		ep.Name = *overrides.Name
+		ep.Name = strcase.ToCamel(*overrides.Name)
 	}
 
 	if overrides.ResourcePath != nil {
@@ -47,6 +48,45 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 	}
 
 	return &ep
+}
+
+type ObjectOverrides struct {
+	Name   *string                    `yaml:"name,omitempty"`
+	Fields map[string]*FieldOverrides `yaml:"fields,omitempty"`
+}
+
+func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec.Object {
+	if object == nil {
+		return nil
+	}
+
+	// Dereference the spec.Object to ensure we don't make changes to the given spec.Object pointer
+	o := *object
+	if overrides == nil {
+		return &o
+	}
+
+	if overrides.Name != nil {
+		o.Name = strcase.ToCamel(*overrides.Name)
+	}
+
+	if overrides.Fields != nil {
+		var overriddenFields []spec.Field
+		for _, field := range o.Fields {
+			fieldOverrides, ok := overrides.Fields[field.Name]
+			if !ok {
+				overriddenFields = append(overriddenFields, field)
+				continue
+			}
+
+			f := ApplyFieldOverrides(field, fieldOverrides, true)
+			overriddenFields = append(overriddenFields, f)
+		}
+
+		o.Fields = overriddenFields
+	}
+
+	return &o
 }
 
 type FieldOverrides struct {
