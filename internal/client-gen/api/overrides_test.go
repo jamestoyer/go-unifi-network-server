@@ -15,11 +15,12 @@
 package api
 
 import (
+	"regexp"
+	"testing"
+
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/networkserver"
 	"github.com/stretchr/testify/assert"
-	"regexp"
-	"testing"
 )
 
 func TestField_ApplyFieldOverrides(t *testing.T) {

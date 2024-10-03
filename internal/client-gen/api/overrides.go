@@ -15,10 +15,39 @@
 package api
 
 import (
+	"regexp"
+
 	"github.com/iancoleman/strcase"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
-	"regexp"
 )
+
+type EndpointOverrides struct {
+	Name         *string `yaml:"name,omitempty"`
+	ResourcePath *string `yaml:"resourcePath,omitempty"`
+}
+
+// ApplyEndpointOverrides will return a mutated spec.Endpoint with the given EndpointOverrides applied.
+func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverrides) *spec.Endpoint {
+	if endpoint == nil {
+		return nil
+	}
+
+	// Dereference the endpoint to ensure we don't make changes to the given endpoint pointer
+	ep := *endpoint
+	if overrides == nil {
+		return &ep
+	}
+
+	if overrides.Name != nil {
+		ep.Name = *overrides.Name
+	}
+
+	if overrides.ResourcePath != nil {
+		ep.ResourcePath = *overrides.ResourcePath
+	}
+
+	return &ep
+}
 
 type FieldOverrides struct {
 	Description *string         `yaml:"description,omitempty"`
