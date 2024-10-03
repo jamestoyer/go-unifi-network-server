@@ -64,8 +64,30 @@ func NewParser(config ParserConfig) *Parser {
 	return &Parser{config: config}
 }
 
-func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*spec.Endpoint, error) {
-	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup, slog.String("specDir", dir)))
+func (p *Parser) ParseAPIDir(ctx context.Context, apiVersion, dir string) (*spec.API, error) {
+	if apiVersion == "" {
+		apiVersion = "unknown"
+	}
+
+	ctx = logging.CtxWithValues(ctx, slog.Group(parserLogGroup,
+		slog.String("specDir", dir),
+		slog.String("apiVersion", apiVersion),
+	))
+
+	endpoints, err := p.parseDir(ctx, dir)
+	if err != nil {
+		return nil, err
+	}
+
+	api, err := spec.NewAPI(apiVersion, endpoints...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create API specification: %w", err)
+	}
+
+	return api, nil
+}
+
+func (p *Parser) parseDir(ctx context.Context, dir string) ([]*spec.Endpoint, error) {
 	var endpoints []*spec.Endpoint
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -73,17 +95,17 @@ func (p *Parser) ParseDir(ctx context.Context, dir string) ([]*spec.Endpoint, er
 		}
 
 		if d.IsDir() && path != dir {
-			slog.DebugContext(ctx, "Unexpected directory skipped", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "Unexpected directory skipped", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return filepath.SkipDir
 		}
 
 		if filepath.Ext(path) != ".json" {
-			slog.DebugContext(ctx, "Unsupported file extension skipped", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "Unsupported file extension skipped", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return nil
 		}
 
 		if slices.Contains(p.config.SkippedFiles, filepath.Base(path)) {
-			slog.DebugContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", dir)))
+			slog.DebugContext(ctx, "File explicitly skipped in configuration", slog.Group(parserLogGroup, slog.String("currentPath", path)))
 			return nil
 		}
 

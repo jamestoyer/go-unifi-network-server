@@ -54,19 +54,23 @@ func main() {
 	logger.InfoContext(ctx, "Generating API client")
 
 	var apiSpecDir string
+	apiVersion := "unknown"
 	if *apiSpecDirFlag == "" {
 		logger.DebugContext(ctx, "No API spec directory specified, downloading the latest API spec")
-		downloadedAPISpecDir, err := downloadAPISpec(ctx)
+		downloadedAPISpecDir, version, err := downloadAPISpec(ctx)
 		if err != nil {
 			logger.ErrorContext(ctx, "Failed to download the API specification", slog.Any("error", err))
 			os.Exit(1)
 		}
 
 		apiSpecDir = downloadedAPISpecDir
+		apiVersion = version.Version.String()
 	} else {
 		logger.DebugContext(ctx, "Using API spec directory", slog.Any("directory", *apiSpecDirFlag))
 		apiSpecDir = *apiSpecDirFlag
 	}
+
+	ctx = logging.CtxWithValues(ctx, slog.String("apiVersion", apiVersion))
 
 	config, err := unmarshalConfig()
 	if err != nil {
@@ -76,19 +80,19 @@ func main() {
 
 	slog.InfoContext(ctx, "Parsing API specification directory")
 	parser := api.NewParser(*config)
-	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
+	apiSpec, err := parser.ParseAPIDir(ctx, apiVersion, apiSpecDir)
 	switch {
 	case err != nil:
 		slog.ErrorContext(ctx, "Failed to parse API specification directory", slog.Any("error", err))
 		os.Exit(1)
-	case len(endpoints) == 0:
+	case len(apiSpec.Endpoints()) == 0:
 		slog.InfoContext(ctx, "No endpoints found to generate")
 		os.Exit(0)
 	default:
-		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(endpoints)))
+		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(apiSpec.Endpoints())))
 	}
 
-	if err = renderAPIClient(ctx, endpoints); err != nil {
+	if err = renderAPIClient(ctx, apiSpec); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
 		os.Exit(1)
 	}
@@ -96,16 +100,16 @@ func main() {
 	logger.InfoContext(ctx, "API client generated")
 }
 
-func downloadAPISpec(ctx context.Context) (string, error) {
+func downloadAPISpec(ctx context.Context) (string, *firmware.Version, error) {
 	logger.InfoContext(ctx, "Downloading Unifi Network Server")
 	firmwareClient, err := firmware.NewClient("")
 	if err != nil {
-		return "", fmt.Errorf("failed to create a new firmware client: %w", err)
+		return "", nil, fmt.Errorf("failed to create a new firmware client: %w", err)
 	}
 
 	archiveFile, version, err := firmwareClient.DownloadLatestVersion(ctx, logger)
 	if err != nil {
-		return "", fmt.Errorf("failed downloaded the latest firmware version: %w", err)
+		return "", version, fmt.Errorf("failed downloaded the latest firmware version: %w", err)
 	}
 
 	defer func() {
@@ -116,22 +120,22 @@ func downloadAPISpec(ctx context.Context) (string, error) {
 	logger.InfoContext(ctx, "Extracting API files")
 	wd, err := os.Getwd()
 	if err != nil {
-		return "", fmt.Errorf("failed to get current working directory: %w", err)
+		return "", version, fmt.Errorf("failed to get current working directory: %w", err)
 	}
 
 	apiDestination := filepath.Join(wd, "build", "api", version.Version.Core().String())
 	if err = os.MkdirAll(apiDestination, 0o755); err != nil {
-		return "", fmt.Errorf("failed to create directory %s: %w", apiDestination, err)
+		return "", version, fmt.Errorf("failed to create directory %s: %w", apiDestination, err)
 	}
 
 	if err = firmware.ExtractAPI(ctx, logger, archiveFile, apiDestination); err != nil {
-		return "", fmt.Errorf("failed to extract Unifi Network Server APIs: %w", err)
+		return "", version, fmt.Errorf("failed to extract Unifi Network Server APIs: %w", err)
 	}
 
-	return apiDestination, nil
+	return apiDestination, version, nil
 }
 
-func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
+func renderAPIClient(ctx context.Context, apiSpec *spec.API) error {
 	if err := os.MkdirAll(packageName, 0o775); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", packageName, err)
 	}
@@ -147,7 +151,7 @@ func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	}
 
 	slog.InfoContext(ctx, "Rendering API client")
-	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
+	return renderer.RenderEndpoints(ctx, apiSpec.Endpoints(), packageName, packageName)
 }
 
 func unmarshalConfig() (*api.ParserConfig, error) {

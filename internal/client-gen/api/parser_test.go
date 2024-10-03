@@ -16,6 +16,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -83,7 +84,7 @@ func TestParseDir(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ctx := context.Background()
 			parser := NewParser(test.config)
-			got, err := parser.ParseDir(ctx, test.dir)
+			got, err := parser.parseDir(ctx, test.dir)
 
 			test.wantErr(t, err)
 			assert.Equal(t, test.want, got)
@@ -156,4 +157,35 @@ func userEndpoint(t *testing.T, filename string) *spec.Endpoint {
 	})
 	require.NoError(t, err)
 	return endpoint
+}
+
+func TestParser_parseDir(t *testing.T) {
+	type fields struct {
+		config ParserConfig
+	}
+	type args struct {
+		ctx context.Context
+		dir string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []*spec.Endpoint
+		wantErr assert.ErrorAssertionFunc
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &Parser{
+				config: tt.fields.config,
+			}
+			got, err := p.parseDir(tt.args.ctx, tt.args.dir)
+			if !tt.wantErr(t, err, fmt.Sprintf("parseDir(%v, %v)", tt.args.ctx, tt.args.dir)) {
+				return
+			}
+			assert.Equalf(t, tt.want, got, "parseDir(%v, %v)", tt.args.ctx, tt.args.dir)
+		})
+	}
 }
