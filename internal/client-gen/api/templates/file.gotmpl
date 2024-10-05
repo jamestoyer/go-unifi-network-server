@@ -36,17 +36,17 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .N
         return nil, resp, fmt.Errorf(`unable to create {{ .ResourcePath }}: %w`, err)
     }
 
-    var item {{ .Name }}
+    var item *{{ .Name }}
     switch len(body.Payload) {
     case 0:
         err = errors.New(`failed to create {{ .Name }}`)
     case 1:
-        item = body.Payload[0]
+        item = &body.Payload[0]
     default:
         err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
     }
 
-    return &item, resp, err
+    return item, resp, err
 }
 
 func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) (*http.Response, error) {
