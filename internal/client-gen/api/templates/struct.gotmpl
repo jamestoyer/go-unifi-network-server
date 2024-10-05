@@ -1,9 +1,13 @@
 type {{ .Name }} struct {
 	{{- range $field := .Fields }}
+	{{ goDescription $field.Description }}
 	{{ $field.Name }} *{{ $field.Type.GoType }} `json:"{{ $field.JSONName}},omitempty"`
 	{{- end }}
 }
 {{ range $field := .Fields }}
+// Get{{ $field.Name }} is a helper function which dereferences {{ $field.Name }}.
+//
+// When {{ $field.Name }} is a nil pointer it will return `{{ $field.Type.DefaultValue }}` as default.
 func (s *{{ $.Name }}) Get{{ $field.Name }}() {{ if $field.Type.IsObjectType }}*{{ end }}{{ $field.Type.GoType }} {
 	if s == nil {{ if not $field.Type.IsPrimitiveType }}|| s.{{ $field.Name}} == nil {{ end }}{
 		return {{ $field.Type.DefaultValue }}
