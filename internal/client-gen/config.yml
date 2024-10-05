@@ -1,10 +1,32 @@
 apiOverrides:
   endpoints:
     User:
-      name: ClientDevice
       objects:
         User:
-          name: ClientDevice
+          fields:
+            FixedApEnabled:
+              name: FixedAPEnabled
+            FixedApMac:
+              name: FixedAPMac
+            FixedIp:
+              name: FixedAPIP
+            LocalDnsRecord:
+              name: LocalDNSRecord
+            LocalDnsRecordEnabled:
+              name: LocalDNSRecordEnabled
+            Mac:
+              name: MAC
+            NetworkId:
+              name: NetworkID
+            UseFixedip:
+              name: UseFixedIP
+            UsergroupId:
+              name: UserGroupID
+            VirtualNetworkOverrideId:
+              name: VirtualNetworkOverrideID
+
+
+
 
 
 parser:
