@@ -21,6 +21,21 @@ import (
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 )
 
+type Overrides struct {
+	Endpoints map[string]*EndpointOverrides `yaml:"endpoints"`
+}
+
+func ApplyOverrides(endpoints []*spec.Endpoint, overrides Overrides) []*spec.Endpoint {
+	var newEndpoints []*spec.Endpoint
+	for _, ep := range endpoints {
+		override := overrides.Endpoints[ep.Name]
+		updated := ApplyEndpointOverrides(ep, override)
+		newEndpoints = append(newEndpoints, updated)
+	}
+
+	return newEndpoints
+}
+
 type EndpointOverrides struct {
 	Name         *string                     `yaml:"name,omitempty"`
 	Objects      map[string]*ObjectOverrides `yaml:"objects,omitempty"`

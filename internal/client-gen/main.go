@@ -15,13 +15,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"log/slog"
 	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
@@ -68,7 +70,7 @@ func main() {
 		apiSpecDir = *apiSpecDirFlag
 	}
 
-	config, err := loadConfig(*configFileFlag)
+	config, err := loadConfig()
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to unmarshal configuration", slog.Any("error", err))
 		os.Exit(1)
@@ -87,6 +89,9 @@ func main() {
 	default:
 		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(endpoints)))
 	}
+
+	slog.InfoContext(ctx, "Applying API overrides")
+	endpoints = api.ApplyOverrides(endpoints, config.APIOverrides)
 
 	if err = renderAPIClient(ctx, endpoints); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
@@ -151,17 +156,20 @@ func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 }
 
 type Config struct {
-	Parser api.ParserConfig `yaml:"parser"`
+	APIOverrides api.Overrides    `yaml:"apiOverrides"`
+	Parser       api.ParserConfig `yaml:"parser"`
 }
 
-func loadConfig(file string) (*Config, error) {
+func loadConfig() (*Config, error) {
 	contents, err := os.ReadFile(*configFileFlag)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
 	}
 
 	var config *Config
-	if err = yaml.Unmarshal(contents, &config); err != nil {
+	f := yaml.NewDecoder(bytes.NewReader(contents))
+	f.KnownFields(true)
+	if err = f.Decode(&config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 	}
 
