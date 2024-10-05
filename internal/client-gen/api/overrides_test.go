@@ -169,8 +169,9 @@ func TestApplyEndpointOverrides(t *testing.T) {
 					"C": {
 						Name: networkserver.String("Updated"),
 						Fields: map[string]*FieldOverrides{
-							"A": {
-								JSONName: networkserver.String("aString"),
+							"Default": {
+								GenerateDefaultDescription: networkserver.Bool(false),
+								JSONName:                   networkserver.String("aString"),
 							},
 						},
 					},
@@ -190,10 +191,11 @@ func TestApplyEndpointOverrides(t *testing.T) {
 						Fields: []spec.Field{},
 					},
 					{
-						Name: "C",
+						Name: "Updated",
 						Fields: []spec.Field{
 							{
-								Name: "Default",
+								Name:     "Default",
+								JSONName: "aString",
 							},
 						},
 					},

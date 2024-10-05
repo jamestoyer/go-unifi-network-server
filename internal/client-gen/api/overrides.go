@@ -47,6 +47,14 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 		ep.ResourcePath = *overrides.ResourcePath
 	}
 
+	var objects []*spec.Object
+	for _, object := range endpoint.Objects {
+		override := overrides.Objects[object.Name]
+		updated := ApplyObjectOverrides(object, override)
+		objects = append(objects, updated)
+	}
+
+	ep.Objects = objects
 	return &ep
 }
 
