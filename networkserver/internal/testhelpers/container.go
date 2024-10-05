@@ -17,11 +17,12 @@ package testhelpers
 import (
 	"context"
 	"fmt"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 type UnifiNetworkServerContainer struct {
@@ -30,11 +31,7 @@ type UnifiNetworkServerContainer struct {
 }
 
 func NewUnifiNetworkServerContainer(ctx context.Context) (*UnifiNetworkServerContainer, error) {
-	unifiPackageURL := ""
-	if packageURL := os.Getenv("UNIFI_PACKAGE_URL"); packageURL != "" {
-		unifiPackageURL = packageURL
-	}
-
+	// When set to "true" debug logs from the server will be output
 	unifiStdOut := ""
 	var logConsumers []testcontainers.LogConsumer
 	if stdOut := os.Getenv("UNIFI_STDOUT"); stdOut != "" {
@@ -43,14 +40,15 @@ func NewUnifiNetworkServerContainer(ctx context.Context) (*UnifiNetworkServerCon
 
 	logConsumers = append(logConsumers, &testcontainers.StdoutLogConsumer{})
 
-	unifiVersion := "latest"
+	// TODO: (jtoyer) This should be loaded from the rendered details version, once that is available
+	unifiVersion := "v8.4.62"
 	if version := os.Getenv("UNIFI_VERSION"); version != "" {
 		unifiVersion = version
 	}
 
 	demoModePath, err := filepath.Abs("../dev/unifi/demo-mode")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not get absolute path for demo-mode: %w", err)
 	}
 
 	r, err := os.Open(demoModePath)
@@ -62,7 +60,6 @@ func NewUnifiNetworkServerContainer(ctx context.Context) (*UnifiNetworkServerCon
 		Name:  fmt.Sprintf("unifi-%v", time.Now().Unix()),
 		Image: "jacobalberty/unifi:" + unifiVersion,
 		Env: map[string]string{
-			"PKGURL":       unifiPackageURL,
 			"UNIFI_STDOUT": unifiStdOut,
 		},
 		ExposedPorts: []string{"8443/tcp"},

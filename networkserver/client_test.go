@@ -17,17 +17,17 @@ package networkserver
 import (
 	"context"
 	"crypto/tls"
-	"github.com/jamestoyer/go-unifi-network-server/networkserver/internal/testhelpers"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 	"log"
 	"testing"
+
+	"github.com/jamestoyer/go-unifi-network-server/networkserver/internal/testhelpers"
+	"github.com/stretchr/testify/suite"
 )
 
 type ClientIntegrationTestSuite struct {
 	suite.Suite
 
+	client         *Client
 	unifiContainer *testhelpers.UnifiNetworkServerContainer
 }
 
@@ -39,6 +39,15 @@ func (suite *ClientIntegrationTestSuite) SetupSuite() {
 	}
 
 	suite.unifiContainer = container
+
+	client, err := NewClient(ctx, suite.unifiContainer.Endpoint, "admin", "admin",
+		WithTLSConfig(&tls.Config{InsecureSkipVerify: true}),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	suite.client = client
 }
 
 func (suite *ClientIntegrationTestSuite) TearDownSuite() {
@@ -46,18 +55,6 @@ func (suite *ClientIntegrationTestSuite) TearDownSuite() {
 	if err := suite.unifiContainer.Terminate(ctx); err != nil {
 		log.Fatalf("Error terminating Unifi container: %s", err)
 	}
-}
-
-func (suite *ClientIntegrationTestSuite) TestNewClient() {
-	t := suite.T()
-	t.Run("new client", func(t *testing.T) {
-		ctx := context.Background()
-		client, err := NewClient(ctx, suite.unifiContainer.Endpoint, "admin", "admin",
-			WithTLSConfig(&tls.Config{InsecureSkipVerify: true}),
-		)
-		require.NoError(t, err)
-		assert.NoError(t, client.Authenticate(ctx))
-	})
 }
 
 func TestClientIntegrationTestSuite(t *testing.T) {
