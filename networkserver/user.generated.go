@@ -34,21 +34,21 @@ type User struct {
 	NoDelete                      *bool   `json:"attr_no_delete,omitempty"`
 	NoEdit                        *bool   `json:"attr_no_edit,omitempty"`
 	Blocked                       *string `json:"blocked,omitempty"`
-	FixedApEnabled                *bool   `json:"fixed_ap_enabled,omitempty"`
-	FixedApMac                    *string `json:"fixed_ap_mac,omitempty"`
-	FixedIp                       *string `json:"fixed_ip,omitempty"`
+	FixedAPEnabled                *bool   `json:"fixed_ap_enabled,omitempty"`
+	FixedAPMac                    *string `json:"fixed_ap_mac,omitempty"`
+	FixedAPIP                     *string `json:"fixed_ip,omitempty"`
 	Hostname                      *string `json:"hostname,omitempty"`
 	LastSeen                      *string `json:"last_seen,omitempty"`
-	LocalDnsRecord                *string `json:"local_dns_record,omitempty"`
-	LocalDnsRecordEnabled         *bool   `json:"local_dns_record_enabled,omitempty"`
-	Mac                           *string `json:"mac,omitempty"`
+	LocalDNSRecord                *string `json:"local_dns_record,omitempty"`
+	LocalDNSRecordEnabled         *bool   `json:"local_dns_record_enabled,omitempty"`
+	MAC                           *string `json:"mac,omitempty"`
 	Name                          *string `json:"name,omitempty"`
-	NetworkId                     *string `json:"network_id,omitempty"`
+	NetworkID                     *string `json:"network_id,omitempty"`
 	Note                          *string `json:"note,omitempty"`
-	UseFixedip                    *bool   `json:"use_fixedip,omitempty"`
-	UsergroupId                   *string `json:"usergroup_id,omitempty"`
+	UseFixedIP                    *bool   `json:"use_fixedip,omitempty"`
+	UserGroupID                   *string `json:"usergroup_id,omitempty"`
 	VirtualNetworkOverrideEnabled *bool   `json:"virtual_network_override_enabled,omitempty"`
-	VirtualNetworkOverrideId      *string `json:"virtual_network_override_id,omitempty"`
+	VirtualNetworkOverrideID      *string `json:"virtual_network_override_id,omitempty"`
 }
 
 func (s *User) GetID() string {
@@ -107,28 +107,28 @@ func (s *User) GetBlocked() string {
 	return *s.Blocked
 }
 
-func (s *User) GetFixedApEnabled() bool {
+func (s *User) GetFixedAPEnabled() bool {
 	if s == nil {
 		return false
 	}
 
-	return *s.FixedApEnabled
+	return *s.FixedAPEnabled
 }
 
-func (s *User) GetFixedApMac() string {
+func (s *User) GetFixedAPMac() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.FixedApMac
+	return *s.FixedAPMac
 }
 
-func (s *User) GetFixedIp() string {
+func (s *User) GetFixedAPIP() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.FixedIp
+	return *s.FixedAPIP
 }
 
 func (s *User) GetHostname() string {
@@ -147,28 +147,28 @@ func (s *User) GetLastSeen() string {
 	return *s.LastSeen
 }
 
-func (s *User) GetLocalDnsRecord() string {
+func (s *User) GetLocalDNSRecord() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.LocalDnsRecord
+	return *s.LocalDNSRecord
 }
 
-func (s *User) GetLocalDnsRecordEnabled() bool {
+func (s *User) GetLocalDNSRecordEnabled() bool {
 	if s == nil {
 		return false
 	}
 
-	return *s.LocalDnsRecordEnabled
+	return *s.LocalDNSRecordEnabled
 }
 
-func (s *User) GetMac() string {
+func (s *User) GetMAC() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.Mac
+	return *s.MAC
 }
 
 func (s *User) GetName() string {
@@ -179,12 +179,12 @@ func (s *User) GetName() string {
 	return *s.Name
 }
 
-func (s *User) GetNetworkId() string {
+func (s *User) GetNetworkID() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.NetworkId
+	return *s.NetworkID
 }
 
 func (s *User) GetNote() string {
@@ -195,20 +195,20 @@ func (s *User) GetNote() string {
 	return *s.Note
 }
 
-func (s *User) GetUseFixedip() bool {
+func (s *User) GetUseFixedIP() bool {
 	if s == nil {
 		return false
 	}
 
-	return *s.UseFixedip
+	return *s.UseFixedIP
 }
 
-func (s *User) GetUsergroupId() string {
+func (s *User) GetUserGroupID() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.UsergroupId
+	return *s.UserGroupID
 }
 
 func (s *User) GetVirtualNetworkOverrideEnabled() bool {
@@ -219,12 +219,12 @@ func (s *User) GetVirtualNetworkOverrideEnabled() bool {
 	return *s.VirtualNetworkOverrideEnabled
 }
 
-func (s *User) GetVirtualNetworkOverrideId() string {
+func (s *User) GetVirtualNetworkOverrideID() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.VirtualNetworkOverrideId
+	return *s.VirtualNetworkOverrideID
 }
 
 type responseBodyUser struct {

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
@@ -68,14 +69,14 @@ func main() {
 		apiSpecDir = *apiSpecDirFlag
 	}
 
-	config, err := unmarshalConfig()
+	config, err := loadConfig()
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to unmarshal configuration", slog.Any("error", err))
 		os.Exit(1)
 	}
 
 	slog.InfoContext(ctx, "Parsing API specification directory")
-	parser := api.NewParser(*config)
+	parser := api.NewParser(config.Parser)
 	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
 	switch {
 	case err != nil:
@@ -87,6 +88,9 @@ func main() {
 	default:
 		slog.InfoContext(ctx, "Found endpoints to render", slog.Int("endpointCount", len(endpoints)))
 	}
+
+	slog.InfoContext(ctx, "Applying API overrides")
+	endpoints = api.ApplyOverrides(endpoints, config.APIOverrides)
 
 	if err = renderAPIClient(ctx, endpoints); err != nil {
 		logger.ErrorContext(ctx, "Failed to generate API client", slog.Any("error", err))
@@ -150,16 +154,23 @@ func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
 }
 
-func unmarshalConfig() (*api.ParserConfig, error) {
+type Config struct {
+	APIOverrides api.Overrides    `yaml:"apiOverrides"`
+	Parser       api.ParserConfig `yaml:"parser"`
+}
+
+func loadConfig() (*Config, error) {
 	contents, err := os.ReadFile(*configFileFlag)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
 	}
 
-	var config api.ParserConfig
-	if err = yaml.Unmarshal(contents, &config); err != nil {
+	var config *Config
+	f := yaml.NewDecoder(bytes.NewReader(contents))
+	f.KnownFields(true)
+	if err = f.Decode(&config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 	}
 
-	return &config, nil
+	return config, nil
 }

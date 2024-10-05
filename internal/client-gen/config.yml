@@ -1,34 +1,62 @@
-skippedFiles:
-  - "Account.json"
-  - "AuthenticationRequest.json"
-  - "BroadcastGroup.json"
-  - "ChannelPlan.json"
-  - "Dashboard.json"
-  - "Device.json"
-  - "DhcpOption.json"
-  - "DpiApp.json"
-  - "DpiGroup.json"
-  - "DynamicDNS.json"
-  - "FirewallGroup.json"
-  - "FirewallRule.json"
-  - "HeatMap.json"
-  - "HeatMapPoint.json"
-  - "Hotspot2Conf.json"
-  - "HotspotOp.json"
-  - "HotspotPackage.json"
-  - "Map.json"
-  - "MediaFile.json"
-  - "NetworkConf.json"
-  - "PortConf.json"
-  - "PortForward.json"
-  - "RadiusProfile.json"
-  - "Routing.json"
-  - "ScheduleTask.json"
-  - "Setting.json"
-  - "SpatialRecord.json"
-  - "Tag.json"
-  - "UserGroup.json"
-  - "VirtualDevice.json"
-  - "Wall.json"
-  - "WlanConf.json"
-  - "WlanGroup.json"
+apiOverrides:
+  endpoints:
+    User:
+      objects:
+        User:
+          fields:
+            FixedApEnabled:
+              name: FixedAPEnabled
+            FixedApMac:
+              name: FixedAPMac
+            FixedIp:
+              name: FixedAPIP
+            LocalDnsRecord:
+              name: LocalDNSRecord
+            LocalDnsRecordEnabled:
+              name: LocalDNSRecordEnabled
+            Mac:
+              name: MAC
+            NetworkId:
+              name: NetworkID
+            UseFixedip:
+              name: UseFixedIP
+            UsergroupId:
+              name: UserGroupID
+            VirtualNetworkOverrideId:
+              name: VirtualNetworkOverrideID
+
+parser:
+  skippedFiles:
+    - "Account.json"
+    - "AuthenticationRequest.json"
+    - "BroadcastGroup.json"
+    - "ChannelPlan.json"
+    - "Dashboard.json"
+    - "Device.json"
+    - "DhcpOption.json"
+    - "DpiApp.json"
+    - "DpiGroup.json"
+    - "DynamicDNS.json"
+    - "FirewallGroup.json"
+    - "FirewallRule.json"
+    - "HeatMap.json"
+    - "HeatMapPoint.json"
+    - "Hotspot2Conf.json"
+    - "HotspotOp.json"
+    - "HotspotPackage.json"
+    - "Map.json"
+    - "MediaFile.json"
+    - "NetworkConf.json"
+    - "PortConf.json"
+    - "PortForward.json"
+    - "RadiusProfile.json"
+    - "Routing.json"
+    - "ScheduleTask.json"
+    - "Setting.json"
+    - "SpatialRecord.json"
+    - "Tag.json"
+    - "UserGroup.json"
+    - "VirtualDevice.json"
+    - "Wall.json"
+    - "WlanConf.json"
+    - "WlanGroup.json"
