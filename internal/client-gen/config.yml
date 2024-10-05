@@ -25,10 +25,6 @@ apiOverrides:
             VirtualNetworkOverrideId:
               name: VirtualNetworkOverrideID
 
-
-
-
-
 parser:
   skippedFiles:
     - "Account.json"

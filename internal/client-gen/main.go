@@ -23,12 +23,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"gopkg.in/yaml.v3"
-
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/api"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
+	"gopkg.in/yaml.v3"
 )
 
 const packageName = "networkserver"
