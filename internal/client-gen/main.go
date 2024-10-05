@@ -18,6 +18,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -26,7 +27,6 @@ import (
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/firmware"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 	"github.com/jamestoyer/go-unifi-network-server/internal/logging"
-	"gopkg.in/yaml.v3"
 )
 
 const packageName = "networkserver"
@@ -68,14 +68,14 @@ func main() {
 		apiSpecDir = *apiSpecDirFlag
 	}
 
-	config, err := unmarshalConfig()
+	config, err := loadConfig(*configFileFlag)
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to unmarshal configuration", slog.Any("error", err))
 		os.Exit(1)
 	}
 
 	slog.InfoContext(ctx, "Parsing API specification directory")
-	parser := api.NewParser(*config)
+	parser := api.NewParser(config.Parser)
 	endpoints, err := parser.ParseDir(ctx, apiSpecDir)
 	switch {
 	case err != nil:
@@ -150,16 +150,20 @@ func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
 }
 
-func unmarshalConfig() (*api.ParserConfig, error) {
+type Config struct {
+	Parser api.ParserConfig `yaml:"parser"`
+}
+
+func loadConfig(file string) (*Config, error) {
 	contents, err := os.ReadFile(*configFileFlag)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read configuraiton file: %w", err)
 	}
 
-	var config api.ParserConfig
+	var config *Config
 	if err = yaml.Unmarshal(contents, &config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yaml: %w", err)
 	}
 
-	return &config, nil
+	return config, nil
 }
