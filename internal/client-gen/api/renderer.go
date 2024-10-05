@@ -15,6 +15,7 @@
 package api
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"embed"
@@ -23,6 +24,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/iancoleman/strcase"
@@ -38,7 +40,10 @@ type Renderer struct {
 }
 
 func NewRenderer() (*Renderer, error) {
-	tmpl, err := template.ParseFS(templatesFs, "templates/*")
+	tmpl := template.New("default").Funcs(template.FuncMap{
+		"goDescription": goDescription,
+	})
+	tmpl, err := tmpl.ParseFS(templatesFs, "templates/*")
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse API templates: %w", err)
 	}
@@ -94,4 +99,27 @@ func (r *Renderer) RenderEndpoints(ctx context.Context, endpoints []*spec.Endpoi
 
 func generatedFilename(name string) string {
 	return strcase.ToSnake(name) + golangGeneratedFileSuffix
+}
+
+func goDescription(description string) string {
+	if description == "" {
+		return description
+	}
+
+	builder := strings.Builder{}
+	scanner := bufio.NewScanner(strings.NewReader(description))
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			builder.WriteString("//")
+		} else {
+			builder.WriteString("// " + scanner.Text())
+		}
+
+		builder.WriteString(fmt.Sprintln())
+	}
+
+	d := strings.TrimSpace(builder.String())
+
+	return d
 }
