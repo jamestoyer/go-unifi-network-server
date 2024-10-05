@@ -364,9 +364,8 @@ type responseBodyUser struct {
 	Payload  []User          `json:"data"`
 }
 
-func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user")
-	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+func (c *Client) CreateUser(ctx context.Context, data *User) (*User, *http.Response, error) {
+	req, err := c.NewRequest(ctx, http.MethodPost, c.ResourceAPIPath("user"), data)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -390,8 +389,8 @@ func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User
 	return item, resp, err
 }
 
-func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", id)
+func (c *Client) DeleteUser(ctx context.Context, id string) (*http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
 	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
@@ -406,8 +405,8 @@ func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.
 	return resp, nil
 }
 
-func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", id)
+func (c *Client) GetUser(ctx context.Context, id string) (*User, *http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
@@ -431,9 +430,8 @@ func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Res
 	return &item, resp, err
 }
 
-func (c *Client) ListUser(ctx context.Context, site string) ([]User, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user")
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+func (c *Client) ListUser(ctx context.Context) ([]User, *http.Response, error) {
+	req, err := c.NewRequest(ctx, http.MethodGet, c.ResourceAPIPath("user"), nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -447,8 +445,8 @@ func (c *Client) ListUser(ctx context.Context, site string) ([]User, *http.Respo
 	return body.Payload, resp, nil
 }
 
-func (c *Client) UpdateUser(ctx context.Context, site string, data *User) (*User, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", data.GetID())
+func (c *Client) UpdateUser(ctx context.Context, data *User) (*User, *http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
