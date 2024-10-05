@@ -17,7 +17,6 @@ package api
 import (
 	"regexp"
 
-	"github.com/iancoleman/strcase"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 )
 
@@ -55,7 +54,7 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 	}
 
 	if overrides.Name != nil {
-		ep.Name = strcase.ToCamel(*overrides.Name)
+		ep.Name = *overrides.Name
 	}
 
 	if overrides.ResourcePath != nil {
@@ -90,7 +89,7 @@ func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec
 	}
 
 	if overrides.Name != nil {
-		o.Name = strcase.ToCamel(*overrides.Name)
+		o.Name = *overrides.Name
 	}
 
 	if overrides.Fields != nil {
@@ -155,7 +154,7 @@ func ApplyFieldOverrides(field spec.Field, overrides *FieldOverrides) spec.Field
 	}
 
 	if overrides.Name != nil {
-		field.Name = strcase.ToCamel(*overrides.Name)
+		field.Name = *overrides.Name
 	}
 
 	if overrides.Type != nil {

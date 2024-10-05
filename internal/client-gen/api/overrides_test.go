@@ -97,38 +97,6 @@ func TestApplyEndpointOverrides(t *testing.T) {
 				},
 			},
 		},
-		"overridden name is not camel case": {
-			endpoint: defaultEndpoint,
-			overrides: &EndpointOverrides{
-				Name: networkserver.String("not A camel-cAse Name"),
-			},
-			want: &spec.Endpoint{
-				Name:         "NotACamelCAseName",
-				ResourcePath: "default-path",
-				Objects: []*spec.Object{
-					{
-						Name:   "A",
-						Fields: []spec.Field{},
-					},
-					{
-						Name:   "B",
-						Fields: []spec.Field{},
-					},
-					{
-						Name: "C",
-						Fields: []spec.Field{
-							{
-								Name: "Default",
-							},
-						},
-					},
-					{
-						Name:   "D",
-						Fields: []spec.Field{},
-					},
-				},
-			},
-		},
 		"resource path is overridden": {
 			endpoint: defaultEndpoint,
 			overrides: &EndpointOverrides{
@@ -285,33 +253,6 @@ func TestApplyObjectOverrides(t *testing.T) {
 				},
 			},
 		},
-		"overridden name is not camel case": {
-			object: defaultObject,
-			overrides: &ObjectOverrides{
-				Name: networkserver.String("not A camel-cAse Name"),
-			},
-			want: &spec.Object{
-				Name: "NotACamelCAseName",
-				Fields: []spec.Field{
-					{
-						Name: "A",
-						Type: spec.FieldTypeBoolean,
-					},
-					{
-						Name: "B",
-						Type: spec.FieldTypeDecimal,
-					},
-					{
-						Name: "C",
-						Type: spec.FieldTypeNumber,
-					},
-					{
-						Name: "D",
-						Type: spec.FieldTypeString,
-					},
-				},
-			},
-		},
 		"fields are overridden": {
 			object: defaultObject,
 			overrides: &ObjectOverrides{
@@ -403,19 +344,6 @@ func TestField_ApplyFieldOverrides(t *testing.T) {
 			},
 			want: spec.Field{
 				Name:        "OverriddenName",
-				Description: "A default description",
-				Type:        spec.FieldTypeBoolean,
-				JSONName:    "default",
-				Validation:  regexp.MustCompile("false|true"),
-			},
-		},
-		"overridden name is not camel case": {
-			field: defaultField,
-			overrides: &FieldOverrides{
-				Name: networkserver.String("not A camel-cAse Name"),
-			},
-			want: spec.Field{
-				Name:        "NotACamelCAseName",
 				Description: "A default description",
 				Type:        spec.FieldTypeBoolean,
 				JSONName:    "default",
