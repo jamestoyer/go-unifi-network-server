@@ -377,17 +377,17 @@ func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User
 		return nil, resp, fmt.Errorf(`unable to create user: %w`, err)
 	}
 
-	var item User
+	var item *User
 	switch len(body.Payload) {
 	case 0:
 		err = errors.New(`failed to create User`)
 	case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
 	default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
 	}
 
-	return &item, resp, err
+	return item, resp, err
 }
 
 func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.Response, error) {
