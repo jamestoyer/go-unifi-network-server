@@ -7,7 +7,7 @@ apiOverrides:
             FixedApEnabled:
               name: FixedAPEnabled
             FixedApMac:
-              name: FixedAPMac
+              name: FixedAPMAC
             FixedIp:
               name: FixedAPIP
             LocalDnsRecord:

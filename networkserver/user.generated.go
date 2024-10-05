@@ -59,10 +59,10 @@ type User struct {
 	//
 	// Validation: false|true
 	FixedAPEnabled *bool `json:"fixed_ap_enabled,omitempty"`
-	// FixedAPMac has been auto generated from the Unifi Network Server API specification
+	// FixedAPMAC has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
-	FixedAPMac *string `json:"fixed_ap_mac,omitempty"`
+	FixedAPMAC *string `json:"fixed_ap_mac,omitempty"`
 	// FixedAPIP has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
@@ -205,15 +205,15 @@ func (s *User) GetFixedAPEnabled() bool {
 	return *s.FixedAPEnabled
 }
 
-// GetFixedAPMac is a helper function which dereferences FixedAPMac.
+// GetFixedAPMAC is a helper function which dereferences FixedAPMAC.
 //
-// When FixedAPMac is a nil pointer it will return `""` as default.
-func (s *User) GetFixedAPMac() string {
+// When FixedAPMAC is a nil pointer it will return `""` as default.
+func (s *User) GetFixedAPMAC() string {
 	if s == nil {
 		return ""
 	}
 
-	return *s.FixedAPMac
+	return *s.FixedAPMAC
 }
 
 // GetFixedAPIP is a helper function which dereferences FixedAPIP.
