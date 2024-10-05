@@ -25,6 +25,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"path"
 	"strings"
 	"sync"
 	"time"
@@ -69,13 +70,14 @@ type Client struct {
 	endpoint     *url.URL
 	username     string
 	password     string
+	site         string
 
 	csrf     string
 	csrfLock sync.RWMutex
 }
 
 // NewClient creates a new Unifi Network Server client.
-func NewClient(ctx context.Context, endpoint, username, password string, options ...ClientOption) (*Client, error) {
+func NewClient(ctx context.Context, endpoint, username, password, site string, options ...ClientOption) (*Client, error) {
 	u, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("invalid endpoint: %w", err)
@@ -96,6 +98,7 @@ func NewClient(ctx context.Context, endpoint, username, password string, options
 		endpoint: u,
 		username: username,
 		password: password,
+		site:     site,
 	}
 
 	if err = client.initialise(ctx); err != nil {
@@ -103,6 +106,11 @@ func NewClient(ctx context.Context, endpoint, username, password string, options
 	}
 
 	return client, nil
+}
+
+// ResourceAPIPath generates the correct API path for a given resource that can be used with NewRequest.
+func (c *Client) ResourceAPIPath(resource string) string {
+	return path.Join("api/s/", c.site, "rest", resource)
 }
 
 func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body interface{}) (*http.Request, error) {

@@ -23,9 +23,8 @@ type responseBody{{ .Name }} struct {
 	Payload  []{{ .Name }}   `json:"data"`
 }
 
-func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
-    endpointPath := path.Join("api/s/", site, "rest", "{{ .ResourcePath }}")
-    req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+func (c *Client) Create{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+    req, err := c.NewRequest(ctx, http.MethodPost, c.ResourceAPIPath("{{ .ResourcePath }}"), data)
     if err != nil {
         return nil, nil, err
     }
@@ -49,8 +48,8 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, site string, data *{{ .N
     return item, resp, err
 }
 
-func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) (*http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", id)
+func (c *Client) Delete{{ .Name }}(ctx context.Context, id string) (*http.Response, error) {
+    endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
     if err != nil {
         return nil, err
@@ -65,8 +64,8 @@ func (c *Client) Delete{{ .Name }}(ctx context.Context, site string, id string) 
     return resp, nil
 }
 
-func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name }}, *http.Response, error) {
-	endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", id)
+func (c *Client) Get{{ .Name }}(ctx context.Context, id string) (*{{ .Name }}, *http.Response, error) {
+	endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
     if err != nil {
         return nil, nil, err
@@ -90,9 +89,8 @@ func (c *Client) Get{{ .Name }}(ctx context.Context, site, id string) (*{{ .Name
 	return &item, resp, err
 }
 
-func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }}, *http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}")
-    req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+func (c *Client) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}, *http.Response, error) {
+    req, err := c.NewRequest(ctx, http.MethodGet, c.ResourceAPIPath("{{ .ResourcePath }}"), nil)
     if err != nil {
         return nil, nil, err
     }
@@ -106,8 +104,8 @@ func (c *Client) List{{ .Name }}(ctx context.Context, site string) ([]{{ .Name }
     return body.Payload, resp, nil
 }
 
-func (c *Client) Update{{ .Name }}(ctx context.Context, site string, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
-    endpointPath:= path.Join("api/s/",site, "rest", "{{ .ResourcePath }}", data.GetID())
+func (c *Client) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+    endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), data.GetID())
     req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
     if err != nil {
         return nil, nil, err
