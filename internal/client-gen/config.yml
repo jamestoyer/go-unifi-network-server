@@ -28,6 +28,13 @@ apiOverrides:
               name: UserGroupID
             VirtualNetworkOverrideId:
               name: VirtualNetworkOverrideID
+          additionalFields:
+            "DeviceIDOverride":
+              description: |
+                The DeviceIDOverride allows for the type of client device to be overridden, which subsequently changes 
+                which icon the client device is displayed with in the UI.
+              jsonName: dev_id_override
+              type: Number
 
 parser:
   skippedFiles:

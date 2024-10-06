@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"path"
 )
 
 // DeleteClientDeviceByMAC will remove a given ClientDevice based on its MAC address.
@@ -67,6 +68,46 @@ func (c *Client) ForceClientDeviceReconnect(ctx context.Context, mac string) (*h
 	})
 	if err != nil {
 		return resp, fmt.Errorf(`unable to force client device reconnect: %w`, err)
+	}
+
+	return resp, nil
+}
+
+type fingerprintOverrideRequest struct {
+	DeviceIDOverride int    `json:"dev_id_override"`
+	MAC              string `json:"mac"`
+}
+
+func (c *Client) OverrideClientDeviceFingerprint(ctx context.Context, mac string, fingerprint int) (*http.Response, error) {
+	endpointPath := path.Join(apiV2Path, "site", c.site, "station", mac, "fingerprint_override")
+	f := fingerprintOverrideRequest{
+		DeviceIDOverride: fingerprint,
+		MAC:              mac,
+	}
+
+	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, f)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.Do(ctx, req, nil)
+	if err != nil {
+		return resp, fmt.Errorf(`failed to override the client device fingerprint: %w`, err)
+	}
+
+	return resp, nil
+}
+
+func (c *Client) RemoveClientDeviceFingerprintOverride(ctx context.Context, mac string) (*http.Response, error) {
+	endpointPath := path.Join(apiV2Path, "site", c.site, "station", mac, "fingerprint_override")
+	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.Do(ctx, req, nil)
+	if err != nil {
+		return resp, fmt.Errorf(`failed to remove the client device fingerprint override: %w`, err)
 	}
 
 	return resp, nil

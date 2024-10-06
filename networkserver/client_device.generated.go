@@ -115,6 +115,9 @@ type ClientDevice struct {
 	//
 	// Validation: None
 	VirtualNetworkOverrideID *string `json:"virtual_network_override_id,omitempty"`
+	// The DeviceIDOverride allows for the type of client device to be overridden, which subsequently changes
+	// which icon the client device is displayed with in the UI.
+	DeviceIDOverride *int64 `json:"dev_id_override,omitempty"`
 }
 
 // GetID is a helper function which dereferences ID.
@@ -357,6 +360,17 @@ func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 	}
 
 	return *s.VirtualNetworkOverrideID
+}
+
+// GetDeviceIDOverride is a helper function which dereferences DeviceIDOverride.
+//
+// When DeviceIDOverride is a nil pointer it will return `0` as default.
+func (s *ClientDevice) GetDeviceIDOverride() int64 {
+	if s == nil || s.DeviceIDOverride == nil {
+		return 0
+	}
+
+	return *s.DeviceIDOverride
 }
 
 type responseBodyClientDevice struct {

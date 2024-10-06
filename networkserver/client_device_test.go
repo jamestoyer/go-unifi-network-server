@@ -261,6 +261,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
 		assert.True(t, got.GetBlocked())
 	})
 }
+
 func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 	t := suite.T()
 	t.Run("unblock client device", func(t *testing.T) {
@@ -310,6 +311,56 @@ func (suite *ClientIntegrationTestSuite) TestClient_ForceClientDeviceReconnect()
 
 		_, err = suite.client.ForceClientDeviceReconnect(ctx, mac.String())
 		assert.NoError(t, err)
+	})
+}
+
+func (suite *ClientIntegrationTestSuite) TestClient_OverrideClientDeviceFingerprint() {
+	t := suite.T()
+	t.Run("override fingerprint", func(t *testing.T) {
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name: String("force client device redirect" + time.Now().String()),
+			MAC:  String(mac.String()),
+		})
+
+		fingerprint := 1096
+		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
+		assert.NoError(t, err)
+
+		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+		assert.Equal(t, Int64(int64(fingerprint)), got.DeviceIDOverride)
+	})
+}
+
+func (suite *ClientIntegrationTestSuite) TestClient_RemoveClientDeviceFingerprintOverride() {
+	t := suite.T()
+	t.Run("override fingerprint", func(t *testing.T) {
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+		fingerprint := 1096
+
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name:             String("force client device redirect" + time.Now().String()),
+			MAC:              String(mac.String()),
+			DeviceIDOverride: Int64(int64(fingerprint)),
+		})
+
+		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
+		require.NoError(t, err)
+
+		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		require.NoError(t, err)
+		require.Equal(t, Int64(int64(fingerprint)), got.DeviceIDOverride)
+
+		_, err = suite.client.RemoveClientDeviceFingerprintOverride(ctx, mac.String())
+		assert.NoError(t, err)
+
+		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+		assert.Nil(t, got.DeviceIDOverride)
 	})
 }
 

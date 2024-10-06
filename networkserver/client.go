@@ -44,6 +44,11 @@ const (
 	// apiPrefixNew is the prefix added to the new API paths; except login. duh.
 	apiPrefixNew string = "/proxy/network"
 
+	// apiV1Path is the v1 API prefix.
+	apiV1Path = "api"
+	// apiV2Path is the v2 API prefix.
+	apiV2Path = "/v2/api"
+
 	stamgrCommandBlock   = "block-sta"
 	stamgrCommandForget  = "forget-sta"
 	stamgrCommandKick    = "kick-sta"
@@ -115,7 +120,7 @@ func NewClient(ctx context.Context, endpoint, username, password, site string, o
 
 // ResourceAPIPath generates the correct API path for a given resource that can be used with NewRequest.
 func (c *Client) ResourceAPIPath(resource string) string {
-	return path.Join("api/s/", c.site, "rest", resource)
+	return path.Join(apiV1Path, "s", c.site, "rest", resource)
 }
 
 func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body interface{}) (*http.Request, error) {
@@ -316,7 +321,7 @@ type stamgrCommand string
 //
 //   - https://dl.ui.com/unifi/8.4.62/unifi_sh_api
 func (c *Client) stamgr(ctx context.Context, command stamgrCommand, argument map[string]interface{}) (*http.Response, error) {
-	endpointPath := path.Join("api/s/", c.site, "cmd/stamgr")
+	endpointPath := path.Join(apiV1Path, "s", c.site, "cmd/stamgr")
 
 	strmgrRequest := map[string]interface{}{
 		"cmd": string(command),
