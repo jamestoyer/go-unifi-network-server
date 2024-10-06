@@ -43,6 +43,16 @@ const (
 
 	// apiPrefixNew is the prefix added to the new API paths; except login. duh.
 	apiPrefixNew string = "/proxy/network"
+
+	// apiV1Path is the v1 API prefix.
+	apiV1Path = "api"
+	// apiV2Path is the v2 API prefix.
+	apiV2Path = "/v2/api"
+
+	stamgrCommandBlock   = "block-sta"
+	stamgrCommandForget  = "forget-sta"
+	stamgrCommandKick    = "kick-sta"
+	stamgrCommandUnblock = "unblock-sta"
 )
 
 var (
@@ -110,7 +120,7 @@ func NewClient(ctx context.Context, endpoint, username, password, site string, o
 
 // ResourceAPIPath generates the correct API path for a given resource that can be used with NewRequest.
 func (c *Client) ResourceAPIPath(resource string) string {
-	return path.Join("api/s/", c.site, "rest", resource)
+	return path.Join(apiV1Path, "s", c.site, "rest", resource)
 }
 
 func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body interface{}) (*http.Request, error) {
@@ -296,6 +306,39 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		if err = json.NewDecoder(resp.Body).Decode(v); err != nil && !errors.Is(err, io.EOF) {
 			return resp, fmt.Errorf("json decode failure: %w", err)
 		}
+	}
+
+	return resp, nil
+}
+
+type stamgrCommand string
+
+// stamgr will execute station manager commands. These are generally used for manipulating a ClientDevice or a guest.
+//
+// Many of the commands are either exposed via the external references or discovered by using the UI.
+//
+// External References:
+//
+//   - https://dl.ui.com/unifi/8.4.62/unifi_sh_api
+func (c *Client) stamgr(ctx context.Context, command stamgrCommand, argument map[string]interface{}) (*http.Response, error) {
+	endpointPath := path.Join(apiV1Path, "s", c.site, "cmd/stamgr")
+
+	strmgrRequest := map[string]interface{}{
+		"cmd": string(command),
+	}
+
+	for name, value := range argument {
+		strmgrRequest[name] = value
+	}
+
+	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, strmgrRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.Do(ctx, req, nil)
+	if err != nil {
+		return resp, fmt.Errorf(`failed to execute stamgr command: %w`, err)
 	}
 
 	return resp, nil

@@ -28,6 +28,7 @@ type ClientIntegrationTestSuite struct {
 	suite.Suite
 
 	client         *Client
+	macPool        *testhelpers.MACPool
 	unifiContainer *testhelpers.UnifiNetworkServerContainer
 }
 
@@ -48,6 +49,7 @@ func (suite *ClientIntegrationTestSuite) SetupSuite() {
 	}
 
 	suite.client = client
+	suite.macPool = testhelpers.NewMACPool()
 }
 
 func (suite *ClientIntegrationTestSuite) TearDownSuite() {
