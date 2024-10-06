@@ -151,7 +151,7 @@ func renderAPIClient(ctx context.Context, endpoints []*spec.Endpoint) error {
 	}
 
 	slog.InfoContext(ctx, "Rendering API client")
-	return renderer.RenderEndpoints(ctx, endpoints, packageName, packageName)
+	return renderer.RenderClient(ctx, endpoints, packageName, packageName)
 }
 
 type Config struct {
