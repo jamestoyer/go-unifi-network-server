@@ -21,10 +21,10 @@ import (
 	"path"
 )
 
-// DeleteClientDeviceByMAC will remove a given ClientDevice based on its MAC address.
+// Delete will remove a given ClientDevice based on its MAC address.
 //
 // Client devices cannot be removed using their IDs instead the `stamgr` must be used, as discovered from the UI.
-func (c *Client) DeleteClientDeviceByMAC(ctx context.Context, mac string) (*http.Response, error) {
+func (c *Client) Delete(ctx context.Context, mac string) (*http.Response, error) {
 	resp, err := c.stamgr(ctx, stamgrCommandForget, map[string]interface{}{
 		"macs": []string{mac},
 	})
@@ -35,7 +35,7 @@ func (c *Client) DeleteClientDeviceByMAC(ctx context.Context, mac string) (*http
 	return resp, nil
 }
 
-func (c *Client) BlockClientDevice(ctx context.Context, mac string) (*http.Response, error) {
+func (c *Client) Block(ctx context.Context, mac string) (*http.Response, error) {
 	resp, err := c.stamgr(ctx, stamgrCommandBlock, map[string]interface{}{
 		"mac": mac,
 	})
@@ -46,7 +46,7 @@ func (c *Client) BlockClientDevice(ctx context.Context, mac string) (*http.Respo
 	return resp, nil
 }
 
-func (c *Client) UnblockClientDevice(ctx context.Context, mac string) (*http.Response, error) {
+func (c *Client) Unblock(ctx context.Context, mac string) (*http.Response, error) {
 	resp, err := c.stamgr(ctx, stamgrCommandUnblock, map[string]interface{}{
 		"mac": mac,
 	})
@@ -62,7 +62,7 @@ func (c *Client) UnblockClientDevice(ctx context.Context, mac string) (*http.Res
 // References:
 //   - https://dl.ui.com/unifi/8.4.62/unifi_sh_api
 //   - https://lists.freeradius.org/pipermail/freeradius-users/2017-February/086467.html
-func (c *Client) ForceClientDeviceReconnect(ctx context.Context, mac string) (*http.Response, error) {
+func (c *Client) ForceReconnect(ctx context.Context, mac string) (*http.Response, error) {
 	resp, err := c.stamgr(ctx, stamgrCommandKick, map[string]interface{}{
 		"mac": mac,
 	})
@@ -78,7 +78,7 @@ type fingerprintOverrideRequest struct {
 	MAC              string `json:"mac"`
 }
 
-func (c *Client) OverrideClientDeviceFingerprint(ctx context.Context, mac string, fingerprint int) (*http.Response, error) {
+func (c *Client) OverrideDeviceID(ctx context.Context, mac string, fingerprint int) (*http.Response, error) {
 	endpointPath := path.Join(apiV2Path, "site", c.site, "station", mac, "fingerprint_override")
 	f := fingerprintOverrideRequest{
 		DeviceIDOverride: fingerprint,
@@ -92,13 +92,13 @@ func (c *Client) OverrideClientDeviceFingerprint(ctx context.Context, mac string
 
 	resp, err := c.Do(ctx, req, nil)
 	if err != nil {
-		return resp, fmt.Errorf(`failed to override the client device fingerprint: %w`, err)
+		return resp, fmt.Errorf(`failed to override the device ID: %w`, err)
 	}
 
 	return resp, nil
 }
 
-func (c *Client) RemoveClientDeviceFingerprintOverride(ctx context.Context, mac string) (*http.Response, error) {
+func (c *Client) RemoveDeviceIDOverride(ctx context.Context, mac string) (*http.Response, error) {
 	endpointPath := path.Join(apiV2Path, "site", c.site, "station", mac, "fingerprint_override")
 	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
@@ -107,7 +107,7 @@ func (c *Client) RemoveClientDeviceFingerprintOverride(ctx context.Context, mac 
 
 	resp, err := c.Do(ctx, req, nil)
 	if err != nil {
-		return resp, fmt.Errorf(`failed to remove the client device fingerprint override: %w`, err)
+		return resp, fmt.Errorf(`failed to remove the device ID override: %w`, err)
 	}
 
 	return resp, nil

@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_Create() {
 	t := suite.T()
 
 	mac, _ := suite.macPool.MAC()
@@ -57,7 +57,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDeviceByMAC() {
+func (suite *ClientIntegrationTestSuite) TestClient_Delete() {
 	t := suite.T()
 
 	t.Run("delete client device", func(t *testing.T) {
@@ -69,12 +69,12 @@ func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDeviceByMAC() {
 			MAC:  String(mac.String()),
 		})
 
-		// Validate the client device actually exists before deletion
+		// Validate the client device actually exists beforge deletion
 		clientDevice, _, err := suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.NotNil(t, clientDevice)
 
-		_, err = suite.client.DeleteClientDeviceByMAC(ctx, mac.String())
+		_, err = suite.client.Delete(ctx, mac.String())
 		assert.NoError(t, err)
 
 		clientDevice, _, err = suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
@@ -91,12 +91,12 @@ func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDeviceByMAC() {
 		ctx := context.Background()
 		mac, release := suite.macPool.MAC()
 		defer release()
-		_, err := suite.client.DeleteClientDeviceByMAC(ctx, mac.String())
+		_, err := suite.client.Delete(ctx, mac.String())
 		assert.NoError(t, err)
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_GetClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_Get() {
 	t := suite.T()
 	t.Run("get existing client device", func(t *testing.T) {
 		ctx := context.Background()
@@ -125,7 +125,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_GetClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_ListClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_List() {
 	t := suite.T()
 	t.Run("list client devices", func(t *testing.T) {
 		ctx := context.Background()
@@ -145,7 +145,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_ListClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_Update() {
 	t := suite.T()
 	t.Run("update existing client device", func(t *testing.T) {
 		ctx := context.Background()
@@ -238,7 +238,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_Block() {
 	t := suite.T()
 	t.Run("block client device", func(t *testing.T) {
 		ctx := context.Background()
@@ -253,7 +253,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
-		_, err = suite.client.BlockClientDevice(ctx, mac.String())
+		_, err = suite.client.Block(ctx, mac.String())
 		assert.NoError(t, err)
 
 		got, _, err = suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
@@ -262,7 +262,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_Unblock() {
 	t := suite.T()
 	t.Run("unblock client device", func(t *testing.T) {
 		ctx := context.Background()
@@ -277,14 +277,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
-		_, err = suite.client.BlockClientDevice(ctx, mac.String())
+		_, err = suite.client.Block(ctx, mac.String())
 		assert.NoError(t, err)
 
 		got, _, err = suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		require.True(t, got.GetBlocked())
 
-		_, err = suite.client.UnblockClientDevice(ctx, mac.String())
+		_, err = suite.client.Unblock(ctx, mac.String())
 		assert.NoError(t, err)
 
 		got, _, err = suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
@@ -293,7 +293,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_ForceClientDeviceReconnect() {
+func (suite *ClientIntegrationTestSuite) TestClient_ForceReconnect() {
 	t := suite.T()
 	t.Run("force client device reconnect", func(t *testing.T) {
 		t.Skip("Unable to test as a device needs to connect first")
@@ -309,12 +309,12 @@ func (suite *ClientIntegrationTestSuite) TestClient_ForceClientDeviceReconnect()
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
-		_, err = suite.client.ForceClientDeviceReconnect(ctx, mac.String())
+		_, err = suite.client.ForceReconnect(ctx, mac.String())
 		assert.NoError(t, err)
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_OverrideClientDeviceFingerprint() {
+func (suite *ClientIntegrationTestSuite) TestClient_OverrideDeviceID() {
 	t := suite.T()
 	t.Run("override fingerprint", func(t *testing.T) {
 		ctx := context.Background()
@@ -326,7 +326,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_OverrideClientDeviceFingerpr
 		})
 
 		fingerprint := 1096
-		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
+		_, err := suite.client.OverrideDeviceID(ctx, mac.String(), fingerprint)
 		assert.NoError(t, err)
 
 		got, _, err := suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
@@ -335,7 +335,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_OverrideClientDeviceFingerpr
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_RemoveClientDeviceFingerprintOverride() {
+func (suite *ClientIntegrationTestSuite) TestClient_RemoveDeviceIDOverride() {
 	t := suite.T()
 	t.Run("override fingerprint", func(t *testing.T) {
 		ctx := context.Background()
@@ -348,14 +348,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_RemoveClientDeviceFingerprin
 			DeviceIDOverride: Int64(int64(fingerprint)),
 		})
 
-		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
+		_, err := suite.client.OverrideDeviceID(ctx, mac.String(), fingerprint)
 		require.NoError(t, err)
 
 		got, _, err := suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.Equal(t, Int64(int64(fingerprint)), got.DeviceIDOverride)
 
-		_, err = suite.client.RemoveClientDeviceFingerprintOverride(ctx, mac.String())
+		_, err = suite.client.RemoveDeviceIDOverride(ctx, mac.String())
 		assert.NoError(t, err)
 
 		got, _, err = suite.client.ClientDevices.Get(ctx, newClientDevice.GetID())
