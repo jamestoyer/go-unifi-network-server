@@ -6,6 +6,8 @@ apiOverrides:
         User:
           name: ClientDevice
           fields:
+            Blocked:
+              type: Boolean
             FixedApEnabled:
               name: FixedAPEnabled
             FixedApMac:

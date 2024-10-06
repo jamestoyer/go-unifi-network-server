@@ -54,7 +54,7 @@ type ClientDevice struct {
 	// Blocked has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
-	Blocked *string `json:"blocked,omitempty"`
+	Blocked *bool `json:"blocked,omitempty"`
 	// FixedAPEnabled has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: false|true
@@ -185,10 +185,10 @@ func (s *ClientDevice) GetNoEdit() bool {
 
 // GetBlocked is a helper function which dereferences Blocked.
 //
-// When Blocked is a nil pointer it will return `""` as default.
-func (s *ClientDevice) GetBlocked() string {
+// When Blocked is a nil pointer it will return `false` as default.
+func (s *ClientDevice) GetBlocked() bool {
 	if s == nil || s.Blocked == nil {
-		return ""
+		return false
 	}
 
 	return *s.Blocked
