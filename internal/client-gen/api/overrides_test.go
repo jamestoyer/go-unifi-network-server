@@ -291,6 +291,72 @@ Validation: None`,
 				},
 			},
 		},
+		"additional fields": {
+			object: defaultObject,
+			overrides: &ObjectOverrides{
+				Fields: map[string]*FieldOverrides{
+					"C": {
+						Name:                       networkserver.String("Updated"),
+						GenerateDefaultDescription: networkserver.Bool(false),
+					},
+				},
+				AdditionalFields: map[string]*FieldOverrides{
+					"AdditionalC": {
+						Name:                       networkserver.String("NewField1"),
+						GenerateDefaultDescription: networkserver.Bool(false),
+					},
+					"AdditionalA": {
+						Description: networkserver.String("A custom description"),
+						JSONName:    networkserver.String("custom_json"),
+						Name:        networkserver.String("OverriddenName"),
+						Type:        &spec.FieldTypeDecimal,
+						Validation:  regexp.MustCompile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`),
+					},
+					"AdditionalB": {},
+				},
+			},
+			want: &spec.Object{
+				Name: "Default",
+				Fields: []spec.Field{
+					{
+						Name: "A",
+						Type: spec.FieldTypeBoolean,
+					},
+					{
+						Name: "B",
+						Type: spec.FieldTypeDecimal,
+					},
+					{
+						Name: "Updated",
+						Type: spec.FieldTypeNumber,
+					},
+					{
+						Name: "D",
+						Type: spec.FieldTypeString,
+					},
+					{
+						Name:        "OverriddenName",
+						Description: "A custom description",
+						JSONName:    "custom_json",
+						Type:        spec.FieldTypeDecimal,
+						Validation:  regexp.MustCompile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`),
+					},
+					{
+						Name: "AdditionalB",
+						Description: `AdditionalB has been auto generated from the Unifi Network Server API specification
+
+Validation: None`,
+						JSONName: "additional_b",
+						Type:     spec.FieldTypeString,
+					},
+					{
+						Name:     "NewField1",
+						JSONName: "new_field_1",
+						Type:     spec.FieldTypeString,
+					},
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {
