@@ -60,11 +60,13 @@ func (r *Renderer) RenderEndpoint(ctx context.Context, endpoint *spec.Endpoint, 
 
 	var buffer bytes.Buffer
 	templateContent := struct {
+		Actions      spec.EndpointActions
 		Name         string
 		Objects      []*spec.Object
 		PackageName  string
 		ResourcePath string
 	}{
+		Actions:      endpoint.Actions,
 		Name:         endpoint.Name,
 		Objects:      endpoint.Objects,
 		PackageName:  packageName,
