@@ -11,7 +11,7 @@ apiOverrides:
             FixedApMac:
               name: FixedAPMAC
             FixedIp:
-              name: FixedAPIP
+              name: FixedIP
             LocalDnsRecord:
               name: LocalDNSRecord
             LocalDnsRecordEnabled:
@@ -26,11 +26,6 @@ apiOverrides:
               name: UserGroupID
             VirtualNetworkOverrideId:
               name: VirtualNetworkOverrideID
-          additionalFields:
-            FixedIP:
-              description: |
-                FixedIP is a reserved IP address given to a ClientDevice.
-              validation: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 
 parser:
   skippedFiles:

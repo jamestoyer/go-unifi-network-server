@@ -17,11 +17,11 @@ package networkserver
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
@@ -103,7 +103,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_GetClientDevice() {
 		mac, _ := suite.macPool.MAC()
 
 		wantName := "get client device" + time.Now().String()
-		newClientDevice := suite.createClientDevice(t, ctx, &ClientDevice{
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
 			Name: String(wantName),
 			MAC:  String(mac.String()),
 		})
@@ -133,7 +133,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_ListClientDevice() {
 		// Ensure there are some clients for testing
 		for i := 0; i < wantCount; i++ {
 			mac, _ := suite.macPool.MAC()
-			_ = suite.createClientDevice(t, ctx, &ClientDevice{
+			_ = suite.createClientDevice(ctx, t, &ClientDevice{
 				Name: String(fmt.Sprintf("list client device %d", i)),
 				MAC:  String(mac.String()),
 			})
@@ -151,7 +151,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 		ctx := context.Background()
 		mac, _ := suite.macPool.MAC()
 
-		newClientDevice := suite.createClientDevice(t, ctx, &ClientDevice{
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
 			Name: String("update client device" + time.Now().String()),
 			MAC:  String(mac.String()),
 		})
@@ -196,7 +196,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 		ctx := context.Background()
 		mac, _ := suite.macPool.MAC()
 
-		newClientDevice := suite.createClientDevice(t, ctx, &ClientDevice{
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
 			Name: String("change mac" + time.Now().String()),
 			MAC:  String(mac.String()),
 		})
@@ -223,7 +223,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 		ctx := context.Background()
 		mac, _ := suite.macPool.MAC()
 
-		_ = suite.createClientDevice(t, ctx, &ClientDevice{
+		_ = suite.createClientDevice(ctx, t, &ClientDevice{
 			Name: String("update ID is not set" + time.Now().String()),
 			MAC:  String(mac.String()),
 		})
@@ -238,7 +238,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) createClientDevice(t *testing.T, ctx context.Context, device *ClientDevice) *ClientDevice {
+func (suite *ClientIntegrationTestSuite) createClientDevice(ctx context.Context, t *testing.T, device *ClientDevice) *ClientDevice {
 	t.Helper()
 
 	clientDevice, _, err := suite.client.CreateClientDevice(ctx, device)

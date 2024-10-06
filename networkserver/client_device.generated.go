@@ -63,10 +63,10 @@ type ClientDevice struct {
 	//
 	// Validation: ^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$
 	FixedAPMAC *string `json:"fixed_ap_mac,omitempty"`
-	// FixedAPIP has been auto generated from the Unifi Network Server API specification
+	// FixedIP has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
-	FixedAPIP *string `json:"fixed_ip,omitempty"`
+	FixedIP *string `json:"fixed_ip,omitempty"`
 	// Hostname has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
@@ -115,8 +115,6 @@ type ClientDevice struct {
 	//
 	// Validation: None
 	VirtualNetworkOverrideID *string `json:"virtual_network_override_id,omitempty"`
-	// FixedIP is a reserved IP address given to a ClientDevice.
-	FixedIP *string `json:"fixed_ip,omitempty"`
 }
 
 // GetID is a helper function which dereferences ID.
@@ -218,15 +216,15 @@ func (s *ClientDevice) GetFixedAPMAC() string {
 	return *s.FixedAPMAC
 }
 
-// GetFixedAPIP is a helper function which dereferences FixedAPIP.
+// GetFixedIP is a helper function which dereferences FixedIP.
 //
-// When FixedAPIP is a nil pointer it will return `""` as default.
-func (s *ClientDevice) GetFixedAPIP() string {
-	if s == nil || s.FixedAPIP == nil {
+// When FixedIP is a nil pointer it will return `""` as default.
+func (s *ClientDevice) GetFixedIP() string {
+	if s == nil || s.FixedIP == nil {
 		return ""
 	}
 
-	return *s.FixedAPIP
+	return *s.FixedIP
 }
 
 // GetHostname is a helper function which dereferences Hostname.
@@ -359,17 +357,6 @@ func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 	}
 
 	return *s.VirtualNetworkOverrideID
-}
-
-// GetFixedIP is a helper function which dereferences FixedIP.
-//
-// When FixedIP is a nil pointer it will return `""` as default.
-func (s *ClientDevice) GetFixedIP() string {
-	if s == nil || s.FixedIP == nil {
-		return ""
-	}
-
-	return *s.FixedIP
 }
 
 type responseBodyClientDevice struct {
