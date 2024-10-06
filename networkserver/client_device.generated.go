@@ -431,16 +431,16 @@ func (c *Client) GetClientDevice(ctx context.Context, id string) (*ClientDevice,
 		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
 	}
 
-	var item ClientDevice
+	var item *ClientDevice
 	switch len(body.Payload) {
 	case 0:
 	case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
 	default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
 	}
 
-	return &item, resp, err
+	return item, resp, err
 }
 
 func (c *Client) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Response, error) {
@@ -471,15 +471,15 @@ func (c *Client) UpdateClientDevice(ctx context.Context, data *ClientDevice) (*C
 		return nil, resp, fmt.Errorf(`unable to update ClientDevice: %w`, err)
 	}
 
-	var item ClientDevice
+	var item *ClientDevice
 	switch len(body.Payload) {
 	case 0:
 		err = errors.New(`failed to update ClientDevice`)
 	case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
 	default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
 	}
 
-	return &item, resp, err
+	return item, resp, err
 }
