@@ -14,6 +14,13 @@
 
 package spec
 
+import (
+	"fmt"
+	"strings"
+
+	"gopkg.in/yaml.v3"
+)
+
 var (
 	FieldTypeBoolean = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "bool", defaultValue: "false"},
@@ -48,31 +55,92 @@ type FieldType struct {
 
 // IsListType indicates whether the type is a Golang list. Use ElementType to determine the type of the elements
 // expected for the list.
-func (t FieldType) IsListType() bool {
+func (t *FieldType) IsListType() bool {
 	_, ok := t.fieldTypeImpl.(listFieldType)
 	return ok
 }
 
 // IsObjectType indicates whether the type is a Golang struct.
-func (t FieldType) IsObjectType() bool {
+func (t *FieldType) IsObjectType() bool {
 	_, ok := t.fieldTypeImpl.(objectFieldType)
 	return ok
 }
 
 // IsPrimitiveType indicates whether the type is a Golang primitive.
-func (t FieldType) IsPrimitiveType() bool {
+func (t *FieldType) IsPrimitiveType() bool {
 	_, ok := t.fieldTypeImpl.(primitiveFieldType)
 	return ok
 }
 
 // ElementType returns the expected FieldType for all elements of a list. If this type is not a list the nil is
 // returned.
-func (t FieldType) ElementType() *FieldType {
+func (t *FieldType) ElementType() *FieldType {
 	if listType, ok := t.fieldTypeImpl.(listFieldType); ok {
 		return &listType.elementType
 	}
 
 	return nil
+}
+
+func (t *FieldType) UnmarshalYAML(node *yaml.Node) error {
+	var value string
+	if err := node.Decode(&value); err != nil {
+		return fmt.Errorf("failed to unmarshal field type: %w", err)
+	}
+
+	ft := unmarshalFieldType(value)
+	*t = ft
+	if ft == unknownType {
+		return fmt.Errorf("unknown field type: %s", value)
+	}
+
+	return nil
+}
+
+func unmarshalFieldType(value string) FieldType {
+	switch value {
+	case "Boolean":
+		return FieldTypeBoolean
+	case "Decimal":
+		return FieldTypeDecimal
+	case "Number":
+		return FieldTypeNumber
+	case "String":
+		return FieldTypeString
+	default:
+		if strings.HasPrefix(value, "List(") && strings.HasSuffix(value, ")") {
+			return unmarshalListFieldType(value)
+		}
+
+		if strings.HasPrefix(value, "Object(") && strings.HasSuffix(value, ")") {
+			return unmarshalObjectFieldType(value)
+		}
+
+		return unknownType
+	}
+}
+
+func unmarshalListFieldType(value string) FieldType {
+	value = strings.TrimPrefix(value, "List(")
+	value = strings.TrimSuffix(value, ")")
+
+	elementType := unmarshalFieldType(value)
+	if elementType == unknownType {
+		return elementType
+	}
+
+	return FieldTypeList(elementType)
+}
+
+func unmarshalObjectFieldType(value string) FieldType {
+	value = strings.TrimPrefix(value, "Object(")
+	value = strings.TrimSuffix(value, ")")
+
+	if strings.ContainsAny(value, "()") {
+		return unknownType
+	}
+
+	return FieldTypeObject(value)
 }
 
 type primitiveFieldType struct {
