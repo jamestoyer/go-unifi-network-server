@@ -174,6 +174,46 @@ func TestApplyEndpointOverrides(t *testing.T) {
 				},
 			},
 		},
+		"actions are empty": {
+			endpoint: &spec.Endpoint{
+				Name:         "ActionsOverride",
+				ResourcePath: "actions",
+			},
+			overrides: &EndpointOverrides{
+				Actions: &EndpointActionsOverrides{},
+			},
+			want: &spec.Endpoint{
+				Name:         "ActionsOverride",
+				ResourcePath: "actions",
+			},
+		},
+		"actions are overridden": {
+			endpoint: &spec.Endpoint{
+				Name:         "ActionsOverride",
+				ResourcePath: "actions",
+			},
+			overrides: &EndpointOverrides{
+				Name: networkserver.String("Updated"),
+				Actions: &EndpointActionsOverrides{
+					DisableCreate: networkserver.Bool(true),
+					DisableDelete: networkserver.Bool(true),
+					DisableGet:    networkserver.Bool(true),
+					DisableList:   networkserver.Bool(true),
+					DisableUpdate: networkserver.Bool(true),
+				},
+			},
+			want: &spec.Endpoint{
+				Name:         "Updated",
+				ResourcePath: "actions",
+				Actions: spec.EndpointActions{
+					DisableCreate: true,
+					DisableDelete: true,
+					DisableGet:    true,
+					DisableList:   true,
+					DisableUpdate: true,
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {

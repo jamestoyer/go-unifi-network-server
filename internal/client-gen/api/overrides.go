@@ -39,7 +39,9 @@ func ApplyOverrides(endpoints []*spec.Endpoint, overrides Overrides) []*spec.End
 }
 
 type EndpointOverrides struct {
-	Name         *string                     `yaml:"name,omitempty"`
+	Name *string `yaml:"name,omitempty"`
+
+	Actions      *EndpointActionsOverrides   `yaml:"actions,omitempty"`
 	Objects      map[string]*ObjectOverrides `yaml:"objects,omitempty"`
 	ResourcePath *string                     `yaml:"resourcePath,omitempty"`
 }
@@ -72,7 +74,44 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 	}
 
 	ep.Objects = objects
+	ep.Actions = applyActionsOverrides(ep.Actions, overrides.Actions)
 	return &ep
+}
+
+type EndpointActionsOverrides struct {
+	DisableCreate *bool `yaml:"disableCreate,omitempty"`
+	DisableDelete *bool `yaml:"disableDelete,omitempty"`
+	DisableGet    *bool `yaml:"disableGet,omitempty"`
+	DisableList   *bool `yaml:"disableList,omitempty"`
+	DisableUpdate *bool `yaml:"disableUpdate,omitempty"`
+}
+
+func applyActionsOverrides(actions spec.EndpointActions, overrides *EndpointActionsOverrides) spec.EndpointActions {
+	if overrides == nil {
+		return actions
+	}
+
+	if overrides.DisableCreate != nil {
+		actions.DisableCreate = *overrides.DisableCreate
+	}
+
+	if overrides.DisableDelete != nil {
+		actions.DisableDelete = *overrides.DisableDelete
+	}
+
+	if overrides.DisableGet != nil {
+		actions.DisableGet = *overrides.DisableGet
+	}
+
+	if overrides.DisableList != nil {
+		actions.DisableList = *overrides.DisableList
+	}
+
+	if overrides.DisableUpdate != nil {
+		actions.DisableUpdate = *overrides.DisableUpdate
+	}
+
+	return actions
 }
 
 type ObjectOverrides struct {

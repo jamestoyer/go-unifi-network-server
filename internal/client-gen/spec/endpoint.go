@@ -22,9 +22,18 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+type EndpointActions struct {
+	DisableCreate bool
+	DisableDelete bool
+	DisableGet    bool
+	DisableList   bool
+	DisableUpdate bool
+}
+
 type Endpoint struct {
 	Name string
 
+	Actions      EndpointActions
 	Filename     string
 	Objects      []*Object
 	ResourcePath string
