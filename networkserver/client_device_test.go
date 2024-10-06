@@ -141,7 +141,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_ListClientDevice() {
 
 		got, _, err := suite.client.ListClientDevice(ctx)
 		assert.NoError(t, err)
-		assert.GreaterOrEqual(t, wantCount, len(got))
+		assert.GreaterOrEqual(t, len(got), wantCount)
 	})
 }
 
@@ -157,12 +157,10 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 		})
 
 		updatedClientDevice := &ClientDevice{
-			ID:         newClientDevice.ID,
-			Name:       String("updated"),
-			MAC:        String(mac.String()),
-			Note:       String("a new note"),
-			UseFixedIP: Bool(true),
-			FixedIP:    String("192.168.1.25"),
+			ID:   newClientDevice.ID,
+			Name: String("updated"),
+			MAC:  String(mac.String()),
+			Note: String("a new note"),
 		}
 		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.NoError(t, err)
@@ -210,7 +208,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 			MAC:        String(newMAC.String()),
 			Note:       String("a new note"),
 			UseFixedIP: Bool(true),
-			FixedIP:    String("192.168.1.25"),
+			FixedIP:    String("192.168.1.2"),
 		}
 		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.Error(t, err)

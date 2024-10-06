@@ -60,6 +60,7 @@ func NewUnifiNetworkServerContainer(ctx context.Context) (*UnifiNetworkServerCon
 		Name:  fmt.Sprintf("unifi-%v", time.Now().Unix()),
 		Image: "jacobalberty/unifi:" + unifiVersion,
 		Env: map[string]string{
+			"PKGURL":       "",
 			"UNIFI_STDOUT": unifiStdOut,
 		},
 		ExposedPorts: []string{"8443/tcp"},
