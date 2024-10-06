@@ -57,14 +57,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
 	})
 }
 
-func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDevice() {
+func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDeviceByMAC() {
 	t := suite.T()
 
 	t.Run("delete client device", func(t *testing.T) {
 		ctx := context.Background()
 		mac, release := suite.macPool.MAC()
 
-		newClientDevice := suite.createClientDevice(t, ctx, &ClientDevice{
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
 			Name: String("delete client device" + time.Now().String()),
 			MAC:  String(mac.String()),
 		})
@@ -74,7 +74,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDevice() {
 		require.NoError(t, err)
 		require.NotNil(t, clientDevice)
 
-		_, err = suite.client.DeleteClientDevice(ctx, newClientDevice.GetID())
+		_, err = suite.client.DeleteClientDeviceByMAC(ctx, mac.String())
 		assert.NoError(t, err)
 
 		clientDevice, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
@@ -91,7 +91,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDevice() {
 		ctx := context.Background()
 		mac, release := suite.macPool.MAC()
 		defer release()
-		_, err := suite.client.DeleteClientDevice(ctx, mac.String())
+		_, err := suite.client.DeleteClientDeviceByMAC(ctx, mac.String())
 		assert.NoError(t, err)
 	})
 }
@@ -235,6 +235,81 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.Error(t, err)
 		assert.Nil(t, got)
+	})
+}
+
+func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
+	t := suite.T()
+	t.Run("block client device", func(t *testing.T) {
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name: String("block client device" + time.Now().String()),
+			MAC:  String(mac.String()),
+		})
+
+		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		require.NoError(t, err)
+		require.NotNil(t, got)
+
+		_, err = suite.client.BlockClientDevice(ctx, mac.String())
+		assert.NoError(t, err)
+
+		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+		assert.True(t, got.GetBlocked())
+	})
+}
+func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
+	t := suite.T()
+	t.Run("get existing client device", func(t *testing.T) {
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name: String("unblock client device" + time.Now().String()),
+			MAC:  String(mac.String()),
+		})
+
+		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		require.NoError(t, err)
+		require.NotNil(t, got)
+
+		_, err = suite.client.BlockClientDevice(ctx, mac.String())
+		assert.NoError(t, err)
+
+		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+		require.True(t, got.GetBlocked())
+
+		_, err = suite.client.UnblockClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+
+		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		assert.NoError(t, err)
+		assert.False(t, got.GetBlocked())
+	})
+}
+
+func (suite *ClientIntegrationTestSuite) TestClient_ForceClientDeviceReconnect() {
+	t := suite.T()
+	t.Run("force client device reconnect", func(t *testing.T) {
+		t.Skip("Unable to test as a device needs to connect first")
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name: String("force client device redirect" + time.Now().String()),
+			MAC:  String(mac.String()),
+		})
+
+		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		require.NoError(t, err)
+		require.NotNil(t, got)
+
+		_, err = suite.client.ForceClientDeviceReconnect(ctx, mac.String())
+		assert.NoError(t, err)
 	})
 }
 
