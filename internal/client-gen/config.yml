@@ -2,6 +2,8 @@ apiOverrides:
   endpoints:
     User:
       name: ClientDevice
+      actions:
+        disableDelete: true
       objects:
         User:
           name: ClientDevice

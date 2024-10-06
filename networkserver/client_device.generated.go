@@ -403,22 +403,6 @@ func (c *Client) CreateClientDevice(ctx context.Context, data *ClientDevice) (*C
 	return item, resp, err
 }
 
-func (c *Client) DeleteClientDevice(ctx context.Context, id string) (*http.Response, error) {
-	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var body responseBodyClientDevice
-	resp, err := c.Do(ctx, req, &body)
-	if err != nil {
-		return resp, fmt.Errorf(`unable to delete ClientDevice: %w`, err)
-	}
-
-	return resp, nil
-}
-
 func (c *Client) GetClientDevice(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
