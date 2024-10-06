@@ -77,16 +77,16 @@ func (c *Client) Get{{ .Name }}(ctx context.Context, id string) (*{{ .Name }}, *
 		return nil, resp, fmt.Errorf(`unable to get {{ .Name }}: %w`, err)
     }
 
-	var item {{ .Name }}
+	var item *{{ .Name }}
 	switch len(body.Payload) {
 	case 0:
     case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
     default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
     }
 
-	return &item, resp, err
+	return item, resp, err
 }
 
 func (c *Client) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}, *http.Response, error) {
@@ -117,15 +117,15 @@ func (c *Client) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ 
         return nil, resp, fmt.Errorf(`unable to update {{ .Name }}: %w`, err)
     }
 
-    var item {{ .Name }}
+    var item *{{ .Name }}
     switch len(body.Payload) {
     case 0:
         err = errors.New(`failed to update {{ .Name }}`)
     case 1:
-        item = body.Payload[0]
+        item = &body.Payload[0]
     default:
         err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
     }
 
-    return &item, resp, err
+    return item, resp, err
 }

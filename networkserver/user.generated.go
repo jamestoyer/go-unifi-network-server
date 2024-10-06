@@ -418,16 +418,16 @@ func (c *Client) GetUser(ctx context.Context, id string) (*User, *http.Response,
 		return nil, resp, fmt.Errorf(`unable to get User: %w`, err)
 	}
 
-	var item User
+	var item *User
 	switch len(body.Payload) {
 	case 0:
 	case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
 	default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
 	}
 
-	return &item, resp, err
+	return item, resp, err
 }
 
 func (c *Client) ListUser(ctx context.Context) ([]User, *http.Response, error) {
@@ -458,15 +458,15 @@ func (c *Client) UpdateUser(ctx context.Context, data *User) (*User, *http.Respo
 		return nil, resp, fmt.Errorf(`unable to update User: %w`, err)
 	}
 
-	var item User
+	var item *User
 	switch len(body.Payload) {
 	case 0:
 		err = errors.New(`failed to update User`)
 	case 1:
-		item = body.Payload[0]
+		item = &body.Payload[0]
 	default:
 		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
 	}
 
-	return &item, resp, err
+	return item, resp, err
 }
