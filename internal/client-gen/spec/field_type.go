@@ -15,10 +15,9 @@
 package spec
 
 import (
+	"errors"
 	"fmt"
 	"strings"
-
-	"gopkg.in/yaml.v3"
 )
 
 var (
@@ -82,11 +81,12 @@ func (t *FieldType) ElementType() *FieldType {
 	return nil
 }
 
-func (t *FieldType) UnmarshalYAML(node *yaml.Node) error {
-	var value string
-	if err := node.Decode(&value); err != nil {
-		return fmt.Errorf("failed to unmarshal field type: %w", err)
+func (t *FieldType) UnmarshalText(text []byte) error {
+	if text == nil {
+		return errors.New("text must not be nil")
 	}
+
+	value := strings.TrimSpace(string(text))
 
 	ft := unmarshalFieldType(value)
 	*t = ft

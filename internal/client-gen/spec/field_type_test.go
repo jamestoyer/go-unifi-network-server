@@ -18,77 +18,76 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v3"
 )
 
-func TestFieldType_UnmarshalYAML(t *testing.T) {
+func TestFieldType_UnmarshalText(t *testing.T) {
 	tests := map[string]struct {
-		data    string
+		data    []byte
 		want    FieldType
 		wantErr assert.ErrorAssertionFunc
 	}{
 		"data is empty": {
-			data:    "",
+			data:    []byte(""),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
 		"data is invalid YAML": {
-			data:    "'",
+			data:    []byte("'"),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
 		"data is a string": {
-			data:    "String",
+			data:    []byte("String"),
 			want:    FieldTypeString,
 			wantErr: assert.NoError,
 		},
 		"data is a boolean": {
-			data:    "Boolean",
+			data:    []byte("Boolean"),
 			want:    FieldTypeBoolean,
 			wantErr: assert.NoError,
 		},
 		"data is a number": {
-			data:    "Number",
+			data:    []byte("Number"),
 			want:    FieldTypeNumber,
 			wantErr: assert.NoError,
 		},
 		"data is a decimal": {
-			data:    "Decimal",
+			data:    []byte("Decimal"),
 			want:    FieldTypeDecimal,
 			wantErr: assert.NoError,
 		},
 		"data is a list": {
-			data:    "List(String)",
+			data:    []byte("List(String)"),
 			want:    FieldTypeList(FieldTypeString),
 			wantErr: assert.NoError,
 		},
 		"data is an object": {
-			data:    "Object(AnObject)",
+			data:    []byte("Object(AnObject)"),
 			want:    FieldTypeObject("AnObject"),
 			wantErr: assert.NoError,
 		},
 		"data is a list of object": {
-			data:    "List(Object(Nested))",
+			data:    []byte("List(Object(Nested))"),
 			want:    FieldTypeList(FieldTypeObject("Nested")),
 			wantErr: assert.NoError,
 		},
 		"data is missing trailing list bracket": {
-			data:    "List(String",
+			data:    []byte("List(String"),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
 		"data is missing trailing object bracket": {
-			data:    "Object(String",
+			data:    []byte("Object(String"),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
 		"data is missing trailing nested bracket": {
-			data:    "List(Object(String)",
+			data:    []byte("List(Object(String)"),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
 		"data is invalid type": {
-			data:    "Not a real type",
+			data:    []byte("Not a real type"),
 			want:    unknownType,
 			wantErr: assert.Error,
 		},
@@ -97,7 +96,7 @@ func TestFieldType_UnmarshalYAML(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			got := FieldType{}
-			err := got.UnmarshalYAML(&yaml.Node{Value: test.data, Kind: yaml.ScalarNode})
+			err := got.UnmarshalText(test.data)
 			test.wantErr(t, err)
 			assert.Equal(t, test.want, got)
 		})
