@@ -72,7 +72,7 @@ func (r *Renderer) RenderEndpoint(ctx context.Context, endpoint *spec.Endpoint, 
 		PackageName:  packageName,
 		ResourcePath: endpoint.ResourcePath,
 	}
-	if err := r.templates.ExecuteTemplate(&buffer, "file.gotmpl", templateContent); err != nil {
+	if err := r.templates.ExecuteTemplate(&buffer, "service.gotmpl", templateContent); err != nil {
 		return fmt.Errorf("failed to generate API endpoint file: %w", err)
 	}
 

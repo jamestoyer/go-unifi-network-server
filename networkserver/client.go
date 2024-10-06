@@ -72,6 +72,10 @@ var (
 	}
 )
 
+type service struct {
+	*Client
+}
+
 type Client struct {
 	httpClient *http.Client
 

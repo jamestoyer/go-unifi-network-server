@@ -373,19 +373,21 @@ func (s *ClientDevice) GetDeviceIDOverride() int64 {
 	return *s.DeviceIDOverride
 }
 
+type ClientDeviceService service
+
 type responseBodyClientDevice struct {
 	Metadata json.RawMessage `json:"meta"`
 	Payload  []ClientDevice  `json:"data"`
 }
 
-func (c *Client) CreateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
-	req, err := c.NewRequest(ctx, http.MethodPost, c.ResourceAPIPath("user"), data)
+func (s *ClientDeviceService) CreateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+	req, err := s.NewRequest(ctx, http.MethodPost, s.ResourceAPIPath("user"), data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var body responseBodyClientDevice
-	resp, err := c.Do(ctx, req, &body)
+	resp, err := s.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to create ClientDevice: %w`, err)
 	}
@@ -403,15 +405,15 @@ func (c *Client) CreateClientDevice(ctx context.Context, data *ClientDevice) (*C
 	return item, resp, err
 }
 
-func (c *Client) GetClientDevice(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
-	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+func (s *ClientDeviceService) GetClientDevice(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
+	endpointPath := path.Join(s.ResourceAPIPath("user"), id)
+	req, err := s.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var body responseBodyClientDevice
-	resp, err := c.Do(ctx, req, &body)
+	resp, err := s.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
 	}
@@ -428,14 +430,14 @@ func (c *Client) GetClientDevice(ctx context.Context, id string) (*ClientDevice,
 	return item, resp, err
 }
 
-func (c *Client) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Response, error) {
-	req, err := c.NewRequest(ctx, http.MethodGet, c.ResourceAPIPath("user"), nil)
+func (s *ClientDeviceService) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Response, error) {
+	req, err := s.NewRequest(ctx, http.MethodGet, s.ResourceAPIPath("user"), nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var body responseBodyClientDevice
-	resp, err := c.Do(ctx, req, &body)
+	resp, err := s.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
 	}
@@ -443,15 +445,15 @@ func (c *Client) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Re
 	return body.Payload, resp, nil
 }
 
-func (c *Client) UpdateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
-	endpointPath := path.Join(c.ResourceAPIPath("user"), data.GetID())
-	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
+func (s *ClientDeviceService) UpdateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+	endpointPath := path.Join(s.ResourceAPIPath("user"), data.GetID())
+	req, err := s.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var body responseBodyClientDevice
-	resp, err := c.Do(ctx, req, &body)
+	resp, err := s.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to update ClientDevice: %w`, err)
 	}
