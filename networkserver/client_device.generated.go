@@ -123,7 +123,7 @@ type ClientDevice struct {
 //
 // When ID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetID() string {
-	if s == nil {
+	if s == nil || s.ID == nil {
 		return ""
 	}
 
@@ -134,7 +134,7 @@ func (s *ClientDevice) GetID() string {
 //
 // When SiteID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetSiteID() string {
-	if s == nil {
+	if s == nil || s.SiteID == nil {
 		return ""
 	}
 
@@ -145,7 +145,7 @@ func (s *ClientDevice) GetSiteID() string {
 //
 // When Hidden is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetHidden() bool {
-	if s == nil {
+	if s == nil || s.Hidden == nil {
 		return false
 	}
 
@@ -156,7 +156,7 @@ func (s *ClientDevice) GetHidden() bool {
 //
 // When HiddenID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetHiddenID() string {
-	if s == nil {
+	if s == nil || s.HiddenID == nil {
 		return ""
 	}
 
@@ -167,7 +167,7 @@ func (s *ClientDevice) GetHiddenID() string {
 //
 // When NoDelete is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetNoDelete() bool {
-	if s == nil {
+	if s == nil || s.NoDelete == nil {
 		return false
 	}
 
@@ -178,7 +178,7 @@ func (s *ClientDevice) GetNoDelete() bool {
 //
 // When NoEdit is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetNoEdit() bool {
-	if s == nil {
+	if s == nil || s.NoEdit == nil {
 		return false
 	}
 
@@ -189,7 +189,7 @@ func (s *ClientDevice) GetNoEdit() bool {
 //
 // When Blocked is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetBlocked() string {
-	if s == nil {
+	if s == nil || s.Blocked == nil {
 		return ""
 	}
 
@@ -200,7 +200,7 @@ func (s *ClientDevice) GetBlocked() string {
 //
 // When FixedAPEnabled is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetFixedAPEnabled() bool {
-	if s == nil {
+	if s == nil || s.FixedAPEnabled == nil {
 		return false
 	}
 
@@ -211,7 +211,7 @@ func (s *ClientDevice) GetFixedAPEnabled() bool {
 //
 // When FixedAPMAC is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetFixedAPMAC() string {
-	if s == nil {
+	if s == nil || s.FixedAPMAC == nil {
 		return ""
 	}
 
@@ -222,7 +222,7 @@ func (s *ClientDevice) GetFixedAPMAC() string {
 //
 // When FixedAPIP is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetFixedAPIP() string {
-	if s == nil {
+	if s == nil || s.FixedAPIP == nil {
 		return ""
 	}
 
@@ -233,7 +233,7 @@ func (s *ClientDevice) GetFixedAPIP() string {
 //
 // When Hostname is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetHostname() string {
-	if s == nil {
+	if s == nil || s.Hostname == nil {
 		return ""
 	}
 
@@ -244,7 +244,7 @@ func (s *ClientDevice) GetHostname() string {
 //
 // When LastSeen is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetLastSeen() string {
-	if s == nil {
+	if s == nil || s.LastSeen == nil {
 		return ""
 	}
 
@@ -255,7 +255,7 @@ func (s *ClientDevice) GetLastSeen() string {
 //
 // When LocalDNSRecord is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetLocalDNSRecord() string {
-	if s == nil {
+	if s == nil || s.LocalDNSRecord == nil {
 		return ""
 	}
 
@@ -266,7 +266,7 @@ func (s *ClientDevice) GetLocalDNSRecord() string {
 //
 // When LocalDNSRecordEnabled is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetLocalDNSRecordEnabled() bool {
-	if s == nil {
+	if s == nil || s.LocalDNSRecordEnabled == nil {
 		return false
 	}
 
@@ -277,7 +277,7 @@ func (s *ClientDevice) GetLocalDNSRecordEnabled() bool {
 //
 // When MAC is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetMAC() string {
-	if s == nil {
+	if s == nil || s.MAC == nil {
 		return ""
 	}
 
@@ -288,7 +288,7 @@ func (s *ClientDevice) GetMAC() string {
 //
 // When Name is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetName() string {
-	if s == nil {
+	if s == nil || s.Name == nil {
 		return ""
 	}
 
@@ -299,7 +299,7 @@ func (s *ClientDevice) GetName() string {
 //
 // When NetworkID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetNetworkID() string {
-	if s == nil {
+	if s == nil || s.NetworkID == nil {
 		return ""
 	}
 
@@ -310,7 +310,7 @@ func (s *ClientDevice) GetNetworkID() string {
 //
 // When Note is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetNote() string {
-	if s == nil {
+	if s == nil || s.Note == nil {
 		return ""
 	}
 
@@ -321,7 +321,7 @@ func (s *ClientDevice) GetNote() string {
 //
 // When UseFixedIP is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetUseFixedIP() bool {
-	if s == nil {
+	if s == nil || s.UseFixedIP == nil {
 		return false
 	}
 
@@ -332,7 +332,7 @@ func (s *ClientDevice) GetUseFixedIP() bool {
 //
 // When UserGroupID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetUserGroupID() string {
-	if s == nil {
+	if s == nil || s.UserGroupID == nil {
 		return ""
 	}
 
@@ -343,7 +343,7 @@ func (s *ClientDevice) GetUserGroupID() string {
 //
 // When VirtualNetworkOverrideEnabled is a nil pointer it will return `false` as default.
 func (s *ClientDevice) GetVirtualNetworkOverrideEnabled() bool {
-	if s == nil {
+	if s == nil || s.VirtualNetworkOverrideEnabled == nil {
 		return false
 	}
 
@@ -354,7 +354,7 @@ func (s *ClientDevice) GetVirtualNetworkOverrideEnabled() bool {
 //
 // When VirtualNetworkOverrideID is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
-	if s == nil {
+	if s == nil || s.VirtualNetworkOverrideID == nil {
 		return ""
 	}
 
@@ -365,7 +365,7 @@ func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 //
 // When FixedIP is a nil pointer it will return `""` as default.
 func (s *ClientDevice) GetFixedIP() string {
-	if s == nil {
+	if s == nil || s.FixedIP == nil {
 		return ""
 	}
 
