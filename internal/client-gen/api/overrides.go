@@ -15,8 +15,11 @@
 package api
 
 import (
+	"maps"
 	"regexp"
+	"slices"
 
+	"github.com/iancoleman/strcase"
 	"github.com/jamestoyer/go-unifi-network-server/internal/client-gen/spec"
 )
 
@@ -73,8 +76,9 @@ func ApplyEndpointOverrides(endpoint *spec.Endpoint, overrides *EndpointOverride
 }
 
 type ObjectOverrides struct {
-	Name   *string                    `yaml:"name,omitempty"`
-	Fields map[string]*FieldOverrides `yaml:"fields,omitempty"`
+	Name             *string                    `yaml:"name,omitempty"`
+	AdditionalFields map[string]*FieldOverrides `yaml:"additionalFields,omitempty"`
+	Fields           map[string]*FieldOverrides `yaml:"fields,omitempty"`
 }
 
 func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec.Object {
@@ -108,7 +112,61 @@ func ApplyObjectOverrides(object *spec.Object, overrides *ObjectOverrides) *spec
 		o.Fields = overriddenFields
 	}
 
+	if overrides.AdditionalFields != nil {
+		var additionalFields []spec.Field
+		sortedNames := slices.Sorted(maps.Keys(overrides.AdditionalFields))
+		for _, name := range sortedNames {
+			additionalField := overrides.AdditionalFields[name]
+			additionalFields = append(additionalFields, populateAdditionalField(name, additionalField))
+		}
+
+		o.Fields = append(o.Fields, additionalFields...)
+	}
+
 	return &o
+}
+
+func populateAdditionalField(name string, overrides *FieldOverrides) spec.Field {
+	field := spec.Field{
+		Name:        name,
+		Description: "",
+		Type:        spec.FieldType{},
+		JSONName:    "",
+		Validation:  nil,
+	}
+
+	if overrides.Name != nil {
+		field.Name = *overrides.Name
+	}
+
+	if overrides.Type != nil {
+		field.Type = *overrides.Type
+	} else {
+		field.Type = spec.FieldTypeString
+	}
+
+	if overrides.JSONName != nil {
+		field.JSONName = *overrides.JSONName
+	} else {
+		field.JSONName = strcase.ToSnake(field.Name)
+	}
+
+	if overrides.Validation != nil {
+		field.Validation = overrides.Validation
+	}
+
+	generateDefaultDescription := true
+	if overrides.GenerateDefaultDescription != nil {
+		generateDefaultDescription = *overrides.GenerateDefaultDescription
+	}
+
+	if overrides.Description != nil {
+		field.Description = *overrides.Description
+	} else if generateDefaultDescription {
+		field.Description = field.DefaultDescription()
+	}
+
+	return field
 }
 
 type FieldOverrides struct {
