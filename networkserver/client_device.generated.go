@@ -380,7 +380,7 @@ type responseBodyClientDevice struct {
 	Payload  []ClientDevice  `json:"data"`
 }
 
-func (s *ClientDeviceService) CreateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+func (s *ClientDeviceService) Create(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
 	req, err := s.NewRequest(ctx, http.MethodPost, s.ResourceAPIPath("user"), data)
 	if err != nil {
 		return nil, nil, err
@@ -405,7 +405,7 @@ func (s *ClientDeviceService) CreateClientDevice(ctx context.Context, data *Clie
 	return item, resp, err
 }
 
-func (s *ClientDeviceService) GetClientDevice(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
+func (s *ClientDeviceService) Get(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join(s.ResourceAPIPath("user"), id)
 	req, err := s.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
@@ -430,7 +430,7 @@ func (s *ClientDeviceService) GetClientDevice(ctx context.Context, id string) (*
 	return item, resp, err
 }
 
-func (s *ClientDeviceService) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Response, error) {
+func (s *ClientDeviceService) List(ctx context.Context) ([]ClientDevice, *http.Response, error) {
 	req, err := s.NewRequest(ctx, http.MethodGet, s.ResourceAPIPath("user"), nil)
 	if err != nil {
 		return nil, nil, err
@@ -445,7 +445,7 @@ func (s *ClientDeviceService) ListClientDevice(ctx context.Context) ([]ClientDev
 	return body.Payload, resp, nil
 }
 
-func (s *ClientDeviceService) UpdateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+func (s *ClientDeviceService) Update(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join(s.ResourceAPIPath("user"), data.GetID())
 	req, err := s.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {

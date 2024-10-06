@@ -25,7 +25,7 @@ type responseBody{{ .Name }} struct {
 }
 
 {{ if not .Actions.DisableCreate }}
-func (s *{{ .Name }}Service) Create{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+func (s *{{ .Name }}Service) Create(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
     req, err := s.NewRequest(ctx, http.MethodPost, s.ResourceAPIPath("{{ .ResourcePath }}"), data)
     if err != nil {
         return nil, nil, err
@@ -52,7 +52,7 @@ func (s *{{ .Name }}Service) Create{{ .Name }}(ctx context.Context, data *{{ .Na
 {{ end }}
 
 {{ if not .Actions.DisableDelete }}
-func (s *{{ .Name }}Service) Delete{{ .Name }}(ctx context.Context, id string) (*http.Response, error) {
+func (s *{{ .Name }}Service) Delete(ctx context.Context, id string) (*http.Response, error) {
     endpointPath:= path.Join(s.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := s.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
     if err != nil {
@@ -70,7 +70,7 @@ func (s *{{ .Name }}Service) Delete{{ .Name }}(ctx context.Context, id string) (
 {{ end }}
 
 {{ if not .Actions.DisableGet }}
-func (s *{{ .Name }}Service) Get{{ .Name }}(ctx context.Context, id string) (*{{ .Name }}, *http.Response, error) {
+func (s *{{ .Name }}Service) Get(ctx context.Context, id string) (*{{ .Name }}, *http.Response, error) {
 	endpointPath:= path.Join(s.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := s.NewRequest(ctx, http.MethodGet, endpointPath, nil)
     if err != nil {
@@ -97,7 +97,7 @@ func (s *{{ .Name }}Service) Get{{ .Name }}(ctx context.Context, id string) (*{{
 {{ end }}
 
 {{ if not .Actions.DisableList }}
-func (s *{{ .Name }}Service) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}, *http.Response, error) {
+func (s *{{ .Name }}Service) List(ctx context.Context) ([]{{ .Name }}, *http.Response, error) {
     req, err := s.NewRequest(ctx, http.MethodGet, s.ResourceAPIPath("{{ .ResourcePath }}"), nil)
     if err != nil {
         return nil, nil, err
@@ -114,7 +114,7 @@ func (s *{{ .Name }}Service) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}
 {{ end }}
 
 {{ if not .Actions.DisableUpdate }}
-func (s *{{ .Name }}Service) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
+func (s *{{ .Name }}Service) Update(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
     endpointPath:= path.Join(s.ResourceAPIPath("{{ .ResourcePath }}"), data.GetID())
     req, err := s.NewRequest(ctx, http.MethodPut, endpointPath, data)
     if err != nil {
