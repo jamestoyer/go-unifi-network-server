@@ -373,7 +373,7 @@ func (c *Client) CreateUser(ctx context.Context, data *User) (*User, *http.Respo
 	var body responseBodyUser
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to create user: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to create User: %w`, err)
 	}
 
 	var item *User
@@ -455,7 +455,7 @@ func (c *Client) UpdateUser(ctx context.Context, data *User) (*User, *http.Respo
 	var body responseBodyUser
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to update user: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to update User: %w`, err)
 	}
 
 	var item User

@@ -32,7 +32,7 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ 
     var body responseBody{{ .Name }}
     resp, err := c.Do(ctx, req, &body)
     if err != nil {
-        return nil, resp, fmt.Errorf(`unable to create {{ .ResourcePath }}: %w`, err)
+        return nil, resp, fmt.Errorf(`unable to create {{ .Name }}: %w`, err)
     }
 
     var item *{{ .Name }}
@@ -114,7 +114,7 @@ func (c *Client) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ 
     var body responseBody{{ .Name }}
     resp, err := c.Do(ctx, req, &body)
     if err != nil {
-        return nil, resp, fmt.Errorf(`unable to update {{ .ResourcePath }}: %w`, err)
+        return nil, resp, fmt.Errorf(`unable to update {{ .Name }}: %w`, err)
     }
 
     var item {{ .Name }}
