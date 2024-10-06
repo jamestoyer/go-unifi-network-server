@@ -17,12 +17,12 @@ import (
 {{ template "struct.gotmpl" $struct }}
 {{ end }}
 
-
 type responseBody{{ .Name }} struct {
     Metadata json.RawMessage `json:"meta"`
 	Payload  []{{ .Name }}   `json:"data"`
 }
 
+{{ if not .Actions.DisableCreate }}
 func (c *Client) Create{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
     req, err := c.NewRequest(ctx, http.MethodPost, c.ResourceAPIPath("{{ .ResourcePath }}"), data)
     if err != nil {
@@ -47,7 +47,9 @@ func (c *Client) Create{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ 
 
     return item, resp, err
 }
+{{ end }}
 
+{{ if not .Actions.DisableDelete }}
 func (c *Client) Delete{{ .Name }}(ctx context.Context, id string) (*http.Response, error) {
     endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
@@ -63,7 +65,9 @@ func (c *Client) Delete{{ .Name }}(ctx context.Context, id string) (*http.Respon
 
     return resp, nil
 }
+{{ end }}
 
+{{ if not .Actions.DisableGet }}
 func (c *Client) Get{{ .Name }}(ctx context.Context, id string) (*{{ .Name }}, *http.Response, error) {
 	endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), id)
     req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
@@ -88,7 +92,9 @@ func (c *Client) Get{{ .Name }}(ctx context.Context, id string) (*{{ .Name }}, *
 
 	return item, resp, err
 }
+{{ end }}
 
+{{ if not .Actions.DisableList }}
 func (c *Client) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}, *http.Response, error) {
     req, err := c.NewRequest(ctx, http.MethodGet, c.ResourceAPIPath("{{ .ResourcePath }}"), nil)
     if err != nil {
@@ -103,7 +109,9 @@ func (c *Client) List{{ .Name }}(ctx context.Context) ([]{{ .Name }}, *http.Resp
 
     return body.Payload, resp, nil
 }
+{{ end }}
 
+{{ if not .Actions.DisableUpdate }}
 func (c *Client) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ .Name }}, *http.Response, error) {
     endpointPath:= path.Join(c.ResourceAPIPath("{{ .ResourcePath }}"), data.GetID())
     req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
@@ -129,3 +137,4 @@ func (c *Client) Update{{ .Name }}(ctx context.Context, data *{{ .Name }}) (*{{ 
 
     return item, resp, err
 }
+{{ end }}
