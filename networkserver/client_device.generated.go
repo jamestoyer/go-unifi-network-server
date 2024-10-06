@@ -364,9 +364,8 @@ type responseBodyClientDevice struct {
 	Payload  []ClientDevice  `json:"data"`
 }
 
-func (c *Client) CreateClientDevice(ctx context.Context, site string, data *ClientDevice) (*ClientDevice, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user")
-	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
+func (c *Client) CreateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+	req, err := c.NewRequest(ctx, http.MethodPost, c.ResourceAPIPath("user"), data)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -374,7 +373,7 @@ func (c *Client) CreateClientDevice(ctx context.Context, site string, data *Clie
 	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to create user: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to create ClientDevice: %w`, err)
 	}
 
 	var item *ClientDevice
@@ -390,8 +389,8 @@ func (c *Client) CreateClientDevice(ctx context.Context, site string, data *Clie
 	return item, resp, err
 }
 
-func (c *Client) DeleteClientDevice(ctx context.Context, site string, id string) (*http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", id)
+func (c *Client) DeleteClientDevice(ctx context.Context, id string) (*http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
 	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
@@ -406,8 +405,8 @@ func (c *Client) DeleteClientDevice(ctx context.Context, site string, id string)
 	return resp, nil
 }
 
-func (c *Client) GetClientDevice(ctx context.Context, site, id string) (*ClientDevice, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", id)
+func (c *Client) GetClientDevice(ctx context.Context, id string) (*ClientDevice, *http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), id)
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
@@ -431,9 +430,8 @@ func (c *Client) GetClientDevice(ctx context.Context, site, id string) (*ClientD
 	return &item, resp, err
 }
 
-func (c *Client) ListClientDevice(ctx context.Context, site string) ([]ClientDevice, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user")
-	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+func (c *Client) ListClientDevice(ctx context.Context) ([]ClientDevice, *http.Response, error) {
+	req, err := c.NewRequest(ctx, http.MethodGet, c.ResourceAPIPath("user"), nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -447,8 +445,8 @@ func (c *Client) ListClientDevice(ctx context.Context, site string) ([]ClientDev
 	return body.Payload, resp, nil
 }
 
-func (c *Client) UpdateClientDevice(ctx context.Context, site string, data *ClientDevice) (*ClientDevice, *http.Response, error) {
-	endpointPath := path.Join("api/s/", site, "rest", "user", data.GetID())
+func (c *Client) UpdateClientDevice(ctx context.Context, data *ClientDevice) (*ClientDevice, *http.Response, error) {
+	endpointPath := path.Join(c.ResourceAPIPath("user"), data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
@@ -457,7 +455,7 @@ func (c *Client) UpdateClientDevice(ctx context.Context, site string, data *Clie
 	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to update user: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to update ClientDevice: %w`, err)
 	}
 
 	var item ClientDevice

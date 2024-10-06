@@ -40,7 +40,7 @@ func (suite *ClientIntegrationTestSuite) SetupSuite() {
 
 	suite.unifiContainer = container
 
-	client, err := NewClient(ctx, suite.unifiContainer.Endpoint, "admin", "admin",
+	client, err := NewClient(ctx, suite.unifiContainer.Endpoint, "admin", "admin", "default",
 		WithTLSConfig(&tls.Config{InsecureSkipVerify: true}),
 	)
 	if err != nil {
