@@ -115,6 +115,8 @@ type ClientDevice struct {
 	//
 	// Validation: None
 	VirtualNetworkOverrideID *string `json:"virtual_network_override_id,omitempty"`
+	// FixedIP is a reserved IP address given to a ClientDevice.
+	FixedIP *string `json:"fixed_ip,omitempty"`
 }
 
 // GetID is a helper function which dereferences ID.
@@ -357,6 +359,17 @@ func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 	}
 
 	return *s.VirtualNetworkOverrideID
+}
+
+// GetFixedIP is a helper function which dereferences FixedIP.
+//
+// When FixedIP is a nil pointer it will return `""` as default.
+func (s *ClientDevice) GetFixedIP() string {
+	if s == nil {
+		return ""
+	}
+
+	return *s.FixedIP
 }
 
 type responseBodyClientDevice struct {
