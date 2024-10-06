@@ -33,7 +33,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
 		ctx := context.Background()
 
 		name := "create client device" + time.Now().String()
-		got, _, err := suite.client.CreateClientDevice(ctx, &ClientDevice{
+		got, _, err := suite.client.ClientDevices.CreateClientDevice(ctx, &ClientDevice{
 			Name: String(name),
 			MAC:  String(mac.String()),
 		})
@@ -47,7 +47,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_CreateClientDevice() {
 	t.Run("existing client device", func(t *testing.T) {
 		ctx := context.Background()
 
-		got, _, err := suite.client.CreateClientDevice(ctx, &ClientDevice{
+		got, _, err := suite.client.ClientDevices.CreateClientDevice(ctx, &ClientDevice{
 			Name: String("existing client device" + time.Now().String()),
 			MAC:  String(mac.String()),
 		})
@@ -70,14 +70,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_DeleteClientDeviceByMAC() {
 		})
 
 		// Validate the client device actually exists before deletion
-		clientDevice, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		clientDevice, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.NotNil(t, clientDevice)
 
 		_, err = suite.client.DeleteClientDeviceByMAC(ctx, mac.String())
 		assert.NoError(t, err)
 
-		clientDevice, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		clientDevice, _, err = suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.Nil(t, clientDevice)
 
@@ -108,7 +108,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_GetClientDevice() {
 			MAC:  String(mac.String()),
 		})
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.NotNil(t, got)
 		assert.NotEmpty(t, got.GetID())
@@ -119,7 +119,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_GetClientDevice() {
 	t.Run("get non existent client device", func(t *testing.T) {
 		ctx := context.Background()
 
-		got, _, err := suite.client.GetClientDevice(ctx, "fakeid")
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, "fakeid")
 		assert.NoError(t, err)
 		assert.Nil(t, got)
 	})
@@ -139,7 +139,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_ListClientDevice() {
 			})
 		}
 
-		got, _, err := suite.client.ListClientDevice(ctx)
+		got, _, err := suite.client.ClientDevices.ListClientDevice(ctx)
 		assert.NoError(t, err)
 		assert.GreaterOrEqual(t, len(got), wantCount)
 	})
@@ -162,11 +162,11 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 			MAC:  String(mac.String()),
 			Note: String("a new note"),
 		}
-		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
+		got, _, err := suite.client.ClientDevices.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.NoError(t, err)
 		assert.NotNil(t, got)
 
-		got, _, err = suite.client.GetClientDevice(ctx, updatedClientDevice.GetID())
+		got, _, err = suite.client.ClientDevices.GetClientDevice(ctx, updatedClientDevice.GetID())
 		assert.NoError(t, err)
 
 		assert.Equal(t, updatedClientDevice.ID, got.ID)
@@ -187,7 +187,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 			Name: String("updated"),
 			MAC:  String(mac.String()),
 		}
-		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
+		got, _, err := suite.client.ClientDevices.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.Error(t, err)
 		assert.Nil(t, got)
 	})
@@ -210,7 +210,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 			UseFixedIP: Bool(true),
 			FixedIP:    String("192.168.1.2"),
 		}
-		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
+		got, _, err := suite.client.ClientDevices.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.Error(t, err)
 		assert.Nil(t, got)
 
@@ -232,7 +232,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UpdateClientDevice() {
 			Name: String("updated"),
 			MAC:  String(mac.String()),
 		}
-		got, _, err := suite.client.UpdateClientDevice(ctx, updatedClientDevice)
+		got, _, err := suite.client.ClientDevices.UpdateClientDevice(ctx, updatedClientDevice)
 		assert.Error(t, err)
 		assert.Nil(t, got)
 	})
@@ -249,14 +249,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
 			MAC:  String(mac.String()),
 		})
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
 		_, err = suite.client.BlockClientDevice(ctx, mac.String())
 		assert.NoError(t, err)
 
-		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err = suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.True(t, got.GetBlocked())
 	})
@@ -273,21 +273,21 @@ func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 			MAC:  String(mac.String()),
 		})
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
 		_, err = suite.client.BlockClientDevice(ctx, mac.String())
 		assert.NoError(t, err)
 
-		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err = suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		require.True(t, got.GetBlocked())
 
 		_, err = suite.client.UnblockClientDevice(ctx, mac.String())
 		assert.NoError(t, err)
 
-		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err = suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.False(t, got.GetBlocked())
 	})
@@ -305,7 +305,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_ForceClientDeviceReconnect()
 			MAC:  String(mac.String()),
 		})
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
@@ -329,7 +329,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_OverrideClientDeviceFingerpr
 		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
 		assert.NoError(t, err)
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.Equal(t, Int64(int64(fingerprint)), got.DeviceIDOverride)
 	})
@@ -351,14 +351,14 @@ func (suite *ClientIntegrationTestSuite) TestClient_RemoveClientDeviceFingerprin
 		_, err := suite.client.OverrideClientDeviceFingerprint(ctx, mac.String(), fingerprint)
 		require.NoError(t, err)
 
-		got, _, err := suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err := suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		require.NoError(t, err)
 		require.Equal(t, Int64(int64(fingerprint)), got.DeviceIDOverride)
 
 		_, err = suite.client.RemoveClientDeviceFingerprintOverride(ctx, mac.String())
 		assert.NoError(t, err)
 
-		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
+		got, _, err = suite.client.ClientDevices.GetClientDevice(ctx, newClientDevice.GetID())
 		assert.NoError(t, err)
 		assert.Nil(t, got.DeviceIDOverride)
 	})
@@ -367,7 +367,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_RemoveClientDeviceFingerprin
 func (suite *ClientIntegrationTestSuite) createClientDevice(ctx context.Context, t *testing.T, device *ClientDevice) *ClientDevice {
 	t.Helper()
 
-	clientDevice, _, err := suite.client.CreateClientDevice(ctx, device)
+	clientDevice, _, err := suite.client.ClientDevices.CreateClientDevice(ctx, device)
 	require.NoError(t, err)
 	require.NotNil(t, clientDevice)
 	return clientDevice

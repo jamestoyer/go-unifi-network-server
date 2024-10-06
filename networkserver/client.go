@@ -27,7 +27,6 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"sync"
 	"time"
 
 	"golang.org/x/net/publicsuffix"
@@ -74,20 +73,6 @@ var (
 
 type service struct {
 	*Client
-}
-
-type Client struct {
-	httpClient *http.Client
-
-	addAPIPrefix bool
-	config       ClientConfig
-	endpoint     *url.URL
-	username     string
-	password     string
-	site         string
-
-	csrf     string
-	csrfLock sync.RWMutex
 }
 
 // NewClient creates a new Unifi Network Server client.
@@ -209,6 +194,8 @@ func (c *Client) newHTTPClient() (*http.Client, error) {
 }
 
 func (c *Client) initialise(ctx context.Context) error {
+	c.initialiseServices()
+
 	httpClient, err := c.newHTTPClient()
 	if err != nil {
 		return fmt.Errorf("error creating http client: %w", err)
