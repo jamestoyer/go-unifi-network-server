@@ -1,8 +1,10 @@
 apiOverrides:
   endpoints:
     User:
+      name: ClientDevice
       objects:
         User:
+          name: ClientDevice
           fields:
             FixedApEnabled:
               name: FixedAPEnabled

@@ -26,7 +26,7 @@ import (
 	"path"
 )
 
-type User struct {
+type ClientDevice struct {
 	// ID has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
@@ -120,7 +120,7 @@ type User struct {
 // GetID is a helper function which dereferences ID.
 //
 // When ID is a nil pointer it will return `""` as default.
-func (s *User) GetID() string {
+func (s *ClientDevice) GetID() string {
 	if s == nil {
 		return ""
 	}
@@ -131,7 +131,7 @@ func (s *User) GetID() string {
 // GetSiteID is a helper function which dereferences SiteID.
 //
 // When SiteID is a nil pointer it will return `""` as default.
-func (s *User) GetSiteID() string {
+func (s *ClientDevice) GetSiteID() string {
 	if s == nil {
 		return ""
 	}
@@ -142,7 +142,7 @@ func (s *User) GetSiteID() string {
 // GetHidden is a helper function which dereferences Hidden.
 //
 // When Hidden is a nil pointer it will return `false` as default.
-func (s *User) GetHidden() bool {
+func (s *ClientDevice) GetHidden() bool {
 	if s == nil {
 		return false
 	}
@@ -153,7 +153,7 @@ func (s *User) GetHidden() bool {
 // GetHiddenID is a helper function which dereferences HiddenID.
 //
 // When HiddenID is a nil pointer it will return `""` as default.
-func (s *User) GetHiddenID() string {
+func (s *ClientDevice) GetHiddenID() string {
 	if s == nil {
 		return ""
 	}
@@ -164,7 +164,7 @@ func (s *User) GetHiddenID() string {
 // GetNoDelete is a helper function which dereferences NoDelete.
 //
 // When NoDelete is a nil pointer it will return `false` as default.
-func (s *User) GetNoDelete() bool {
+func (s *ClientDevice) GetNoDelete() bool {
 	if s == nil {
 		return false
 	}
@@ -175,7 +175,7 @@ func (s *User) GetNoDelete() bool {
 // GetNoEdit is a helper function which dereferences NoEdit.
 //
 // When NoEdit is a nil pointer it will return `false` as default.
-func (s *User) GetNoEdit() bool {
+func (s *ClientDevice) GetNoEdit() bool {
 	if s == nil {
 		return false
 	}
@@ -186,7 +186,7 @@ func (s *User) GetNoEdit() bool {
 // GetBlocked is a helper function which dereferences Blocked.
 //
 // When Blocked is a nil pointer it will return `""` as default.
-func (s *User) GetBlocked() string {
+func (s *ClientDevice) GetBlocked() string {
 	if s == nil {
 		return ""
 	}
@@ -197,7 +197,7 @@ func (s *User) GetBlocked() string {
 // GetFixedAPEnabled is a helper function which dereferences FixedAPEnabled.
 //
 // When FixedAPEnabled is a nil pointer it will return `false` as default.
-func (s *User) GetFixedAPEnabled() bool {
+func (s *ClientDevice) GetFixedAPEnabled() bool {
 	if s == nil {
 		return false
 	}
@@ -208,7 +208,7 @@ func (s *User) GetFixedAPEnabled() bool {
 // GetFixedAPMAC is a helper function which dereferences FixedAPMAC.
 //
 // When FixedAPMAC is a nil pointer it will return `""` as default.
-func (s *User) GetFixedAPMAC() string {
+func (s *ClientDevice) GetFixedAPMAC() string {
 	if s == nil {
 		return ""
 	}
@@ -219,7 +219,7 @@ func (s *User) GetFixedAPMAC() string {
 // GetFixedAPIP is a helper function which dereferences FixedAPIP.
 //
 // When FixedAPIP is a nil pointer it will return `""` as default.
-func (s *User) GetFixedAPIP() string {
+func (s *ClientDevice) GetFixedAPIP() string {
 	if s == nil {
 		return ""
 	}
@@ -230,7 +230,7 @@ func (s *User) GetFixedAPIP() string {
 // GetHostname is a helper function which dereferences Hostname.
 //
 // When Hostname is a nil pointer it will return `""` as default.
-func (s *User) GetHostname() string {
+func (s *ClientDevice) GetHostname() string {
 	if s == nil {
 		return ""
 	}
@@ -241,7 +241,7 @@ func (s *User) GetHostname() string {
 // GetLastSeen is a helper function which dereferences LastSeen.
 //
 // When LastSeen is a nil pointer it will return `""` as default.
-func (s *User) GetLastSeen() string {
+func (s *ClientDevice) GetLastSeen() string {
 	if s == nil {
 		return ""
 	}
@@ -252,7 +252,7 @@ func (s *User) GetLastSeen() string {
 // GetLocalDNSRecord is a helper function which dereferences LocalDNSRecord.
 //
 // When LocalDNSRecord is a nil pointer it will return `""` as default.
-func (s *User) GetLocalDNSRecord() string {
+func (s *ClientDevice) GetLocalDNSRecord() string {
 	if s == nil {
 		return ""
 	}
@@ -263,7 +263,7 @@ func (s *User) GetLocalDNSRecord() string {
 // GetLocalDNSRecordEnabled is a helper function which dereferences LocalDNSRecordEnabled.
 //
 // When LocalDNSRecordEnabled is a nil pointer it will return `false` as default.
-func (s *User) GetLocalDNSRecordEnabled() bool {
+func (s *ClientDevice) GetLocalDNSRecordEnabled() bool {
 	if s == nil {
 		return false
 	}
@@ -274,7 +274,7 @@ func (s *User) GetLocalDNSRecordEnabled() bool {
 // GetMAC is a helper function which dereferences MAC.
 //
 // When MAC is a nil pointer it will return `""` as default.
-func (s *User) GetMAC() string {
+func (s *ClientDevice) GetMAC() string {
 	if s == nil {
 		return ""
 	}
@@ -285,7 +285,7 @@ func (s *User) GetMAC() string {
 // GetName is a helper function which dereferences Name.
 //
 // When Name is a nil pointer it will return `""` as default.
-func (s *User) GetName() string {
+func (s *ClientDevice) GetName() string {
 	if s == nil {
 		return ""
 	}
@@ -296,7 +296,7 @@ func (s *User) GetName() string {
 // GetNetworkID is a helper function which dereferences NetworkID.
 //
 // When NetworkID is a nil pointer it will return `""` as default.
-func (s *User) GetNetworkID() string {
+func (s *ClientDevice) GetNetworkID() string {
 	if s == nil {
 		return ""
 	}
@@ -307,7 +307,7 @@ func (s *User) GetNetworkID() string {
 // GetNote is a helper function which dereferences Note.
 //
 // When Note is a nil pointer it will return `""` as default.
-func (s *User) GetNote() string {
+func (s *ClientDevice) GetNote() string {
 	if s == nil {
 		return ""
 	}
@@ -318,7 +318,7 @@ func (s *User) GetNote() string {
 // GetUseFixedIP is a helper function which dereferences UseFixedIP.
 //
 // When UseFixedIP is a nil pointer it will return `false` as default.
-func (s *User) GetUseFixedIP() bool {
+func (s *ClientDevice) GetUseFixedIP() bool {
 	if s == nil {
 		return false
 	}
@@ -329,7 +329,7 @@ func (s *User) GetUseFixedIP() bool {
 // GetUserGroupID is a helper function which dereferences UserGroupID.
 //
 // When UserGroupID is a nil pointer it will return `""` as default.
-func (s *User) GetUserGroupID() string {
+func (s *ClientDevice) GetUserGroupID() string {
 	if s == nil {
 		return ""
 	}
@@ -340,7 +340,7 @@ func (s *User) GetUserGroupID() string {
 // GetVirtualNetworkOverrideEnabled is a helper function which dereferences VirtualNetworkOverrideEnabled.
 //
 // When VirtualNetworkOverrideEnabled is a nil pointer it will return `false` as default.
-func (s *User) GetVirtualNetworkOverrideEnabled() bool {
+func (s *ClientDevice) GetVirtualNetworkOverrideEnabled() bool {
 	if s == nil {
 		return false
 	}
@@ -351,7 +351,7 @@ func (s *User) GetVirtualNetworkOverrideEnabled() bool {
 // GetVirtualNetworkOverrideID is a helper function which dereferences VirtualNetworkOverrideID.
 //
 // When VirtualNetworkOverrideID is a nil pointer it will return `""` as default.
-func (s *User) GetVirtualNetworkOverrideID() string {
+func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 	if s == nil {
 		return ""
 	}
@@ -359,28 +359,28 @@ func (s *User) GetVirtualNetworkOverrideID() string {
 	return *s.VirtualNetworkOverrideID
 }
 
-type responseBodyUser struct {
+type responseBodyClientDevice struct {
 	Metadata json.RawMessage `json:"meta"`
-	Payload  []User          `json:"data"`
+	Payload  []ClientDevice  `json:"data"`
 }
 
-func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User, *http.Response, error) {
+func (c *Client) CreateClientDevice(ctx context.Context, site string, data *ClientDevice) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user")
 	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyUser
+	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to create user: %w`, err)
 	}
 
-	var item *User
+	var item *ClientDevice
 	switch len(body.Payload) {
 	case 0:
-		err = errors.New(`failed to create User`)
+		err = errors.New(`failed to create ClientDevice`)
 	case 1:
 		item = &body.Payload[0]
 	default:
@@ -390,36 +390,36 @@ func (c *Client) CreateUser(ctx context.Context, site string, data *User) (*User
 	return item, resp, err
 }
 
-func (c *Client) DeleteUser(ctx context.Context, site string, id string) (*http.Response, error) {
+func (c *Client) DeleteClientDevice(ctx context.Context, site string, id string) (*http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user", id)
 	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var body responseBodyUser
+	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return resp, fmt.Errorf(`unable to delete User: %w`, err)
+		return resp, fmt.Errorf(`unable to delete ClientDevice: %w`, err)
 	}
 
 	return resp, nil
 }
 
-func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Response, error) {
+func (c *Client) GetClientDevice(ctx context.Context, site, id string) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user", id)
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyUser
+	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to get User: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
 	}
 
-	var item User
+	var item ClientDevice
 	switch len(body.Payload) {
 	case 0:
 	case 1:
@@ -431,39 +431,39 @@ func (c *Client) GetUser(ctx context.Context, site, id string) (*User, *http.Res
 	return &item, resp, err
 }
 
-func (c *Client) ListUser(ctx context.Context, site string) ([]User, *http.Response, error) {
+func (c *Client) ListClientDevice(ctx context.Context, site string) ([]ClientDevice, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user")
 	req, err := c.NewRequest(ctx, http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyUser
+	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
-		return nil, resp, fmt.Errorf(`unable to get User: %w`, err)
+		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
 	}
 
 	return body.Payload, resp, nil
 }
 
-func (c *Client) UpdateUser(ctx context.Context, site string, data *User) (*User, *http.Response, error) {
+func (c *Client) UpdateClientDevice(ctx context.Context, site string, data *ClientDevice) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join("api/s/", site, "rest", "user", data.GetID())
 	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body responseBodyUser
+	var body responseBodyClientDevice
 	resp, err := c.Do(ctx, req, &body)
 	if err != nil {
 		return nil, resp, fmt.Errorf(`unable to update user: %w`, err)
 	}
 
-	var item User
+	var item ClientDevice
 	switch len(body.Payload) {
 	case 0:
-		err = errors.New(`failed to update User`)
+		err = errors.New(`failed to update ClientDevice`)
 	case 1:
 		item = body.Payload[0]
 	default:
