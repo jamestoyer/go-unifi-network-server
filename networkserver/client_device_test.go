@@ -263,7 +263,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_BlockClientDevice() {
 }
 func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 	t := suite.T()
-	t.Run("get existing client device", func(t *testing.T) {
+	t.Run("unblock client device", func(t *testing.T) {
 		ctx := context.Background()
 		mac, _ := suite.macPool.MAC()
 
@@ -283,7 +283,7 @@ func (suite *ClientIntegrationTestSuite) TestClient_UnblockClientDevice() {
 		assert.NoError(t, err)
 		require.True(t, got.GetBlocked())
 
-		_, err = suite.client.UnblockClientDevice(ctx, newClientDevice.GetID())
+		_, err = suite.client.UnblockClientDevice(ctx, mac.String())
 		assert.NoError(t, err)
 
 		got, _, err = suite.client.GetClientDevice(ctx, newClientDevice.GetID())
