@@ -72,7 +72,7 @@ func (r *Renderer) RenderEndpoint(ctx context.Context, endpoint *spec.Endpoint, 
 		PackageName:  packageName,
 		ResourcePath: endpoint.ResourcePath,
 	}
-	if err := r.templates.ExecuteTemplate(&buffer, "file.gotmpl", templateContent); err != nil {
+	if err := r.templates.ExecuteTemplate(&buffer, "service.gotmpl", templateContent); err != nil {
 		return fmt.Errorf("failed to generate API endpoint file: %w", err)
 	}
 
@@ -94,6 +94,37 @@ func (r *Renderer) RenderEndpoints(ctx context.Context, endpoints []*spec.Endpoi
 		if err := r.RenderEndpoint(ctx, endpoint, targetDir, packageName); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (r *Renderer) RenderClient(ctx context.Context, endpoints []*spec.Endpoint, targetDir, packageName string) error {
+	slog.DebugContext(ctx, "Rendering client", slog.Int("endpointCount", len(endpoints)))
+	if err := r.RenderEndpoints(ctx, endpoints, targetDir, packageName); err != nil {
+		return fmt.Errorf("failed to render client endpoints: %w", err)
+	}
+
+	var buffer bytes.Buffer
+	templateContent := struct {
+		PackageName string
+		Endpoints   []*spec.Endpoint
+	}{
+		Endpoints:   endpoints,
+		PackageName: packageName,
+	}
+	if err := r.templates.ExecuteTemplate(&buffer, "client.gotmpl", templateContent); err != nil {
+		return fmt.Errorf("failed to generate API client file: %w", err)
+	}
+
+	src, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return fmt.Errorf("failed to format API endpoint: %w", err)
+	}
+
+	filename := filepath.Join(targetDir, generatedFilename("client"))
+	if err := os.WriteFile(filename, src, 0o644); err != nil {
+		return fmt.Errorf("failed to write API endpoint file: %w", err)
 	}
 
 	return nil

@@ -1,0 +1,40 @@
+// Code generated from Unifi Network Server API definitions.
+// DO NOT EDIT.
+
+{{ template "licence.gotmpl" }}
+package {{ .PackageName }}
+
+import (
+    "net/http"
+    "net/url"
+    "sync"
+)
+
+type Client struct {
+    httpClient *http.Client
+
+    addAPIPrefix bool
+    config       ClientConfig
+    endpoint     *url.URL
+    username     string
+    password     string
+    site         string
+
+    csrf     string
+    csrfLock sync.RWMutex
+
+	// common is a shared service to reduce allocations of services
+	common service
+
+    {{ range $endpoint := .Endpoints }}
+    {{ $endpoint.Name }}s *{{ $endpoint.Name }}Service
+    {{ end }}
+}
+
+func (c *Client) initialiseServices() {
+    c.common.Client = c
+
+    {{ range $endpoint := .Endpoints }}
+	c.{{ $endpoint.Name }}s = (*{{ $endpoint.Name }}Service)(&c.common)
+    {{- end }}
+}
