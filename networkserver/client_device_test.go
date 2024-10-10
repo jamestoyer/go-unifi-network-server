@@ -238,6 +238,38 @@ func (suite *ClientIntegrationTestSuite) TestClient_Update() {
 	})
 }
 
+func (suite *ClientIntegrationTestSuite) TestClient_GetByMAC() {
+	t := suite.T()
+	t.Run("get existing client device", func(t *testing.T) {
+		ctx := context.Background()
+		mac, _ := suite.macPool.MAC()
+
+		wantName := "get client device" + time.Now().String()
+		newClientDevice := suite.createClientDevice(ctx, t, &ClientDevice{
+			Name: String(wantName),
+			MAC:  String(mac.String()),
+		})
+
+		got, _, err := suite.client.ClientDevices.GetByMAC(ctx, mac.String())
+		assert.NoError(t, err)
+		assert.NotNil(t, got)
+		assert.NotEmpty(t, got.GetID())
+		assert.Equal(t, wantName, got.GetName())
+		assert.Equal(t, mac.String(), got.GetMAC())
+		assert.Equal(t, newClientDevice.GetID(), got.GetID())
+	})
+
+	t.Run("get non existent client device", func(t *testing.T) {
+		ctx := context.Background()
+		mac, release := suite.macPool.MAC()
+		defer release()
+
+		got, _, err := suite.client.ClientDevices.Get(ctx, mac.String())
+		assert.NoError(t, err)
+		assert.Nil(t, got)
+	})
+}
+
 func (suite *ClientIntegrationTestSuite) TestClient_Block() {
 	t := suite.T()
 	t.Run("block client device", func(t *testing.T) {

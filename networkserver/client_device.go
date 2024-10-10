@@ -35,6 +35,36 @@ func (c *Client) Delete(ctx context.Context, mac string) (*http.Response, error)
 	return resp, nil
 }
 
+// GetByMAC will look up a ClientDevice by its MAC address rather than the internal ID used by Get.
+//
+// Importantly, the information returned by these to functions is not actually the same as they return different
+// variations of the data for a client device. The primary difference is that this function will populate the current IP
+// unlike Get which doesn't include this.
+func (s *ClientDeviceService) GetByMAC(ctx context.Context, mac string) (*ClientDevice, *http.Response, error) {
+	endpointPath := path.Join(s.StatAPIPath("user"), mac)
+	req, err := s.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var body responseBodyClientDevice
+	resp, err := s.Do(ctx, req, &body)
+	if err != nil {
+		return nil, resp, fmt.Errorf(`unable to get ClientDevice: %w`, err)
+	}
+
+	var item *ClientDevice
+	switch len(body.Payload) {
+	case 0:
+	case 1:
+		item = &body.Payload[0]
+	default:
+		err = fmt.Errorf("unexpected number of results: %v", len(body.Payload))
+	}
+
+	return item, resp, err
+}
+
 func (c *Client) Block(ctx context.Context, mac string) (*http.Response, error) {
 	resp, err := c.stamgr(ctx, stamgrCommandBlock, map[string]interface{}{
 		"mac": mac,
@@ -57,7 +87,7 @@ func (c *Client) Unblock(ctx context.Context, mac string) (*http.Response, error
 	return resp, nil
 }
 
-// ForceClientDeviceReconnect will kick a ClientDevice forcing them to reconnect to a site.
+// ForceReconnect will kick a ClientDevice forcing them to reconnect to a site.
 //
 // References:
 //   - https://dl.ui.com/unifi/8.4.62/unifi_sh_api
