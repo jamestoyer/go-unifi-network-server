@@ -107,9 +107,14 @@ func NewClient(ctx context.Context, endpoint, username, password, site string, o
 	return client, nil
 }
 
-// ResourceAPIPath generates the correct API path for a given resource that can be used with NewRequest.
+// ResourceAPIPath generates the correct API path for a given rest resource that can be used with NewRequest.
 func (c *Client) ResourceAPIPath(resource string) string {
 	return path.Join(apiV1Path, "s", c.site, "rest", resource)
+}
+
+// StatAPIPath generates the correct API path for a given stat resource that can be used with NewRequest.
+func (c *Client) StatAPIPath(resource string) string {
+	return path.Join(apiV1Path, "s", c.site, "stat", resource)
 }
 
 func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body interface{}) (*http.Request, error) {

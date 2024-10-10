@@ -31,6 +31,10 @@ apiOverrides:
             VirtualNetworkOverrideId:
               name: VirtualNetworkOverrideID
           additionalFields:
+            CurrentIP:
+              description: |
+                The CurrentIP address assigned to the ClientDevice. This is read only and will only be populated when
+                a request to GetByMAC is made.
             "DeviceIDOverride":
               description: |
                 The DeviceIDOverride allows for the type of client device to be overridden, which subsequently changes 

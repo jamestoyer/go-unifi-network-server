@@ -115,6 +115,9 @@ type ClientDevice struct {
 	//
 	// Validation: None
 	VirtualNetworkOverrideID *string `json:"virtual_network_override_id,omitempty"`
+	// The CurrentIP address assigned to the ClientDevice. This is read only and will only be populated when
+	// a request to GetByMAC is made.
+	CurrentIP *string `json:"current_ip,omitempty"`
 	// The DeviceIDOverride allows for the type of client device to be overridden, which subsequently changes
 	// which icon the client device is displayed with in the UI.
 	DeviceIDOverride *int64 `json:"dev_id_override,omitempty"`
@@ -360,6 +363,17 @@ func (s *ClientDevice) GetVirtualNetworkOverrideID() string {
 	}
 
 	return *s.VirtualNetworkOverrideID
+}
+
+// GetCurrentIP is a helper function which dereferences CurrentIP.
+//
+// When CurrentIP is a nil pointer it will return `""` as default.
+func (s *ClientDevice) GetCurrentIP() string {
+	if s == nil || s.CurrentIP == nil {
+		return ""
+	}
+
+	return *s.CurrentIP
 }
 
 // GetDeviceIDOverride is a helper function which dereferences DeviceIDOverride.
