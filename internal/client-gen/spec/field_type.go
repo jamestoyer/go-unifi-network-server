@@ -33,6 +33,9 @@ var (
 	FieldTypeString = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "string", defaultValue: `""`},
 	}
+	FieldTypeUnixTime = FieldType{
+		fieldTypeImpl: primitiveFieldType{kind: "types.UnixEpochTime", defaultValue: `types.UnixEpochTime{}`},
+	}
 
 	unknownType = FieldType{
 		fieldTypeImpl: primitiveFieldType{kind: "Field Type Unknown"},
@@ -107,6 +110,8 @@ func unmarshalFieldType(value string) FieldType {
 		return FieldTypeNumber
 	case "String":
 		return FieldTypeString
+	case "UnixTime":
+		return FieldTypeUnixTime
 	default:
 		if strings.HasPrefix(value, "List(") && strings.HasSuffix(value, ")") {
 			return unmarshalListFieldType(value)
