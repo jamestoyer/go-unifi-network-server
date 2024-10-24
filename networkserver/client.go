@@ -412,7 +412,7 @@ func checkResponseForError(resp *http.Response) error {
 	if err == nil && data != nil {
 		if err = json.Unmarshal(data, errResp); err != nil {
 			// Reset the response to ensure we don't leave it in an inconsistent state after the failed unmarshalling
-			errResp = &ErrResponse{}
+			errResp = &ErrResponse{Response: resp}
 		}
 	}
 
