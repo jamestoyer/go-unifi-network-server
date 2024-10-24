@@ -291,8 +291,18 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 			return nil, fmt.Errorf("failed to copy response body: %w", err)
 		}
 	default:
-		if err = json.NewDecoder(resp.Body).Decode(v); err != nil && !errors.Is(err, io.EOF) {
-			return resp, fmt.Errorf("json decode failure: %w", err)
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
+
+		if err = json.Unmarshal(data, v); err != nil && !errors.Is(err, io.EOF) {
+			// Re-populate the body so it can be interrogated later
+			resp.Body = io.NopCloser(bytes.NewReader(data))
+			return resp, ErrJSONUnmarshal{
+				error:    fmt.Errorf("json decode failure: %w", err),
+				Response: resp,
+			}
 		}
 	}
 
@@ -385,6 +395,11 @@ func (e *ErrResponse) Error() string {
 	}
 
 	return fmt.Sprintf("%s %+v", e.Meta.Message, e.Data)
+}
+
+type ErrJSONUnmarshal struct {
+	error
+	Response *http.Response
 }
 
 func checkResponseForError(resp *http.Response) error {
