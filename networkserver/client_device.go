@@ -42,7 +42,7 @@ func (c *Client) Delete(ctx context.Context, mac string) (*http.Response, error)
 // unlike Get which doesn't include this.
 func (s *ClientDeviceService) GetByMAC(ctx context.Context, mac string) (*ClientDevice, *http.Response, error) {
 	endpointPath := path.Join(s.StatAPIPath("user"), mac)
-	req, err := s.NewRequest(ctx, http.MethodGet, endpointPath, nil)
+	req, err := s.NewRequest(http.MethodGet, endpointPath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -115,7 +115,7 @@ func (c *Client) OverrideDeviceID(ctx context.Context, mac string, fingerprint i
 		MAC:              mac,
 	}
 
-	req, err := c.NewRequest(ctx, http.MethodPut, endpointPath, f)
+	req, err := c.NewRequest(http.MethodPut, endpointPath, f)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (c *Client) OverrideDeviceID(ctx context.Context, mac string, fingerprint i
 
 func (c *Client) RemoveDeviceIDOverride(ctx context.Context, mac string) (*http.Response, error) {
 	endpointPath := path.Join(apiV2Path, "site", c.site, "station", mac, "fingerprint_override")
-	req, err := c.NewRequest(ctx, http.MethodDelete, endpointPath, nil)
+	req, err := c.NewRequest(http.MethodDelete, endpointPath, nil)
 	if err != nil {
 		return nil, err
 	}

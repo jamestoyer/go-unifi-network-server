@@ -117,7 +117,7 @@ func (c *Client) StatAPIPath(resource string) string {
 	return path.Join(apiV1Path, "s", c.site, "stat", resource)
 }
 
-func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(method, urlPath string, body interface{}) (*http.Request, error) {
 	u, err := c.endpoint.Parse(c.path(urlPath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create API request URL: %w", err)
@@ -133,7 +133,7 @@ func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body in
 		bodyBuffer = bytes.NewBuffer(bodyBytes)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, u.String(), bodyBuffer)
+	req, err := http.NewRequest(method, u.String(), bodyBuffer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
@@ -157,7 +157,7 @@ func (c *Client) NewRequest(ctx context.Context, method, urlPath string, body in
 // Authenticate is predominantly a helper method that should only be called to refresh the authentication cookies if
 // they have gone stale.
 func (c *Client) Authenticate(ctx context.Context) error {
-	req, err := c.NewRequest(ctx, http.MethodPost, apiLoginPath, struct {
+	req, err := c.NewRequest(http.MethodPost, apiLoginPath, struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}{Username: c.username, Password: c.password})
@@ -219,7 +219,7 @@ func (c *Client) initialise(ctx context.Context) error {
 //
 // Adapted from https://github.com/unpoller/unifi/blob/5679712eac71f81836fcc44ce843b00fbfda6dc9/unifi.go#L156-L201
 func (c *Client) setAddAPIPrefix(ctx context.Context) error {
-	req, err := c.NewRequest(ctx, http.MethodGet, "", nil)
+	req, err := c.NewRequest(http.MethodGet, "", nil)
 	if err != nil {
 		return fmt.Errorf("error creating http request: %w", err)
 	}
@@ -235,6 +235,7 @@ func (c *Client) setAddAPIPrefix(ctx context.Context) error {
 		return http.ErrUseLastResponse
 	}
 
+	req = req.WithContext(ctx)
 	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("unable to determine API type: %w", err)
@@ -267,13 +268,9 @@ func (c *Client) path(p string) string {
 // Do will execute a HTTP request to the Unifi Network Server. When v implements an io.Writer the raw response will be
 // copied, otherwise the response body will be JSON decoded to any non nil value of v.
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
-	if ctx == nil {
-		return nil, errors.New("context not set")
-	}
-
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.do(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("http request failure: %w", err)
+		return nil, err
 	}
 
 	defer resp.Body.Close()
@@ -282,11 +279,6 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		c.csrfLock.Lock()
 		c.csrf = csrf
 		c.csrfLock.Unlock()
-	}
-
-	err = checkResponseForError(resp)
-	if err != nil {
-		return nil, err
 	}
 
 	if v == nil {
@@ -305,6 +297,39 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	}
 
 	return resp, nil
+}
+
+func (c *Client) do(ctx context.Context, req *http.Request) (*http.Response, error) {
+	if ctx == nil {
+		return nil, errors.New("context not set")
+	}
+
+	req = req.WithContext(ctx)
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		// Return the context error when ctx.Done is true. Typically, this means the context is cancelled and the error
+		// will give the end user more information.
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+			return nil, fmt.Errorf("http request failure: %w", err)
+		}
+	}
+
+	if csrf := resp.Header.Get("X-Csrf-Token"); csrf != "" {
+		c.csrfLock.Lock()
+		c.csrf = csrf
+		c.csrfLock.Unlock()
+	}
+
+	err = checkResponseForError(resp)
+	if err != nil {
+		// Close the body after an error to ensure we clean up correctly.
+		_ = resp.Body.Close()
+	}
+
+	return resp, err
 }
 
 type stamgrCommand string
@@ -327,7 +352,7 @@ func (c *Client) stamgr(ctx context.Context, command stamgrCommand, argument map
 		strmgrRequest[name] = value
 	}
 
-	req, err := c.NewRequest(ctx, http.MethodPost, endpointPath, strmgrRequest)
+	req, err := c.NewRequest(http.MethodPost, endpointPath, strmgrRequest)
 	if err != nil {
 		return nil, err
 	}
