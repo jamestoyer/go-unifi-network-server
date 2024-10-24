@@ -370,17 +370,18 @@ type ErrResponse struct {
 		ResponseCode string `json:"rc"`
 		Message      string `json:"msg"`
 	} `json:"meta"`
-	Data     interface{} `json:"data"`
-	response *http.Response
+	Data interface{} `json:"data"`
+
+	Response *http.Response `json:"-"`
 }
 
 func (e *ErrResponse) Error() string {
-	if e.response != nil && e.response.Request != nil {
-		return fmt.Sprintf("%v %v: %d %s %+v", e.response.Request.Method, e.response.Request.URL, e.response.StatusCode, e.Meta.Message, e.Data)
+	if e.Response != nil && e.Response.Request != nil {
+		return fmt.Sprintf("%v %v: %d %s %+v", e.Response.Request.Method, e.Response.Request.URL, e.Response.StatusCode, e.Meta.Message, e.Data)
 	}
 
-	if e.response != nil {
-		return fmt.Sprintf("%d %s %+v", e.response.StatusCode, e.Meta.Message, e.Data)
+	if e.Response != nil {
+		return fmt.Sprintf("%d %s %+v", e.Response.StatusCode, e.Meta.Message, e.Data)
 	}
 
 	return fmt.Sprintf("%s %+v", e.Meta.Message, e.Data)
@@ -391,7 +392,7 @@ func checkResponseForError(resp *http.Response) error {
 		return nil
 	}
 
-	errResp := &ErrResponse{response: resp}
+	errResp := &ErrResponse{Response: resp}
 	data, err := io.ReadAll(resp.Body)
 	if err == nil && data != nil {
 		if err = json.Unmarshal(data, errResp); err != nil {
