@@ -290,6 +290,14 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	}
 
 	if v == nil {
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
+		// Repopulate the body so that it can be used later. This is only done for struct parsing as when an
+		// io.Writer is used the consumer inherently has the body already.
+		resp.Body = io.NopCloser(bytes.NewBuffer(data))
+
 		return resp, nil
 	}
 
@@ -299,7 +307,17 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 			return nil, fmt.Errorf("failed to copy response body: %w", err)
 		}
 	default:
-		if err = json.NewDecoder(resp.Body).Decode(v); err != nil && !errors.Is(err, io.EOF) {
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
+		defer func() {
+			// Repopulate the body so that it can be used later. This is only done for struct parsing as when an
+			// io.Writer is used the consumer inherently has the body already.
+			resp.Body = io.NopCloser(bytes.NewBuffer(data))
+		}()
+
+		if err = json.Unmarshal(data, &v); err != nil && !errors.Is(err, io.EOF) {
 			return resp, fmt.Errorf("json decode failure: %w", err)
 		}
 	}
