@@ -56,6 +56,11 @@ func TestFieldType_UnmarshalText(t *testing.T) {
 			want:    FieldTypeDecimal,
 			wantErr: assert.NoError,
 		},
+		"data is a unix time": {
+			data:    []byte("UnixTime"),
+			want:    FieldTypeUnixTime,
+			wantErr: assert.NoError,
+		},
 		"data is a list": {
 			data:    []byte("List(String)"),
 			want:    FieldTypeList(FieldTypeString),

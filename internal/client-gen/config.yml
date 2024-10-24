@@ -16,6 +16,8 @@ apiOverrides:
               name: FixedAPMAC
             FixedIp:
               name: FixedIP
+            LastSeen:
+              type: UnixTime
             LocalDnsRecord:
               name: LocalDNSRecord
             LocalDnsRecordEnabled:

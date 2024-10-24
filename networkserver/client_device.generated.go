@@ -24,6 +24,8 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+
+	"github.com/jamestoyer/go-unifi-network-server/networkserver/types"
 )
 
 type ClientDevice struct {
@@ -74,7 +76,7 @@ type ClientDevice struct {
 	// LastSeen has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
-	LastSeen *string `json:"last_seen,omitempty"`
+	LastSeen *types.UnixEpochTime `json:"last_seen,omitempty"`
 	// LocalDNSRecord has been auto generated from the Unifi Network Server API specification
 	//
 	// Validation: None
@@ -246,10 +248,10 @@ func (s *ClientDevice) GetHostname() string {
 
 // GetLastSeen is a helper function which dereferences LastSeen.
 //
-// When LastSeen is a nil pointer it will return `""` as default.
-func (s *ClientDevice) GetLastSeen() string {
+// When LastSeen is a nil pointer it will return `types.UnixEpochTime{}` as default.
+func (s *ClientDevice) GetLastSeen() types.UnixEpochTime {
 	if s == nil || s.LastSeen == nil {
-		return ""
+		return types.UnixEpochTime{}
 	}
 
 	return *s.LastSeen
