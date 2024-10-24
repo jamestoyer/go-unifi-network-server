@@ -19,8 +19,9 @@ import (
 )
 
 type ClientConfig struct {
-	TLSConfig *tls.Config
-	UserAgent string
+	PreserveResponseBody bool
+	TLSConfig            *tls.Config
+	UserAgent            string
 }
 
 type ClientOption interface {

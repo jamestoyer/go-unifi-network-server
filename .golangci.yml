@@ -22,5 +22,7 @@ linters:
 linters-settings:
   wrapcheck:
     ignorePackageGlobs:
-      - github.com/jamestoyer/go-unifi-network-server/*
+      - context
       - log/slog
+
+      - github.com/jamestoyer/go-unifi-network-server/*
